@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Common{
-	// 只是非常简单的封装
+	// 只锟角非筹拷锟津单的凤拷装
 	class c_binary_file
 	{
 	public:

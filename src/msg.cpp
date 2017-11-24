@@ -2,62 +2,17 @@
 
 #include "../res/resource.h"
 
-#include "about.h"
-#include "asctable.h"
-#include "msg.h"
+
+static char* __THIS_FILE__  = __FILE__;
 
 namespace Common {
-	//////////////////////////////////////////////////////////////////////////
-	std::string CComWnd::c_comport::get_id_and_name() const
-	{
-		char idstr[17] = {0};
-		_snprintf(idstr, sizeof(idstr), "COM%-13d", _i);
-		std::stringstream ss;
-		ss << idstr << "\t\t" << _s;
-		return std::string(ss.str());
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	CComWnd::i_com_list* CComWnd::c_comport_list::update_list()
-	{
-		HDEVINFO hDevInfo = INVALID_HANDLE_VALUE;
-		SP_DEVINFO_DATA spdata = {0};
-		GUID guid = GUID_DEVINTERFACE_COMPORT;
-
-		empty();
-
-		hDevInfo = SetupDiGetClassDevs(&guid, 0, 0, DIGCF_PRESENT|DIGCF_DEVICEINTERFACE);
-		if(hDevInfo == INVALID_HANDLE_VALUE){
-			return this;
-		}
-
-		spdata.cbSize = sizeof(spdata);
-		for(int i=0; SetupDiEnumDeviceInfo(hDevInfo, i, &spdata); i++){
-			char buff[1024] = {0};
-			if(SetupDiGetDeviceRegistryProperty(hDevInfo, &spdata, SPDRP_FRIENDLYNAME, NULL, 
-				PBYTE(buff), _countof(buff), NULL))
-			{
-				// Prolific com port (COMxx)
-				char* p = strstr(buff, "(COM");
-				if(p){
-					int id = atoi(p + 4);
-					if(p != buff) *(p-1) = '\0';
-					add(c_comport(id, buff));
-				}
-			}
-		}
-		SetupDiDestroyDeviceInfoList(hDevInfo);
-
-		return this;
-	}
-
 	//////////////////////////////////////////////////////////////////////////
 	CComWnd::CComWnd()
 		: m_layout(0)
 		, m_hAccel(0)
 	{
 		_b_recv_char_edit_fullscreen = false;
-		_b_send_data_format_hex = false; // ×Ö·û
+		_b_send_data_format_hex = false; // ï¿½Ö·ï¿½
 		_send_data_format_hex   = SendDataFormatHex::sdfh_kNone;
 		_send_data_format_char  = SendDataFormatChar::sdfc_kNone;
 		_recv_cur_edit          = NULL;
@@ -102,6 +57,8 @@ namespace Common {
 	{
 		SetWindowText(hWnd, COMMON_NAME_AND_VERSION);
 
+		memory.set_notifier(this);
+
 		struct {HWND* phwnd; UINT  id;}hwndlist[] = {
 				{&_hCP,		IDC_CBO_CP},
 				{&_hBR,		IDC_CBO_BR},
@@ -116,26 +73,6 @@ namespace Common {
 			SMART_ENSURE(*hwndlist[i].phwnd = ::GetDlgItem(m_hWnd, hwndlist[i].id), !=NULL)(i).Fatal();
 		}
 
-		static char* aBaudRate[]={"110","300","600","1200","2400","4800","9600","14400","19200","38400","57600","115200","128000","256000", NULL};
-		static DWORD iBaudRate[]={CBR_110,CBR_300,CBR_600,CBR_1200,CBR_2400,CBR_4800,CBR_9600,CBR_14400,CBR_19200,CBR_38400,CBR_57600,CBR_115200,CBR_128000,CBR_256000};
-		static char* aParity[] = {"ÎÞ","ÆæÐ£Ñé","Å¼Ð£Ñé", "±ê¼Ç", "¿Õ¸ñ", NULL};
-		static BYTE iParity[] = { NOPARITY, ODDPARITY,EVENPARITY, MARKPARITY, SPACEPARITY };
-		static char* aStopBit[] = {"1Î»", "1.5Î»","2Î»", NULL};
-		static BYTE iStopBit[] = {ONESTOPBIT,ONE5STOPBITS,TWOSTOPBITS};
-		static char* aDataSize[] = {"8Î»","7Î»","6Î»","5Î»",NULL};
-		static BYTE iDataSize[] = {8,7,6,5};
-
-		for(int i=0; aBaudRate[i]; i++)
-			_baudrate_list.add(c_baudrate(iBaudRate[i],aBaudRate[i], true));
-		for(int i=0; aParity[i]; i++)
-			_parity_list.add(t_com_item(iParity[i],aParity[i]));
-		for(int i=0; aStopBit[i]; i++)
-			_stopbit_list.add(t_com_item(iStopBit[i], aStopBit[i]));
-		for(int i=0; aDataSize[i]; i++)
-			_databit_list.add(t_com_item(iDataSize[i], aDataSize[i]));
-
-
-
 		editor_recv_char()->Create(hWnd, "", WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | ES_READONLY |
 			ES_MULTILINE | ES_WANTRETURN | ES_AUTOHSCROLL | ES_AUTOVSCROLL ,
 			WS_EX_CLIENTEDGE,
@@ -147,9 +84,9 @@ namespace Common {
 		editor_recv_hex()->Attach(::GetDlgItem(hWnd, IDC_EDIT_RECV));
 		editor_send()->Attach(::GetDlgItem(hWnd, IDC_EDIT_SEND));
 
-		editor_recv_hex()->limit_text(-1);
-		editor_recv_char()->limit_text(-1);
-		editor_send()->limit_text(-1);
+		editor_recv_hex()->limit_text(COMMON_RECV_BUF_SIZE);
+		editor_recv_char()->limit_text(COMMON_RECV_BUF_SIZE);
+		editor_send()->limit_text(COMMON_SEND_BUF_SIZE);
 
 		SendMessage(WM_SETICON, ICON_SMALL, LPARAM(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1))));
 
@@ -160,18 +97,18 @@ namespace Common {
 		layout_visible(layout_control(m_layout, "recv_wnd_recv"), FALSE);
 		layout_resize(m_layout, NULL);
 
-		// ½çÃæÔªËØ
+		// ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
 		::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 350, 0);
 		::SetDlgItemText(m_hWnd, IDC_STATIC_TIMER, "00:00:00");
 		
-		// ½çÃæÔ¤¶¨Òå
+		// ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½
 		switch_simple_ui(true, false);
 		switch_window_top_most(true, false);
 		switch_send_data_format(true, false);
 		switch_recv_data_format(true, false);
 		switch_auto_send(true, false, -1);
 
-		// ´°¿Ú¹Ø±ÕÊÂ¼þ
+		// ï¿½ï¿½ï¿½Ú¹Ø±ï¿½ï¿½Â¼ï¿½
 		_window_close_handler.add([&](){
 			if (_b_recv_char_edit_fullscreen){
 				_b_recv_char_edit_fullscreen = false;
@@ -185,8 +122,6 @@ namespace Common {
 			if (_comm.is_opened()){
 				com_try_close(true);
 				_timer.stop();
-                if(_auto_send_timer.is_running())
-                    _auto_send_timer.stop();
 			}
 			return false;
 		});
@@ -196,7 +131,7 @@ namespace Common {
 			return false;
 		});
 
-		// Ïà¹Ø½Ó¿Ú
+		// ï¿½ï¿½Ø½Ó¿ï¿½
 		_comm.set_notifier(this);
 		_comm.counter()->set_updater(this);
 		_timer.set_period(1000);
@@ -206,7 +141,7 @@ namespace Common {
 		_auto_send_timer.set_period_timer(this);
 		_auto_send_timer.set_notifier(this);
 
-		// ½ÓÊÕÆ÷
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		_hex_data_receiver.set_editor(&_recv_hex_edit);
 		_text_data_receiver.set_editor(&_recv_char_edit);
 		_comm.add_data_receiver(&_hex_data_receiver);
@@ -217,11 +152,11 @@ namespace Common {
 		com_update_item_list();
 		com_add_prompt_if_no_cp_presents();
 
-		// ´ÓÅäÖÃÎÄ¼þ¼ÓÔØÅäÖÃ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		init_from_config_file();
 
-		// »¶Ó­Óï
-		update_status("»¶Ó­Ê¹ÓÃ Common´®¿Úµ÷ÊÔ¹¤¾ß! Enjoy! :-)");
+		// ï¿½ï¿½Ó­ï¿½ï¿½
+		update_status("ï¿½ï¿½Ó­Ê¹ï¿½ï¿½ Commonï¿½ï¿½ï¿½Úµï¿½ï¿½Ô¹ï¿½ï¿½ï¿½! Enjoy! :-)");
 
 		return 0;
 	}
@@ -274,7 +209,7 @@ namespace Common {
 				if (_strnicmp("COM", name, 3) == 0){
 					int comid = atoi(name + 3);
 					if (event == DBT_DEVICEARRIVAL){
-						update_status("´®¿ÚÉè±¸ %s ÒÑ²åÈë!", name);
+						update_status("ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ %s ï¿½Ñ²ï¿½ï¿½ï¿½!", name);
 						if (!_comm.is_opened()){
 							com_update_comport_list_and_select_current();
 						}
@@ -283,12 +218,12 @@ namespace Common {
                         }
 					}
 					else{
-						update_status("´®¿ÚÉè±¸ %s ÒÑÒÆ³ý!", name);
-						// ±£³Öµ±Ç°Ñ¡ÖÐµÄÉè±¸ÒÀÈ»ÎªÑ¡ÖÐ×´Ì¬
+						update_status("ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ %s ï¿½ï¿½ï¿½Æ³ï¿½!", name);
+						// ï¿½ï¿½ï¿½Öµï¿½Ç°Ñ¡ï¿½Ðµï¿½ï¿½è±¸ï¿½ï¿½È»ÎªÑ¡ï¿½ï¿½×´Ì¬
 						if (!_comm.is_opened()){
 							com_update_comport_list_and_select_current();
 						}
-						else{ // Èç¹ûÒÆ³ýµÄÊÇµ±Ç°COM
+						else{ // ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½Çµï¿½Ç°COM
 							int index = ComboBox_GetCurSel(_hCP);
 							c_comport* cp = index >= 0 ? (c_comport*)ComboBox_GetItemData(_hCP, index) : nullptr;
 							int comidcur = (int)cp > 0xFFFF ? cp->get_i() : 0;
@@ -328,7 +263,7 @@ namespace Common {
 		{
 			long* a = (long*)lParam;
 			char status[128] = { "×´Ì¬: " };
-			sprintf(status + 6, "½ÓÊÕ¼ÆÊý:%u,·¢ËÍ¼ÆÊý:%u,µÈ´ý·¢ËÍ:%u", a[0],a[1],a[2]);
+			sprintf(status + 6, "ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½:%u,ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½:%u,ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½:%u", a[0],a[1],a[2]);
 			SetWindowText(_hStatus, status);
 			return 0;
 		}
@@ -361,7 +296,7 @@ namespace Common {
 			return x;
 		}
 		case kAutoSend:
-			debug_out(("×Ô¶¯·¢ËÍÖÐ...\n"));
+			debug_out(("ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...\n"));
 			com_do_send(true);
 			return 0;
 		}
@@ -400,11 +335,11 @@ namespace Common {
 			i_com_list* plist;
 			HWND hwnd;
 		} ups[] = {
-			{list_callback_ud::e_type::cp, _comport_list.update_list() , _hCP},
-			{list_callback_ud::e_type::br, _baudrate_list.update_list() , _hBR},
-			{list_callback_ud::e_type::pa, _parity_list.update_list() , _hPA},
-			{list_callback_ud::e_type::sb, _stopbit_list.update_list() , _hSB},
-			{list_callback_ud::e_type::db, _databit_list.update_list() , _hDB},
+			{list_callback_ud::e_type::cp, _comm.comports()->update_list() , _hCP},
+			{list_callback_ud::e_type::br, _comm.baudrates()->update_list() , _hBR},
+			{list_callback_ud::e_type::pa, _comm.parities()->update_list() , _hPA},
+			{list_callback_ud::e_type::sb, _comm.stopbits()->update_list() , _hSB},
+			{list_callback_ud::e_type::db, _comm.databits()->update_list() , _hDB},
 		};
 
 		for(int i=0; i<sizeof(ups)/sizeof(*ups); i++){
@@ -417,8 +352,8 @@ namespace Common {
 			}
 		}
 
-		int ii = ComboBox_InsertString(_hBR, -1, "<ÊäÈë>");
-		ComboBox_SetItemData(_hBR, ii, 1);	// 1 - ×Ô¶¨Òå
+		int ii = ComboBox_InsertString(_hBR, -1, "<ï¿½ï¿½ï¿½ï¿½>");
+		ComboBox_SetItemData(_hBR, ii, 1);	// 1 - ï¿½Ô¶ï¿½ï¿½ï¿½
 	}
 
 	void CComWnd::com_udpate_list_callback( void* ud, const t_com_item* t )
@@ -465,7 +400,7 @@ namespace Common {
 
 	void CComWnd::com_update_comport_list()
 	{
-		i_com_list* list = _comport_list.update_list();
+		i_com_list* list = _comm.comports()->update_list();
 		list_callback_ud ud;
 		ud.that = this;
 		ud.type = list_callback_ud::e_type::cp;
@@ -481,7 +416,7 @@ namespace Common {
 	{
 		switch (id)
 		{
-		// ¹¤¾ßÏä/°ïÖú²Ëµ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
 		case MENU_OTHER_HELP:		(new c_about_dlg)->do_modal(*this); break;
 		//case MENU_OTHER_STR2HEX:	(new c_str2hex_dlg)->do_modeless(this); break;
 		case MENU_OTHER_ASCII:		(new c_asctable_dlg)->do_modeless(*this);break;
@@ -494,7 +429,7 @@ namespace Common {
 			msgbox(MB_ICONINFORMATION,0,"not implemented!"); break;
 		case MENU_OTHER_NEWVERSION:break;
 
-		// ÎÄ±¾½ÓÊÕÊý¾ÝÇø²Ëµ¥
+		// ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
 		case ID_EDITCONTEXTMENU_COPY:		_recv_char_edit.do_copy(); break;
 		case ID_EDITCONTEXTMENU_CUT:		_recv_char_edit.do_cut(); break;
 		case ID_EDITCONTEXTMENU_PASTE:		_recv_char_edit.do_paste(); break;
@@ -537,18 +472,18 @@ namespace Common {
 		case IDC_BTN_SAVEFILE:
 		{
 			if(_file_data_receiver.size() == 0) {
-				msgbox(MB_ICONINFORMATION, "ÌáÊ¾", "»º³åÇøÃ»ÓÐÊý¾Ý¡£");
+				msgbox(MB_ICONINFORMATION, "ï¿½ï¿½Ê¾", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½");
 				return -1;
 			}
 
 			c_file_save_dlg dlg;
-			dlg.set_title("Ñ¡Ôñ±£´æÎÄ¼þÃû");
-			dlg.set_filter("ËùÓÐÎÄ¼þ(*.*), ÇëÊÖÐ´ÎÄ¼þÃû+À©Õ¹Ãû\0*.*\0");
+			dlg.set_title("Ñ¡ï¿½ñ±£´ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½");
+			dlg.set_filter("ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½(*.*), ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Ä¼ï¿½ï¿½ï¿½+ï¿½ï¿½Õ¹ï¿½ï¿½\0*.*\0");
 			if(!dlg.do_modal(*this)) return 0;
 
 			c_binary_file file;
 			if(!file.open(dlg.get_buffer(), "wb")) {
-				msgerr("ÎÄ¼þ´ò¿ªÊ§°Ü");
+				msgerr("ï¿½Ä¼ï¿½ï¿½ï¿½Ê§ï¿½ï¿½");
 				return -1;
 			}
 
@@ -556,14 +491,14 @@ namespace Common {
 			auto size = _file_data_receiver.size();
 
 			if(!file.write(data, (int)size)) {
-				msgerr("ÎÄ¼þÐ´ÈëÊ§°Ü¡£");
+				msgerr("ï¿½Ä¼ï¿½Ð´ï¿½ï¿½Ê§ï¿½Ü¡ï¿½");
 				return -1;
 			}
 
 			file.flush();
 			file.close();
 
-			msgbox(MB_ICONINFORMATION, dlg.get_buffer(), "ÎÄ¼þÒÑ³É¹¦±£´æ¡£\nÎÄ¼þ´óÐ¡: %d", size);
+			msgbox(MB_ICONINFORMATION, dlg.get_buffer(), "ï¿½Ä¼ï¿½ï¿½Ñ³É¹ï¿½ï¿½ï¿½ï¿½æ¡£\nï¿½Ä¼ï¿½ï¿½ï¿½Ð¡: %d", size);
 			return 0;
 		}
 		case IDC_BTN_SEND:
@@ -615,7 +550,7 @@ namespace Common {
 						virtual bool check_valid(const char* str)
 						{
 							if (!_that->test_get_int_value() || _that->get_int_value()<=0){
-								_notifier->msgbox(MB_ICONEXCLAMATION, nullptr, "ÇëÊäÈëÕýÕûÊýÖµ!");
+								_notifier->msgbox(MB_ICONEXCLAMATION, nullptr, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ!");
 								return false;
 
 							}
@@ -635,7 +570,7 @@ namespace Common {
 						}
 						virtual const char* get_prompt_text()
 						{
-							return "ÇëÊäÈë×Ô¶¨Òå²¨ÌØÂÊ:";
+							return "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½å²¨ï¿½ï¿½ï¿½ï¿½:";
 						}
 
 					protected:
@@ -649,7 +584,7 @@ namespace Common {
 					if (brinput.get_dlg_code() == IDOK){
 						int br = brinput.get_int_value();
 						std::string s = brinput.get_string_value();
-						const c_baudrate& item = _baudrate_list.add(c_baudrate(br, s.c_str(), false));
+						const c_baudrate& item = _comm.baudrates()->add(c_baudrate(br, s.c_str(), false));
 						index = ComboBox_InsertString(_hBR, index, s.c_str());
 						ComboBox_SetItemData(_hBR, index, &item);
 						ComboBox_SetCurSel(_hBR, index);
@@ -687,7 +622,7 @@ namespace Common {
 		case IDC_CHK_AUTO_SEND:
 			switch_auto_send();
 			return 0;
-		// ½ÓÊÕÊý¾ÝÖÐ¼äµÄ°´Å¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½Ä°ï¿½Å¥
 		case IDC_BTN_HELP:
 			if(code==BN_CLICKED){
 				HMENU hMenu;
@@ -698,10 +633,10 @@ namespace Common {
 				return 0;
 			}
 			break;
-		// ·¢ËÍÊý¾Ý°´Å¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½Å¥
 		case IDC_BTN_CLR_COUNTER:
 			if(code==BN_CLICKED){
-				//Î´·¢ËÍ¼ÆÊý²»ÐèÒªÇåÁã
+				//Î´ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½
 				c_data_counter* counter = _comm.counter();
 				counter->reset_wr_rd();
 				counter->call_updater();
@@ -709,7 +644,7 @@ namespace Common {
 			}
 			break;
 
-		// Êý¾Ý¸´ÖÆ°´Å¥
+		// ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½Æ°ï¿½Å¥
 		case IDC_BTN_COPY_RECV:
 			if (code == BN_CLICKED){
 				if (_recv_cur_edit && ::IsWindow(*_recv_cur_edit)){
@@ -717,7 +652,7 @@ namespace Common {
 					return 0;
 				}
 				else{
-					msgbox(MB_ICONINFORMATION, "", "µ±Ç°Ã»ÓÐÊý¾ÝÏÔÊ¾¿Ø¼þ!");
+					msgbox(MB_ICONINFORMATION, "", "ï¿½ï¿½Ç°Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ø¼ï¿½!");
 					return 0;
 				}
 			}
@@ -729,7 +664,7 @@ namespace Common {
 			}
 			break;
 
-		// Êý¾ÝÇå³ý°´Å¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¥
 		case IDC_BTN_CLR_RECV:
 		case IDC_BTN_CLR_SEND:
 			if (code == BN_CLICKED){
@@ -745,7 +680,7 @@ namespace Common {
 				return 0;
 			}
 			break;
-		// ÖÃ¶¥ && ¼ò½àÄ£Ê½
+		// ï¿½Ã¶ï¿½ && ï¿½ï¿½ï¿½Ä£Ê½
 		case IDC_CHK_TOP:
 			if (code == BN_CLICKED){
 				switch_window_top_most();
@@ -759,7 +694,7 @@ namespace Common {
 			}
 			break;
 
-		// ´ÓÎÄ¼þ¼ÓÔØ
+		// ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
 		case IDC_BTN_LOADFILE:
 			if (code == BN_CLICKED){
 				com_load_file();
@@ -800,7 +735,7 @@ namespace Common {
 		int cursel = ComboBox_GetCurSel(_hCP);
 		t_com_item* pi = (t_com_item*)(cursel == -1 ? 0 : ComboBox_GetItemData(_hCP,cursel));
 		if (!pi){
-			msgbox(MB_ICONEXCLAMATION, NULL, "Ã»ÓÐ¿ÉÓÃµÄ´®¿Ú, Çëµã»÷´®¿ÚÁÐ±íË¢ÐÂ!");
+			msgbox(MB_ICONEXCLAMATION, NULL, "Ã»ï¿½Ð¿ï¿½ï¿½ÃµÄ´ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ë¢ï¿½ï¿½!");
 			return false;
 		}
 
@@ -811,12 +746,12 @@ namespace Common {
 	{
 		int count = ComboBox_GetCount(_hCP);
 		if (count == 0){
-			ComboBox_InsertString(_hCP, -1, "< Ã» ÓÐ ÕÒ µ½ ÈÎ ºÎ ¿É ÓÃ µÄ ´® ¿Ú ! >  µã »÷ Ë¢ ÐÂ ÁÐ ±í");
+			ComboBox_InsertString(_hCP, -1, "< Ã» ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ! >  ï¿½ï¿½ ï¿½ï¿½ Ë¢ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½");
 			ComboBox_SetItemData(_hCP, 0, 0);
-			update_status("Ã»ÓÐÕÒµ½¿ÉÓÃµÄ´®¿Ú!");
+			update_status("Ã»ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ÃµÄ´ï¿½ï¿½ï¿½!");
 		}
 		else{
-			update_status("¹²ÕÒµ½ %d ¸ö´®¿ÚÉè±¸!", count);
+			update_status("ï¿½ï¿½ï¿½Òµï¿½ %d ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸!", count);
 		}
 	}
 
@@ -838,7 +773,7 @@ namespace Common {
 
 	void CComWnd::com_update_open_btn_text()
 	{
-		::SetWindowText(_hOpen, _comm.is_opened() ? "¹Ø±Õ(&W)" : "´ò¿ª(&W)");
+		::SetWindowText(_hOpen, _comm.is_opened() ? "ï¿½Ø±Õ´ï¿½ï¿½ï¿½(&W)" : "ï¿½ò¿ª´ï¿½ï¿½ï¿½(&W)");
 	}
 
 	void CComWnd::update_timer(int h, int m, int s)
@@ -862,8 +797,8 @@ namespace Common {
 			bsimple = !!::IsDlgButtonChecked(m_hWnd, IDC_CHECK_SIMPLE);
 		}
 
-		// ÒòÎªÓÐÐ©²¼¾Ö¹²ÓÃÁËÏàÍ¬µÄ¿Ø¼þ, ËùÒÔÉèÖÃÒþ²ØÓÐÏÈºóË³Ðò
-		if (bsimple){ // ¼ò½àÄ£Ê½
+		// ï¿½ï¿½Îªï¿½ï¿½Ð©ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Ä¿Ø¼ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½Ë³ï¿½ï¿½
+		if (bsimple){ // ï¿½ï¿½ï¿½Ä£Ê½
 			layout_visible(layout_control(m_layout, "recv_btns"), FALSE);
 			layout_visible(layout_control(m_layout, "simple_mode_help_btn"), TRUE);
 			layout_visible(layout_control(m_layout, "simple_mode_panel"), TRUE);
@@ -941,7 +876,7 @@ namespace Common {
 			::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_DELAY), bauto && valid && _comm.is_opened() ? FALSE : TRUE);
 			::SetDlgItemInt(m_hWnd, IDC_EDIT_DELAY, valid ? interval : interval_default, FALSE);
 			if (!valid){
-				msgbox(MB_ICONEXCLAMATION, nullptr, "×Ô¶¯·¢ËÍÊ±¼ä²»ºÏ·¨, ÒÑÉèÖÃÎªÄ¬ÈÏÖµ!");
+				msgbox(MB_ICONEXCLAMATION, nullptr, "ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä²»ï¿½Ï·ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÄ¬ï¿½ï¿½Öµ!");
 			}
 			else{
 				_auto_send_timer.set_period(interval);
@@ -954,7 +889,7 @@ namespace Common {
 					BOOL bTranslated;
 					int ti = ::GetDlgItemInt(m_hWnd, IDC_EDIT_DELAY, &bTranslated, FALSE);
 					if (!bTranslated || !(ti >= interval_min && ti <= interval_max)){
-						msgbox(MB_ICONEXCLAMATION, nullptr, "×Ô¶¯·¢ËÍÊ±¼äÉèÖÃÓÐÎó!");
+						msgbox(MB_ICONEXCLAMATION, nullptr, "ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!");
 						return;
 					}
 
@@ -1021,17 +956,20 @@ namespace Common {
 			switch_send_data_format(true, false);
 		}
 		else if (selected == "any"){
-            const int line_cch = 16;
 			int length = file_size;
-			char* hexstr = c_text_formatting::hex2str(buffer, &length, line_cch, 0, NULL, 0, c_text_formatting::newline_type::NLT_CRLF);
-            editor_send()->set_text(hexstr);
-            delete[] hexstr;
-            switch_send_data_format(true, true);
+			char* hexstr = c_text_formatting::hex2str(
+				buffer, &length, COMMON_LINE_CCH_SEND, 0, NULL, 0, c_text_formatting::newline_type::NLT_CRLF);
+			if (hexstr){
+				editor_send()->set_text(hexstr);
+				switch_send_data_format(true, true);
+				memory.free((void**)&hexstr, "");
+				switch_send_data_format(true, true);
+			}
 		}
 		else if (selected == "cmd"){
 			bf.close();
 			delete[] buffer;
-			// sendcmd_try_load_xml(*this, bf.get_fn().c_str(), &_comm);
+			sendcmd_try_load_xml(*this, bf.get_fn().c_str(), &_comm);
 			return; // !!!
 		}
 
@@ -1042,20 +980,20 @@ namespace Common {
 	{
 		c_file_open_dlg fodlg;
 		if (selected == "text"){
-			fodlg.set_title("Ñ¡ÔñÒ»¸ö´¿ÎÄ±¾ÎÄ¼þ...");
-			fodlg.set_filter("ÎÄ±¾ÎÄ¼þ(*.txt)\0*.txt\0ËùÓÐÎÄ¼þ(*.*)\0*.*\0");
+			fodlg.set_title("Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½...");
+			fodlg.set_filter("ï¿½Ä±ï¿½ï¿½Ä¼ï¿½(*.txt)\0*.txt\0ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½(*.*)\0*.*\0");
 		}
 		else if (selected == "any"){
-			fodlg.set_title("ÈÎÒâÑ¡ÔñÒ»¸öÎÄ¼þ, µ«²»ÒªÌ«´ó...");
-			fodlg.set_filter("ËùÓÐÎÄ¼þ(*.*)\0*.*\0");
+			fodlg.set_title("ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä¼ï¿½, ï¿½ï¿½ï¿½ï¿½ÒªÌ«ï¿½ï¿½...");
+			fodlg.set_filter("ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½(*.*)\0*.*\0");
 		}
 		else if (selected == "hexseq"){
-			fodlg.set_title("Ñ¡ÔñÒ»¸ö°üº¬16½øÖÆÐòÁÐµÄÎÄ±¾, ÄÚÈÝÓ¦¸ÃÊÇ: XX XX XX XX ...");
-			fodlg.set_filter("Ê®Áù½øÖÆÐòÁÐÎÄ±¾ÎÄ¼þ(*.txt)\0*.txt\0ËùÓÐÎÄ¼þ(*.*)\0*.*\0");
+			fodlg.set_title("Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½Ä±ï¿½, ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½: XX XX XX XX ...");
+			fodlg.set_filter("Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½(*.txt)\0*.txt\0ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½(*.*)\0*.*\0");
 		}
 		else if (selected == "cmd"){
-			fodlg.set_title("ÃüÁîÎÄ¼þÄÜ·½±ãµØ·¢ËÍÒ»×éÏà¹ØµÄÃüÁî, Ñ¡ÔñÒ»¸ö°É~");
-			fodlg.set_filter("ÃüÁîÎÄ±¾ÎÄ¼þ(*.xml)\0 * .xml\0ËùÓÐÎÄ¼þ(*.*)\0 * .*\0");
+			fodlg.set_title("ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ü·ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½, Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½~");
+			fodlg.set_filter("ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½(*.xml)\0 * .xml\0ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½(*.*)\0 * .*\0");
 		}
 
 		if (!fodlg.do_modal(*this) || !bf.open(fodlg.get_buffer(), "rb"))
@@ -1068,10 +1006,10 @@ namespace Common {
 		bf.seek(0, SEEK_SET);
 		if (load_size > max_load_size)
 			return msgbox(MB_ICONQUESTION | MB_YESNO,
-			"ÎÄ¼þÌ«´ó",
-			"ÎÄ¼þ: %s\n"
-			"ÒÑ¾­³¬¹ý×î´ó´ò¿ªÎÄ¼þ´óÐ¡: %d ×Ö½Ú\n"
-			"\nÒª¼ÌÐøÂð?"
+			"ï¿½Ä¼ï¿½Ì«ï¿½ï¿½",
+			"ï¿½Ä¼ï¿½: %s\n"
+			"ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ð¡: %d ï¿½Ö½ï¿½\n"
+			"\nÒªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?"
 			, bf.get_fn().c_str()
 			, max_load_size) == IDYES;
 		else
@@ -1112,7 +1050,7 @@ namespace Common {
 				len = c_text_formatting::remove_string_cr(text);
 				break;
 			case SendDataFormatChar::sdfc_kCrlf:
-				// µ±Ç°ÊÇ Edit ¿Ø¼þ, ÒÔ '\r\n' »»ÐÐ, ÎÞÐè×÷×ª»»
+				// ï¿½ï¿½Ç°ï¿½ï¿½ Edit ï¿½Ø¼ï¿½, ï¿½ï¿½ '\r\n' ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
 				break;
 			}
 
@@ -1122,8 +1060,8 @@ namespace Common {
 				if ((n & 0x80000000) == 0){
 					cancel_auto_send();
 					msgbox(MB_ICONEXCLAMATION, NULL,
-						"½âÎö×ªÒå×Ö·û´®Ê±Óöµ½´íÎó!\n\n"
-						"ÔÚµÚ %d ¸ö×Ö·û¸½½ü³öÏÖÓï·¨½âÎö´íÎó!",
+						"ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!\n\n"
+						"ï¿½Úµï¿½ %d ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!",
 						len
 						);
 					return false;
@@ -1135,8 +1073,8 @@ namespace Common {
 			len = n & 0x7FFFFFFF;
 			if ((n & 0x80000000) == 0){
 				cancel_auto_send();
-				msgbox(MB_ICONEXCLAMATION, NULL, "·¢ËÍÇøµÄÊý¾Ý½âÎö´íÎó, Çë¼ì²é!\n\nÊÇ²»ÊÇÑ¡´íÁË·¢ËÍÊý¾ÝµÄ¸ñÊ½\?\n\n"
-					"ÔÚµÚ %d ¸ö×Ö·û¸½½ü³öÏÖÓï·¨½âÎö´íÎó!", len);
+				msgbox(MB_ICONEXCLAMATION, NULL, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½!\n\nï¿½Ç²ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄ¸ï¿½Ê½\?\n\n"
+					"ï¿½Úµï¿½ %d ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!", len);
 				return false;
 			}
 		}
@@ -1176,7 +1114,7 @@ namespace Common {
 				_file_data_receiver.reset_buffer();
 				_comm.begin_threads();
 				com_update_open_btn_text();
-				update_status("´®¿ÚÒÑ´ò¿ª!");
+				update_status("ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½!");
 				_timer.start();
 			}
 		}
@@ -1291,7 +1229,7 @@ namespace Common {
 			switch_window_top_most(true, item->get_bool());
 		}
 
-		// Êý¾Ý·¢ËÍ¸ñÊ½ÉèÖÃ
+		// ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		if (auto item = comcfg->get_key("comm.send.format")){
 			switch_send_data_format(true, item->val() == "hex");
 		}
@@ -1307,9 +1245,9 @@ namespace Common {
 			else _send_data_format_char &= ~SendDataFormatChar::sdfc_kUseEscape;
 		}
 
-		// ´®¿Ú²ÎÊýÅäÖÃ
+		// ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (auto item = comcfg->get_key("comm.config.comport")){
-			auto& cp = _comport_list;
+			auto& cp = *_comm.comports();
 			if (cp.size()){
 				for (int i = 0; i < cp.size(); i++){
 					if (item->get_int() == cp[i].get_i()){
@@ -1324,7 +1262,7 @@ namespace Common {
 			split_string(&brs, item->val().c_str(), '|');
 			if (brs.size() > 1){
 				for (int i = 0; i < (int)brs.size() - 1; i++){
-					auto& b = _baudrate_list.add(c_baudrate(atoi(brs[i].c_str()), brs[i].c_str(), false));
+					auto& b = _comm.baudrates()->add(c_baudrate(atoi(brs[i].c_str()), brs[i].c_str(), false));
 					int idx = ComboBox_InsertString(_hBR, ComboBox_GetCount(_hBR)-1, brs[i].c_str());
 					ComboBox_SetItemData(_hBR, idx, &b);
 				}
@@ -1332,9 +1270,9 @@ namespace Common {
 
 			if (brs.size() > 0){
 				int index = -1;
-				auto li = _baudrate_list;
-				for (int i = 0; i < li.size(); i++){
-					if (brs[brs.size()-1] == li[i].get_s()){
+				auto li = _comm.baudrates();
+				for (int i = 0; i < li->size(); i++){
+					if (brs[brs.size()-1] == (*li)[i].get_s()){
 						index = i;
 						break;
 					}
@@ -1346,9 +1284,9 @@ namespace Common {
 		}
 		if (auto item = comcfg->get_key("comm.config.parity")){
 			int index = -1;
-			auto li = _parity_list;
-			for (int i = 0; i < li.size(); i++){
-				if (item->get_int() == li[i].get_i()){
+			auto li = _comm.parities();
+			for (int i = 0; i < li->size(); i++){
+				if (item->get_int() == (*li)[i].get_i()){
 					index = i;
 					break;
 				}
@@ -1359,9 +1297,9 @@ namespace Common {
 		}
 		if (auto item = comcfg->get_key("comm.config.databit")){
 			int index = -1;
-			auto li = _databit_list;
-			for (int i = 0; i < li.size(); i++){
-				if (item->get_int() == li[i].get_i()){
+			auto li = _comm.databits();
+			for (int i = 0; i < li->size(); i++){
+				if (item->get_int() == (*li)[i].get_i()){
 					index = i;
 					break;
 				}
@@ -1372,9 +1310,9 @@ namespace Common {
 		}
 		if (auto item = comcfg->get_key("comm.config.stopbit")){
 			int index = -1;
-			auto li = _stopbit_list;
-			for (int i = 0; i < li.size(); i++){
-				if (item->get_int() == li[i].get_i()){
+			auto li = _comm.stopbits();
+			for (int i = 0; i < li->size(); i++){
+				if (item->get_int() == (*li)[i].get_i()){
 					index = i;
 					break;
 				}
@@ -1384,7 +1322,7 @@ namespace Common {
 			}
 		}
 
-		// ×Ô¶¯·¢ËÍ
+		// ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		bool bAutoSend = false;
 		int  interval = -1;
 		if (auto item = comcfg->get_key("comm.autosend.enable")){
@@ -1404,7 +1342,7 @@ namespace Common {
 		comcfg->set_key("gui.simplemode", !!::IsDlgButtonChecked(m_hWnd, IDC_CHECK_SIMPLE));
 		comcfg->set_key("gui.topmost", !!::IsDlgButtonChecked(m_hWnd, IDC_CHK_TOP));
 
-		// Êý¾Ý·¢ËÍ¸ñÊ½ÉèÖÃ
+		// ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		comcfg->set_key("comm.send.format", _b_send_data_format_hex ? "hex" : "char");
 
 		const char* crlftype[] = { "none", "cr", "lf", "crlf" };
@@ -1413,14 +1351,14 @@ namespace Common {
 		comcfg->set_key("comm.send.format.char.escape",
 			_send_data_format_char & SendDataFormatChar::sdfc_kUseEscape ? "true" : "false");
 
-		// ´®¿Ú²ÎÊýÅäÖÃ
+		// ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		auto get_cbo_item_data = [](HWND hcbo){
 			int i = ComboBox_GetCurSel(hcbo);
 			SMART_ASSERT(i >= 0)(i).Fatal();
 			return reinterpret_cast<t_com_item*>(ComboBox_GetItemData(hcbo, i));
 		};
 
-		// µ±Ç°´®¿ÚºÅ
+		// ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Úºï¿½
 		int icp = ComboBox_GetCurSel(_hCP);
 		c_comport* cp = nullptr;
 		if (icp >= 0){
@@ -1434,8 +1372,8 @@ namespace Common {
 			comcfg->set_key("comm.config.comport", "");
 		}
 
-		// µ±Ç°²¨ÌØÂÊ
-		auto& brs = _baudrate_list;
+		// ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		auto& brs = *_comm.baudrates();
 		std::string user_baudrates;
 		for (int i = 0; i < brs.size(); i++){
 			if (brs[i].is_added_by_user()){
@@ -1446,12 +1384,12 @@ namespace Common {
 		user_baudrates += get_cbo_item_data(_hBR)->get_s();
 		comcfg->set_key("comm.config.baudrate", user_baudrates.c_str());
 
-		// µ±Ç° Ð£ÑéÎ», Êý¾ÝÎ», Í£Ö¹Î»
+		// ï¿½ï¿½Ç° Ð£ï¿½ï¿½Î», ï¿½ï¿½ï¿½ï¿½Î», Í£Ö¹Î»
 		comcfg->set_key("comm.config.parity", get_cbo_item_data(_hPA)->get_i());
 		comcfg->set_key("comm.config.databit", get_cbo_item_data(_hDB)->get_i());
 		comcfg->set_key("comm.config.stopbit", get_cbo_item_data(_hSB)->get_i());
 
-		// ×Ô¶¯·¢ËÍ
+		// ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		comcfg->set_key("comm.autosend.enable", !!::IsDlgButtonChecked(m_hWnd, IDC_CHK_AUTO_SEND));
 		BOOL bTranslated;
 		int interval = ::GetDlgItemInt(m_hWnd, IDC_EDIT_DELAY, &bTranslated, FALSE);
@@ -1500,7 +1438,7 @@ namespace Common {
 			p[1] = cap;
 			p[2] = ico;
 
-			// ÓÃSendMessageºÃ²»?
+			// ï¿½ï¿½SendMessageï¿½Ã²ï¿½?
 			PostMessage(kMessageBox, 0, LPARAM(p));
 			return 0;
 		}
@@ -1512,22 +1450,22 @@ namespace Common {
 		return 
 			R"(
 			<Window size="430,330">
-				<Font name = "Î¢ÈíÑÅºÚ" size = "16" default = "true" />
-				<Font name = "Î¢ÈíÑÅºÚ" size = "12"/>
+				<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "16" default = "true" />
+				<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "12"/>
 				<Vertical>
 					<Vertical inset = "5,5,5,5">
 						<Container minheight="180" minwidth="180">
-							<Group text="Ñ¡ÔñÀàÐÍ" />
+							<Group text="Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" />
 							<Vertical inset="5,20,5,5">
-								<Option name="text" text="´¿ÎÄ±¾ÎÄ¼þ"/>
-								<Static text="¼´ÆÕÍ¨µÄ´¿ASCIIÂëÎÄ¼þ, °´Ô­ÎÄÄÚÈÝÏÔÊ¾ÔÚÎÄ±¾¿òÖÐ!" font="1" inset="20,0,0,0"/>
-								<Option name="any" text="ÈÎÒâÊý¾ÝÎÄ¼þ"/>
-								<Static text="³£ËµµÄ¶þ½øÖÆÎÄ¼þ(Ö±½Ó´ò¿ªÓÐÂÒÂë), ½«ÒÔ16½øÖÆÐòÁÐ·½Ê½ÏÔÊ¾!" font="1" inset="20,0,0,0"/>
-								<Option name="hexseq" text="°üº¬16½øÖÆÐòÁÐµÄÎÄ±¾ÎÄ¼þ"/>
-								<Static text="Á½¸ö×Ö·ûÒ»×éµÄ16½øÖÆÐòÁÐÎÄ¼þ, ±ÈÈç: 12 AB FF" font="1" inset="20,0,0,0"/>
-								<Option name="cmd" text="ÃüÁîÁÐ±íÎÄ¼þ" style="disabled"/>
-								<Static text="°üº¬ÔÚÎÄ±¾ÎÄ¼þÖÐµÄÃüÁîÁÐ±íË÷Òý!" font="1" inset="20,0,0,0"/>
-								<Option name="nothing" text="È¡Ïû" />
+								<Option name="text" text="ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½"/>
+								<Static text="ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Ä´ï¿½ASCIIï¿½ï¿½ï¿½Ä¼ï¿½, ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½!" font="1" inset="20,0,0,0"/>
+								<Option name="any" text="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½"/>
+								<Static text="ï¿½ï¿½Ëµï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½(Ö±ï¿½Ó´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½), ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½Ê½ï¿½ï¿½Ê¾!" font="1" inset="20,0,0,0"/>
+								<Option name="hexseq" text="ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½"/>
+								<Static text="ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½Ò»ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½, ï¿½ï¿½ï¿½ï¿½: 12 AB FF" font="1" inset="20,0,0,0"/>
+								<Option name="cmd" text="ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ä¼ï¿½"/>
+								<Static text="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½!" font="1" inset="20,0,0,0"/>
+								<Option name="nothing" text="È¡ï¿½ï¿½" />
 							</Vertical>
 						</Container>
 					</Vertical>
@@ -1571,23 +1509,23 @@ namespace Common {
 			_bchar ?
 			R"feifei(
 			<Window size="260,110">
-				<Font name = "Î¢ÈíÑÅºÚ" size = "12" default = "true" />
-				<Font name = "Î¢ÈíÑÅºÚ" size = "12"/>
+				<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "12" default = "true" />
+				<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "12"/>
 				<Vertical>
 					<Horizontal>
 						<Container inset="5,5,5,5" height="110" width="130">
-							<Group text="»»ÐÐ·ûÀàÐÍ"/>
+							<Group text="ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½"/>
 							<Vertical inset="15,20,5,5">
-								<Option name="nlt_crlf" text="»Ø³µ»»ÐÐ(\r\n)" style="group"/>
-								<Option name = "nlt_cr" text = "»Ø³µ(\r)" />
-								<Option name = "nlt_lf" text = "»»ÐÐ(\n)" />
-								<Option name = "nlt_none" text = "ºöÂÔ" />
+								<Option name="nlt_crlf" text="ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½(\r\n)" style="group"/>
+								<Option name = "nlt_cr" text = "ï¿½Ø³ï¿½(\r)" />
+								<Option name = "nlt_lf" text = "ï¿½ï¿½ï¿½ï¿½(\n)" />
+								<Option name = "nlt_none" text = "ï¿½ï¿½ï¿½ï¿½" />
 							</Vertical>
 						</Container>
 						<Container inset="5,5,5,5" height="110" width="130">
-							<Group text="×ªÒå×Ö·û"/>
+							<Group text="×ªï¿½ï¿½ï¿½Ö·ï¿½"/>
 							<Vertical inset="15,20,5,5">
-								<Check name="escape_use" text="Ê¹ÓÃ×ªÒå×Ö·û" />
+								<Check name="escape_use" text="Ê¹ï¿½ï¿½×ªï¿½ï¿½ï¿½Ö·ï¿½" />
 							</Vertical>
 						</Container>
 					</Horizontal>
@@ -1597,14 +1535,14 @@ namespace Common {
 			:
 		R"feifei(
 <Window size="300,100">
-	<Font name = "Î¢ÈíÑÅºÚ" size = "12" default = "true" />
-	<Font name = "ºÚÌå" size = "20"/>
+	<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "12" default = "true" />
+	<Font name = "ï¿½ï¿½ï¿½ï¿½" size = "20"/>
 	<Vertical>
 		<Vertical>
 			<Control />
 			<Horizontal height="30">
 				<Control />
-				<Static text="µ±Ç°Ã»ÓÐ¿ÉÉèÖÃµÄÊôÐÔ" font="1" width="200"/>
+				<Static text="ï¿½ï¿½Ç°Ã»ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½" font="1" width="200"/>
 				<Control />
 			</Horizontal>
 			<Control />
@@ -1651,7 +1589,7 @@ namespace Common {
 		{
 		case WM_INITDIALOG:
 		{
-			::SetWindowText(m_hWnd, _bchar ? "ÉèÖÃ×Ö·û·¢ËÍ¸ñÊ½" : "ÉèÖÃÊ®Áù½øÖÆ·¢ËÍ¸ñÊ½");
+			::SetWindowText(m_hWnd, _bchar ? "ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Í¸ï¿½Ê½" : "ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½Í¸ï¿½Ê½");
 			CenterWindow();
 
 			if (_bchar){

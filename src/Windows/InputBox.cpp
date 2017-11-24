@@ -98,8 +98,8 @@ namespace Common{
 		return
 			R"feifei(
 <Window size="230,70">
-	<Font name = "Î¢ÈíÑÅºÚ" size = "12" default = "true" />
-	<Font name = "Î¢ÈíÑÅºÚ" size = "12"/>
+	<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "12" default = "true" />
+	<Font name = "Î¢ï¿½ï¿½ï¿½Åºï¿½" size = "12"/>
 	<Vertical>
 		<Horizontal inset="5,5,5,5">
 			<Vertical inset="5,5,5,5">
@@ -108,9 +108,9 @@ namespace Common{
 			</Vertical>
 			<Control width="10" />
 			<Vertical width="50" height="60">
-				<Button name="btnok" text="È·¶¨" />
+				<Button name="btnok" text="È·ï¿½ï¿½" />
 				<Control height="5"/>
-				<Button name="btncancel" text="È¡Ïû" />
+				<Button name="btncancel" text="È¡ï¿½ï¿½" />
 			</Vertical>
 		</Horizontal>
 	</Vertical>

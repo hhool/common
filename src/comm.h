@@ -1,17 +1,15 @@
 #pragma once
 
-#include "data.h"
-
 namespace Common {
-	// ·¢ËÍ, ½ÓÊÕ, Î´·¢ËÍÊý¾Ý¼ÆÊýÆ÷½Ó¿Ú
+	// ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
 	class i_data_counter
 	{
 	public:
-		// ¶Á, Ð´, Î´Ð´
+		// ï¿½ï¿½, Ð´, Î´Ð´
 		virtual void update_counter(long rd, long wr, long uw) = 0;
 	};
 
-	// Êý¾Ý¼ÆÊýÆ÷Àà
+	// ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	class c_data_counter
 	{
 	public:
@@ -60,70 +58,158 @@ namespace Common {
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-	// ÒÔÏÂ¶¨Òå ·¢ËÍÊý¾Ý·â×°Ïà¹ØÀàºÍ½á¹¹
+	// ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½Í½á¹¹
 
-	// Ä¬ÈÏ·¢ËÍ»º³åÇø´óÐ¡, ³¬¹ý´Ë´óÐ¡»á×Ô¶¯´ÓÄÚ´æ·ÖÅä
+	// Ä¬ï¿½Ï·ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡, ï¿½ï¿½ï¿½ï¿½ï¿½Ë´ï¿½Ð¡ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½
 	const int csdp_def_size = 1024;
 	enum csdp_type{
-		csdp_local,		// ±¾µØ°ü, ²»ÐèÒªÊÍ·Å
-		csdp_alloc,		// ·ÖÅä°ü, ÔÚÊý¾ÝÁ¿´óÓÚÄ¬ÈÏ»º³åÇø»òÄÚ²¿»º³åÇø²»¹»Ê±±»·ÖÅä
+		csdp_local,		// ï¿½ï¿½ï¿½Ø°ï¿½, ï¿½ï¿½ï¿½ï¿½Òªï¿½Í·ï¿½
+		csdp_alloc,		// ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		csdp_exit,		
 	};
 
 #pragma warning(push)
 #pragma warning(disable:4200)	// nonstandard extension used : zero-sized array in struct/union
 #pragma pack(push,1)
-	// »ù´¡·¢ËÍÊý¾Ý°ü, ²»°üº¬»º³åÇø
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	struct c_send_data_packet{
-		csdp_type		type;			// °üÀàÐÍ
-		list_s			_list_entry;	// ÓÃÓÚÌí¼Óµ½·¢ËÍ¶ÓÁÐ
-		bool			used;			// ÊÇ·ñÒÑ±»Ê¹ÓÃ
-		int				cb;				// Êý¾Ý°üÊý¾Ý³¤¶È
+		csdp_type		type;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		list_s			_list_entry;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½
+		bool			used;			// ï¿½Ç·ï¿½ï¿½Ñ±ï¿½Ê¹ï¿½ï¿½
+		int				cb;				// ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
 		unsigned char	data[0];
 	};
 
-	// À©Õ¹·¢ËÍÊý¾Ý°ü, ÓÐÒ»¸ö csdp_def_size ´óÐ¡µÄ»º³åÇø
+	// ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½, ï¿½ï¿½Ò»ï¿½ï¿½ csdp_def_size ï¿½ï¿½Ð¡ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½
 	struct c_send_data_packet_extended{
-		csdp_type		type;			// °üÀàÐÍ
-		list_s			_list_entry;	// ÓÃÓÚÌí¼Óµ½·¢ËÍ¶ÓÁÐ
-		bool			used;			// ÊÇ·ñÒÑ±»Ê¹ÓÃ
-		int				cb;				// Êý¾Ý°üÊý¾Ý³¤¶È
+		csdp_type		type;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		list_s			_list_entry;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½
+		bool			used;			// ï¿½Ç·ï¿½ï¿½Ñ±ï¿½Ê¹ï¿½ï¿½
+		int				cb;				// ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
 		unsigned char	data[csdp_def_size];
 	};
 #pragma pack(pop)
 #pragma warning(pop)
 
-	// ·¢ËÍÊý¾Ý°ü¹ÜÀíÆ÷, ÓÃÀ´½«·¢ËÍµÄÊý¾Ý°üÅÅ³É¶ÓÁÐ
-	// °ü¹ÜÀíÆ÷»á±»¶à¸öÏß³ÌÍ¬Ê±·ÃÎÊ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½Å³É¶ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á±»ï¿½ï¿½ï¿½ï¿½ß³ï¿½Í¬Ê±ï¿½ï¿½ï¿½ï¿½
 	class c_data_packet_manager
 	{
 	public:
 		c_data_packet_manager();
 		~c_data_packet_manager();
 		void					empty();
-		c_send_data_packet*		alloc(int size);						// Í¨¹ý´Ëº¯Êý»ñÈ¡Ò»¸ö¿ÉÒÔÈÝÄÉÖ¸¶¨´óÐ¡Êý¾ÝµÄ°ü
-		void					release(c_send_data_packet* psdp);		// ·µ»¹Ò»¸ö°ü
-		void					put(c_send_data_packet* psdp);			// Ïò·¢ËÍ¶ÓÁÐÎ²²åÈëÒ»¸öÐÂµÄÊý¾Ý°ü
-		void					put_front(c_send_data_packet* psdp);	// ²åÈëÒ»¸ö·¢ËÍÊý¾Ý°üµ½¶ÓÁÐÊ×, ÓÅÏÈ´¦Àí
-		c_send_data_packet*		get();									// °ü»ñÈ¡Õßµ÷ÓÃ´Ë½Ó¿ÚÈ¡µÃÊý¾Ý°ü, Ã»ÓÐ°üÊ±»á±»¹ÒÆð
+		c_send_data_packet*		alloc(int size);						// Í¨ï¿½ï¿½ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ÝµÄ°ï¿½
+		void					release(c_send_data_packet* psdp);		// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
+		void					put(c_send_data_packet* psdp);			// ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½Ý°ï¿½
+		void					put_front(c_send_data_packet* psdp);	// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½
+		c_send_data_packet*		get();									// ï¿½ï¿½ï¿½ï¿½È¡ï¿½ßµï¿½ï¿½Ã´Ë½Ó¿ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½, Ã»ï¿½Ð°ï¿½Ê±ï¿½á±»ï¿½ï¿½ï¿½ï¿½
 		c_send_data_packet*		query_head();
 		HANDLE					get_event() const { return _hEvent; }
 
 	private:
-		c_send_data_packet_extended	_data[100];	// Ô¤¶¨ÒåµÄ±¾µØ°üµÄ¸öÊý
-		c_critical_locker			_lock;		// ¶àÏß³ÌËø
-		HANDLE						_hEvent;	// ³¢ÊÔget()¿É²»ÄÜËø¶¨, ÒòÎªÆäËüµØ·½Òªput()!
-		list_s						_list;		// ·¢ËÍÊý¾Ý°ü¶ÓÁÐ
+		c_send_data_packet_extended	_data[100];	// Ô¤ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ø°ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½
+		c_critical_locker			_lock;		// ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½
+		HANDLE						_hEvent;	// ï¿½ï¿½ï¿½ï¿½get()ï¿½É²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½Òªput()!
+		list_s						_list;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½
 	};
 
-	// ´®¿ÚÊÂ¼þ¼àÌýÆ÷½Ó¿Ú
+	//////////////////////////////////////////////////////////////////////////
+	// ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ ...
+
+	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½
+	class t_com_item
+	{
+	public:
+		t_com_item(int i,const char* s){_s = s; _i=i;}
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½Ð£ï¿½ï¿½Î»
+		std::string get_s() const {return _s;}
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½: NOPARITY(ï¿½ï¿½)
+		int get_i() const {return _i;}
+
+	protected:
+		std::string _s;
+		int _i;
+	};
+
+	// Ë¢ï¿½Â´ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ê±ï¿½ï¿½Òªï¿½Ãµï¿½ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	typedef void t_list_callback(void* ud, const t_com_item* t);
+
+	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½Ê±ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½Í½Ó¿ï¿½
+	class i_com_list
+	{
+	public:
+		virtual void callback(t_list_callback* cb, void* ud) = 0;
+	};
+
+	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ÐµÄ´ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+	template<class T>
+	class t_com_list : public i_com_list
+	{
+	public:
+		void empty() {_list.clear();}
+		const T& add(T t) { _list.push_back(t); return _list[_list.size() - 1]; }
+		int size() {return _list.size();}
+		const T& operator[](int i) {return _list[i];}
+
+		// ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ï¿½Ð±ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		virtual i_com_list* update_list(){return this;}
+
+		virtual operator i_com_list*() {return static_cast<i_com_list*>(this);}
+		virtual void callback(t_list_callback* cb, void* ud)
+		{
+			for(int i=0,c=_list.size(); i<c; i++){
+				cb(ud, &_list[i]);
+			}
+		}
+
+	protected:
+		std::vector<T> _list;
+	};
+
+	// ï¿½ï¿½ï¿½Ú¶Ë¿ï¿½ï¿½Ð±ï¿½, ï¿½Ì³Ðµï¿½Ô­ï¿½ï¿½ï¿½ï¿½: ï¿½Ë¿ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Î½ï¿½ï¿½ "ï¿½Ñºï¿½ï¿½ï¿½"
+	// ï¿½ï¿½ï¿½ç³£ï¿½ï¿½ï¿½ï¿½: Prolific USB-to-Serial Comm Port
+	// ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+	class c_comport : public t_com_item
+	{
+	public:
+		c_comport(int id,const char* s)
+			: t_com_item(id, s)
+		{}
+
+		std::string get_id_and_name() const;
+	};
+
+	// ï¿½ï¿½ï¿½Ú¶Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½: Òªï¿½ï¿½ÏµÍ³È¡ï¿½ï¿½ï¿½Ð±ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´
+	class c_comport_list : public t_com_list<c_comport>
+	{
+	public:
+		virtual i_com_list* update_list();
+	};
+
+	// ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½â²¿ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ô±
+	class c_baudrate : public t_com_item
+	{
+	public:
+		c_baudrate(int id, const char* s, bool inner)
+			: t_com_item(id, s)
+			, _inner(inner)
+		{}
+
+		bool is_added_by_user() const { return !_inner; }
+	protected:
+		bool _inner;
+	};
+
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
 	class i_com_event_listener
 	{
 	public:
 		virtual void do_event(DWORD evt) = 0;
 	};
 
-	// do_eventµÄ¹ý³ÌÒ»¶¨²»Òª³¤Ê±¼ä²»·µ»Ø, ËùÒÔÐ´ÁË¸ö»ùÓÚÊÂ¼þµÄ¼àÌýÆ÷
+	// do_eventï¿½Ä¹ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ê±ï¿½ä²»ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Ë¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	class c_event_event_listener : public i_com_event_listener
 	{
 	public:
@@ -157,7 +243,7 @@ namespace Common {
 		HANDLE	hEvent;
 	};
 
-	// ´®¿ÚÊÂ¼þ¼àÌýÆ÷½Ó¿Ú ¹ÜÀíÆ÷
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	class c_com_event_listener
 	{
 		struct item{
@@ -200,16 +286,16 @@ namespace Common {
 		std::vector<item>	_listeners;
 	};
 
-	// ´®¿ÚÀà
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	class CComm
 	{
-	// UIÍ¨ÖªÕß
+	// UIÍ¨Öªï¿½ï¿½
 	public:
 		void set_notifier(i_notifier* noti) { _notifier = noti;	}
 	private:
 		i_notifier*	_notifier;
 
-	// ·¢ËÍÊý¾Ý°ü¹ÜÀí
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½
 	private:
 		c_send_data_packet*		get_packet()	{ return _send_data.get(); }
 	public:
@@ -232,7 +318,7 @@ namespace Common {
 			}
 			else{
 				if (!bsilent)
-					_notifier->msgbox(MB_ICONERROR, NULL, "´®¿ÚÎ´´ò¿ª!");
+					_notifier->msgbox(MB_ICONERROR, NULL, "ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½!");
 				release_packet(psdp);
 				return false;
 			}
@@ -243,26 +329,26 @@ namespace Common {
 	private:	
 		c_data_packet_manager	_send_data;
 
-	// ¼ÆÊýÆ÷
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public:
 		c_data_counter*			counter() { return &_data_counter; }
 	private:
 		c_data_counter			_data_counter;
 
-	// ÊÂ¼þ¼àÌýÆ÷
+	// ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private:
 		c_com_event_listener	_event_listener;
 
-	// Êý¾Ý½ÓÊÕÆ÷
+	// ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public:
-		void add_data_receiver(IDataReceiver* receiver);
-		void remove_data_receiver(IDataReceiver* receiver);
+		void add_data_receiver(i_data_receiver* receiver);
+		void remove_data_receiver(i_data_receiver* receiver);
 		void call_data_receivers(const unsigned char* ba, int cb);
 	private:
-		c_ptr_array<IDataReceiver>	_data_receivers;
+		c_ptr_array<i_data_receiver>	_data_receivers;
 		c_critical_locker				_data_receiver_lock;
 
-	// ÄÚ²¿¹¤×÷Ïß³Ì
+	// ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
 	private:
 		bool _begin_threads();
 		bool _end_threads();
@@ -311,13 +397,13 @@ namespace Common {
 	private:
 
 
-	// ´®¿ÚÅäÖÃ½á¹¹Ìå
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã½á¹¹ï¿½ï¿½
 	private:
 		//COMMPROP			_commprop;
 		//COMMCONFIG			_commconfig;
 		COMMTIMEOUTS		_timeouts;
 		DCB					_dcb;
-	// ´®¿ÚÉèÖÃ(¹©Íâ²¿µ÷ÓÃ)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½)
 	public:
 		struct s_setting_comm{
 			DWORD	baud_rate;
@@ -331,7 +417,21 @@ namespace Common {
         }
 
 
-	// Íâ²¿Ïà¹Ø²Ù×÷½Ó¿Ú
+	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+	public:
+		c_comport_list*			comports()	{ return &_comport_list; }
+		t_com_list<c_baudrate>*	baudrates()	{ return &_baudrate_list; }
+		t_com_list<t_com_item>*	parities()	{ return &_parity_list; }
+		t_com_list<t_com_item>*	stopbits()	{ return &_stopbit_list; }
+		t_com_list<t_com_item>*	databits()	{ return &_databit_list; }
+	private:
+		c_comport_list			_comport_list;
+		t_com_list<c_baudrate>	_baudrate_list;
+		t_com_list<t_com_item>	_parity_list;
+		t_com_list<t_com_item>	_stopbit_list;
+		t_com_list<t_com_item>	_databit_list;
+
+	// ï¿½â²¿ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
 	private:
 		HANDLE		_hComPort;
 	public:
@@ -349,3 +449,12 @@ namespace Common {
 		~CComm();
 	};
 }
+
+// ×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½Ä£ï¿½Î´ï¿½ï¿½ï¿½Ã¼ï¿½É¾ï¿½ï¿½
+#define COMMON_MAX_LOAD_SIZE			((unsigned long)1<<20)
+#define COMMON_LINE_CCH_SEND			16
+#define COMMON_LINE_CCH_RECV			16
+#define COMMON_SEND_BUF_SIZE			COMMON_MAX_LOAD_SIZE
+#define COMMON_RECV_BUF_SIZE			0 // un-limited //(((unsigned long)1<<20)*10)
+#define COMMON_INTERNAL_RECV_BUF_SIZE	((unsigned long)1<<20)
+#define COMMON_READ_BUFFER_SIZE			((unsigned long)1<<20)

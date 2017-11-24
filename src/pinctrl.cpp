@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "../res/resource.h"
 
-#include "pinctrl.h"
-
 static int axisx = -1, axisy = -1;
 
 static int dtr[3] = {DTR_CONTROL_DISABLE, DTR_CONTROL_ENABLE, DTR_CONTROL_HANDSHAKE};
@@ -34,21 +32,21 @@ INT_PTR __stdcall DlgProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
             if(HIWORD(wp) != BN_CLICKED)
                 return 0;
             if(!_get_handle()) {
-                MessageBox(hwnd, "Ã»ÓÐ´®¿ÚÉè±¸±»´ò¿ª!", "", MB_ICONINFORMATION);
+                MessageBox(hwnd, "Ã»ï¿½Ð´ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½!", COMMON_NAME, MB_ICONINFORMATION);
                 return 0;
             }
 
             COMMCONFIG _config;
             DWORD size = sizeof(_config);
             if(!GetCommConfig(_get_handle(), &_config, &size)) {
-                MessageBox(hwnd, "»ñÈ¡´®¿ÚÅäÖÃÊ±´íÎó", nullptr, MB_ICONERROR);
+                MessageBox(hwnd, "ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½", nullptr, MB_ICONERROR);
                 EndDialog(hwnd, 0);
                 return 0;
             }
             _config.dcb.fDtrControl = dtr[ComboBox_GetCurSel(hDtr)];
             _config.dcb.fRtsControl = rts[ComboBox_GetCurSel(hRts)];
             if(!SetCommConfig(_get_handle(), &_config, sizeof(_config))) {
-                MessageBox(hwnd, "ÉèÖÃDTR/RTSÊ±´íÎó!", nullptr, MB_ICONERROR);
+                MessageBox(hwnd, "ï¿½ï¿½ï¿½ï¿½DTR/RTSÊ±ï¿½ï¿½ï¿½ï¿½!", nullptr, MB_ICONERROR);
                 return 0;
             }
             break;
@@ -59,7 +57,7 @@ INT_PTR __stdcall DlgProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
     case WM_INITDIALOG:
     {
         if(!_get_handle()) {
-            ::MessageBox(GetActiveWindow(), "ÇëÏÈ´ò¿ªÒ»¸ö´®¿ÚÉè±¸!", "", MB_ICONEXCLAMATION);
+            ::MessageBox(GetActiveWindow(), "ï¿½ï¿½ï¿½È´ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸!", COMMON_NAME, MB_ICONEXCLAMATION);
             EndDialog(hwnd, 0);
             return 0;
         }
@@ -67,7 +65,7 @@ INT_PTR __stdcall DlgProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
         COMMCONFIG _config;
         DWORD size = sizeof(_config);
         if(!GetCommConfig(_get_handle(), &_config, &size)) {
-            MessageBox(GetActiveWindow(), "»ñÈ¡´®¿ÚÅäÖÃÊ±´íÎó", nullptr, MB_ICONERROR);
+            MessageBox(GetActiveWindow(), "ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½", nullptr, MB_ICONERROR);
             EndDialog(hwnd, 0);
             return 0;
         }

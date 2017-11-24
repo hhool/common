@@ -10,7 +10,6 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <new>
 #include <memory>
 
 #include <cassert>
@@ -29,11 +28,14 @@
 #include <WinInet.h>
 
 #include "Sdklayout/SdkLayout.h"
+#include "tinyxml2/tinyxml2.h"
+
 
 #include "debug.h"
 #include "utils.h"
 #include "struct/list.h"
 #include "struct/Config.h"
+#include "struct/memory.h"
 #include "struct/Thunk.h"
 
 #include "Windows/Timer.h"
@@ -45,6 +47,13 @@
 #include "Windows/DialogBuilder.h"
 #include "Windows/FileOperation.h"
 #include "Windows/InputBox.h"
+
+#include "DataProcessor.h"
+#include "asctable.h"
+#include "comm.h"
+#include "about.h"
+#include "SendCmd.h"
+#include "msg.h"
 
 extern Common::CComConfig* comcfg;
 

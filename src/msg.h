@@ -1,10 +1,7 @@
 #pragma once
 
-#include "data.h"
-#include "comm.h"
-
 namespace Common {
-	// ·¢ËÍÎÄ¼ş¸ñÊ½Ñ¡Ôñ¶Ô»°¿ò
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê½Ñ¡ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
 	class c_send_file_format_dlg : public c_dialog_builder
 	{
 	public:
@@ -19,7 +16,7 @@ namespace Common {
 		SdkLayout::CTinyString _selected;
 	};
 
-	// ·¢ËÍ¸ñÊ½¿ØÖÆ¶Ô»°¿ò
+	// ï¿½ï¿½ï¿½Í¸ï¿½Ê½ï¿½ï¿½ï¿½Æ¶Ô»ï¿½ï¿½ï¿½
 	class c_send_data_format_dlg : public c_dialog_builder
 	{
 	public:
@@ -64,19 +61,19 @@ namespace Common {
 			kAutoSend,
 		};
 
-		// ·¢ËÍ·½Ê½Ö»ÓĞÁ½ÖÖ: 16½øÖÆ + ÎÄ±¾×Ö·û, ÓÉ_b_send_data_frmat_hex¾ö¶¨; µ÷ÓÃº¯ÊıÀ´·½±ã¾ö¶¨
-		// ÕâÀïÊÇÆäËüÑ¡Ïî, ±ÈÈç: »Ø³µÀàĞÍ, ÊÇ·ñ´¦Àí¿ØÖÆ×Ö·ûµÈ
+		// ï¿½ï¿½ï¿½Í·ï¿½Ê½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: 16ï¿½ï¿½ï¿½ï¿½ + ï¿½Ä±ï¿½ï¿½Ö·ï¿½, ï¿½ï¿½_b_send_data_frmat_hexï¿½ï¿½ï¿½ï¿½; ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½: ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 		enum SendDataFormatHex{
 			sdfh_kNone		= 0x00000000,
 		};
 		enum SendDataFormatChar{
 			sdfc_kNone		= 0x00000000,
-			// 01Á½Î»¾ö¶¨»»ĞĞ·ûÀàĞÍ
+			// 01ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ·ï¿½ï¿½ï¿½ï¿½ï¿½
 			sdfc_kNoCrlf	= 0x00000000,
 			sdfc_kCr		= 0x00000001,
 			sdfc_kLf		= 0x00000002,
 			sdfc_kCrlf		= 0x00000003,
-			// µÚ2Î» ¾ö¶¨ÊÇ·ñÊ¹ÓÃ×ªÒå×Ö·û
+			// ï¿½ï¿½2Î» ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½ï¿½×ªï¿½ï¿½ï¿½Ö·ï¿½
 			sdfc_kUseEscape = 0x00000004,
 		};
 
@@ -93,7 +90,7 @@ namespace Common {
 		// IAcceleratorTranslator interface
 		virtual bool TranslateAccelerator(MSG* pmsg);
 
-		// ´æÔÚ¶àÏß³Ì²Ù×÷, ËùÒÔÖØĞ´
+		// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ß³Ì²ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´
 		virtual int msgbox(UINT msgicon, char* caption, char* fmt, ...);
 
 	protected:
@@ -119,124 +116,6 @@ namespace Common {
 		LRESULT on_command_ctrl(HWND hwnd, int id, int code);
 
 	private:
-		// Ò»Ğ©Ïà¹ØÅäÖÃ
-		void init_from_config_file();
-		void save_to_config_file();
-
-		void switch_rich_edit_fullscreen(bool full);
-		void switch_window_top_most(bool manual=false, bool topmost = true);
-		void switch_simple_ui(bool manual=false, bool bsimple=false);
-		void switch_send_data_format(bool manual=false, bool bhex=false, DWORD fmthex=0,DWORD fmtchar=0);
-		void switch_recv_data_format(bool manual = false, bool bhex = false, DWORD fmthex = 0, DWORD fmtchar = 0);
-		bool is_send_data_format_hex() { return _b_send_data_format_hex; }
-		bool is_send_data_format_char(){ return !is_send_data_format_hex(); }
-		bool is_recv_data_format_hex() { return _b_recv_data_format_hex; }
-		bool is_recv_data_format_char(){ return !is_recv_data_format_hex(); }
-		void switch_auto_send(bool manual=false, bool bauto=false, int interval=-1);
-		
-
-	public:
-		Window::c_edit*			editor_send()		{return &_send_edit;}
-		Window::c_edit*			editor_recv_hex()	{return &_recv_hex_edit;}
-		Window::c_rich_edit*	editor_recv_char()	{return &_recv_char_edit;}
-
-	//////////////////////////////////////////////////////////////////////////
-	// ÒÔÏÂ¹ÜÀí´®¿ÚÏà¹ØµÄÒ»Ğ©¶ÔÏó, Èç: ²¨ÌØÂÊÁĞ±í ...
-
-	// ´®¿Ú¶ÔÏó
-	class t_com_item
-	{
-	public:
-		t_com_item(int i,const char* s){_s = s; _i=i;}
-
-		// ·µ»Ø×Ö·û´®²¿·Ö: ±ÈÈç: ÎŞĞ£ÑéÎ»
-		std::string get_s() const {return _s;}
-		// ·µ»ØÕûÊı²¿·Ö : ±ÈÈç: NOPARITY(ºê)
-		int get_i() const {return _i;}
-
-	protected:
-		std::string _s;
-		int _i;
-	};
-
-	// Ë¢ĞÂ´®¿Ú¶ÔÏóÁĞ±íÊ±ĞèÒªÓÃµ½µÄ»Øµ÷º¯ÊıÀàĞÍ
-	typedef void t_list_callback(void* ud, const t_com_item* t);
-
-	// ´®¿Ú¶ÔÏóË¢ĞÂÊ±µÄ»Øµ÷ÀàĞÍ½Ó¿Ú
-	class i_com_list
-	{
-	public:
-		virtual void callback(t_list_callback* cb, void* ud) = 0;
-	};
-
-	// ´®¿Ú¶ÔÏóÈİÆ÷: ±ÈÈç ±£´æÏµÍ³ËùÓĞµÄ´®¿ÚÁĞ±í
-	template<class T>
-	class t_com_list : public i_com_list
-	{
-	public:
-		void empty() {_list.clear();}
-		const T& add(T t) { _list.push_back(t); return _list[_list.size() - 1]; }
-		int size() {return _list.size();}
-		const T& operator[](int i) {return _list[i];}
-
-		// ¸üĞÂ¶ÔÏóÁĞ±í, ±ÈÈç¸üĞÂÏµÍ³´®¿ÚÁĞ±í
-		virtual i_com_list* update_list(){return this;}
-
-		virtual operator i_com_list*() {return static_cast<i_com_list*>(this);}
-		virtual void callback(t_list_callback* cb, void* ud)
-		{
-			for(int i=0,c=_list.size(); i<c; i++){
-				cb(ud, &_list[i]);
-			}
-		}
-
-	protected:
-		std::vector<T> _list;
-	};
-
-	// ´®¿Ú¶Ë¿ÚÁĞ±í, ¼Ì³ĞµÄÔ­ÒòÊÇ: ¶Ë¿ÚÓĞÒ»¸öËùÎ½µÄ "ÓÑºÃÃû"
-	// ±ÈÈç³£¼ûµÄ: Prolific USB-to-Serial Comm Port
-	// ¸üĞÂµ½´®¿ÚÁĞ±í¿Ø¼şÖĞÊ±ĞèÒªËıÃÇÁ½ÕßÒ»Æğ
-	class c_comport : public t_com_item
-	{
-	public:
-		c_comport(int id,const char* s)
-			: t_com_item(id, s)
-		{}
-
-		std::string get_id_and_name() const;
-	};
-
-	// ´®¿Ú¶Ë¿ÚÈİÆ÷: ÒªÏòÏµÍ³È¡µÃÁĞ±í, ËùÒÔÖØĞ´
-	class c_comport_list : public t_com_list<c_comport>
-	{
-	public:
-		virtual i_com_list* update_list();
-	};
-
-	// ÓÉÓÚ²¨ÌØÂÊ¿ÉÓÉÍâ²¿ÊÖ¶¯Ìí¼Ó, ËùÒÔ¶à¼ÓÒ»¸ö³ÉÔ±
-	class c_baudrate : public t_com_item
-	{
-	public:
-		c_baudrate(int id, const char* s, bool inner)
-			: t_com_item(id, s)
-			, _inner(inner)
-		{}
-
-		bool is_added_by_user() const { return !_inner; }
-	protected:
-		bool _inner;
-	};
-
-	// ´®¿Ú¶ÔÏóÁĞ±í
-	private:
-		c_comport_list			_comport_list;
-		t_com_list<c_baudrate>	_baudrate_list;
-		t_com_list<t_com_item>	_parity_list;
-		t_com_list<t_com_item>	_stopbit_list;
-		t_com_list<t_com_item>	_databit_list;
-
-	private:
 		struct list_callback_ud{
 			enum e_type{
 				cp,br,pa,sb,db
@@ -260,6 +139,28 @@ namespace Common {
 		bool _com_load_file_prompt_size(SdkLayout::CTinyString& selected, c_binary_file& bf);
 		bool com_do_send(bool callfromautosend);
 
+		// Ò»Ğ©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		void init_from_config_file();
+		void save_to_config_file();
+
+		void switch_rich_edit_fullscreen(bool full);
+		void switch_window_top_most(bool manual=false, bool topmost = true);
+		void switch_simple_ui(bool manual=false, bool bsimple=false);
+		void switch_send_data_format(bool manual=false, bool bhex=false, DWORD fmthex=0,DWORD fmtchar=0);
+		void switch_recv_data_format(bool manual = false, bool bhex = false, DWORD fmthex = 0, DWORD fmtchar = 0);
+		bool is_send_data_format_hex() { return _b_send_data_format_hex; }
+		bool is_send_data_format_char(){ return !is_send_data_format_hex(); }
+		bool is_recv_data_format_hex() { return _b_recv_data_format_hex; }
+		bool is_recv_data_format_char(){ return !is_recv_data_format_hex(); }
+		void switch_auto_send(bool manual=false, bool bauto=false, int interval=-1);
+		
+
+	public:
+		Window::c_edit*			editor_send()		{return &_send_edit;}
+		Window::c_edit*			editor_recv_hex()	{return &_recv_hex_edit;}
+		Window::c_rich_edit*	editor_recv_char()	{return &_recv_char_edit;}
+
+	private:
 		HWND _hCP, _hBR, _hPA, _hSB, _hDB;
 		HWND _hStatus, _hOpen;
 		Window::c_rich_edit	_recv_char_edit;
@@ -273,23 +174,23 @@ namespace Common {
 		c_timer				_timer;
 		c_timer				_auto_send_timer;
 
-		char				_send_buffer[10240];	//ÓÃÓÚÄ¬ÈÏÈ¡·¢ËÍÊı¾İ¿òµÄÊı¾İ
-		Window::c_edit*		_recv_cur_edit;			// µ±Ç°½ÓÊÕÊı¾İ¸ñÊ½ÎÄ±¾¿Ø¼ş
+		char				_send_buffer[10240];	//ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		Window::c_edit*		_recv_cur_edit;			// ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¸ï¿½Ê½ï¿½Ä±ï¿½ï¿½Ø¼ï¿½
 		bool				_b_send_data_format_hex;
 		bool				_b_recv_data_format_hex;
 		DWORD				_send_data_format_hex;
 		DWORD				_send_data_format_char;
 
-		HexReceiver		_hex_data_receiver;
-		TextReceiver	_text_data_receiver;
-		FileReceiver	_file_data_receiver;
+		c_hex_data_receiver		_hex_data_receiver;
+		c_text_data_receiver	_text_data_receiver;
+		c_file_data_receiver	_file_data_receiver;
 
 		AThunk				_thunk_rich_edit;
 		WNDPROC				_thunk_rich_edit_old_proc;
 
 		c_observable		_window_close_handler;
 
-        // ÊÇ·ñĞèÒªÔÚ¹Ø±ÕºóË¢ĞÂ´®¿ÚÁĞ±í£¬ÒòÎª´®¿Ú´ò¿ªÊ±ÎŞ·¨ĞŞ¸ÄÁĞ±í£¬ËùÒÔ~
+        // ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½Ú¹Ø±Õºï¿½Ë¢ï¿½Â´ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ú´ï¿½Ê±ï¿½Ş·ï¿½ï¿½Ş¸ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~
         bool                _b_refresh_comport;
 	};
 }

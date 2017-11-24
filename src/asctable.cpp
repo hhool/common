@@ -1,22 +1,22 @@
 #include "StdAfx.h"
 
-#include "asctable.h"
+static char* __THIS_FILE__ = __FILE__;
 
 /**********************************************************
-ÎÄ¼þÃû³Æ:asctable.c
-ÎÄ¼þÂ·¾¶:../common/asctable.c
-´´½¨Ê±¼ä:2013-2-14,22:03:48,½ñÌìÇéÈË½Ú
-ÎÄ¼þ×÷Õß:Å®º¢²»¿Þ
-ÎÄ¼þËµÃ÷:ÏÔÊ¾³ö0~127µÄASCIIÂë
+ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½:asctable.c
+ï¿½Ä¼ï¿½Â·ï¿½ï¿½:../common/asctable.c
+ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½:2013-2-14,22:03:48,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë½ï¿½
+ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½:Å®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ï¿½Ä¼ï¿½Ëµï¿½ï¿½:ï¿½ï¿½Ê¾ï¿½ï¿½0~127ï¿½ï¿½ASCIIï¿½ï¿½
 **********************************************************/
 
-#define ASC_FONT_HEIGHT		14					//×ÖÌå¸ß¶È
-#define ASC_TEXT_ASCENT		5					//ÐÐ¾à
-#define ASC_LINES_CLIENT	15					//Ã¿ÆÁÄ»ÏÔÊ¾µÄÐÐÊý
-#define ASC_CLIENT_WIDTH	380					//´°¿Ú¿Í»§Çø¿í¶È
-#define ASC_MOUSE_DELTA		ASC_LINES_CLIENT	//Êó±ê¹öÂÖ¹öÒ»´Î²½½øÖµ
-#define ASC_TOTAL_ENTRY		256					//0~127,ASCIIÂë×ÜÊý,¸ù¾ÝÊµ¼ÊÇé¿öÐÞ¸Ä
-#define ASC_FACENAME		"Consolas"			//×ÖÌåÃû
+#define ASC_FONT_HEIGHT		14					//ï¿½ï¿½ï¿½ï¿½ß¶ï¿½
+#define ASC_TEXT_ASCENT		5					//ï¿½Ð¾ï¿½
+#define ASC_LINES_CLIENT	15					//Ã¿ï¿½ï¿½Ä»ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define ASC_CLIENT_WIDTH	380					//ï¿½ï¿½ï¿½Ú¿Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define ASC_MOUSE_DELTA		ASC_LINES_CLIENT	//ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½Ò»ï¿½Î²ï¿½ï¿½ï¿½Öµ
+#define ASC_TOTAL_ENTRY		256					//0~127,ASCIIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
+#define ASC_FACENAME		"Consolas"			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 static struct{
 	unsigned char index;
@@ -76,11 +76,11 @@ namespace Common{
 			return TRUE;
 
 		case WM_LBUTTONDOWN:
-			_fgcolor = (++_fgcolor) % _countof(cr_table);
+			_fgcolor = (++_fgcolor) % __ARRAY_SIZE(cr_table);
 			::InvalidateRect(m_hWnd, NULL, TRUE);
 			return 0;
 		case WM_RBUTTONDOWN:
-			_bgcolor = (++_bgcolor) % _countof(cr_table);
+			_bgcolor = (++_bgcolor) % __ARRAY_SIZE(cr_table);
 			::InvalidateRect(m_hWnd, NULL, TRUE);
 			return 0;
 		case WM_PAINT:
@@ -114,7 +114,7 @@ namespace Common{
 				SetBkMode(hdc,TRANSPARENT);
 				SetTextColor(hdc,cr_table[_fgcolor]);
 
-				len=sprintf(str,"%4s %4s  %4s  %s","Ê®","°Ë","Ê®Áù","ÃèÊö");
+				len=sprintf(str,"%4s %4s  %4s  %s","Ê®","ï¿½ï¿½","Ê®ï¿½ï¿½","ï¿½ï¿½ï¿½ï¿½");
 				TextOut(hdc,x,y,str,len);
 				y += ASC_FONT_HEIGHT+ASC_TEXT_ASCENT;
 				len=sprintf(str,"----------------------------------------");
@@ -203,7 +203,7 @@ namespace Common{
 			}
 		case WM_INITDIALOG:
 			{
-				::SetWindowText(m_hWnd, "ASCIIÂë±í: ×ó¼ü: Ç°¾°É«, ÓÒ¼ü: ±³¾°É«");
+				::SetWindowText(m_hWnd, "ASCIIï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½: Ç°ï¿½ï¿½É«, ï¿½Ò¼ï¿½: ï¿½ï¿½ï¿½ï¿½É«");
 				SCROLLINFO si;
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_ALL;
@@ -219,7 +219,7 @@ namespace Common{
 					GetWindowRect(m_hWnd,&rcW);
 					GetClientRect(m_hWnd,&rcC);
 					borderheight = (rcW.bottom-rcW.top)-(rcC.bottom-rcC.top);
-					MoveWindow(m_hWnd,axisx,axisy,ASC_CLIENT_WIDTH+16, // "²ÂµÄ"
+					MoveWindow(m_hWnd,axisx,axisy,ASC_CLIENT_WIDTH+16, // "ï¿½Âµï¿½"
 						borderheight+(ASC_LINES_CLIENT+2)*(ASC_FONT_HEIGHT+ASC_TEXT_ASCENT),TRUE);
 					break;	ZeroMemory(&si,sizeof(si));
 			

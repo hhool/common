@@ -80,7 +80,7 @@ namespace SdkLayout
 		for( int it = 0; it < m_items.GetSize(); it++ ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 			if( !pControl->IsVisible() ) continue;
-			pControl->SetPos(rct); // ËùÓÐ·Çfloat×Ó¿Ø¼þ·Å´óµ½Õû¸ö¿Í»§Çø
+			pControl->SetPos(rct); // ï¿½ï¿½ï¿½Ð·ï¿½floatï¿½Ó¿Ø¼ï¿½ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
 		}
 	}
 

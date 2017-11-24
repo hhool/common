@@ -1,14 +1,75 @@
 #include "StdAfx.h"
 
-#include "comm.h"
-#include "data.h"
+static char* __THIS_FILE__ = __FILE__;
+
 
 namespace Common{
+	//////////////////////////////////////////////////////////////////////////
+	std::string c_comport::get_id_and_name() const
+	{
+		char idstr[17] = {0};
+		_snprintf(idstr, sizeof(idstr), "COM%-13d", _i);
+		std::stringstream ss;
+		ss << idstr << "\t\t" << _s;
+		return std::string(ss.str());
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	i_com_list* c_comport_list::update_list()
+	{
+		HDEVINFO hDevInfo = INVALID_HANDLE_VALUE;
+		SP_DEVINFO_DATA spdata = {0};
+		GUID guid = GUID_DEVINTERFACE_COMPORT;
+
+		empty();
+
+		hDevInfo = SetupDiGetClassDevs(&guid, 0, 0, DIGCF_PRESENT|DIGCF_DEVICEINTERFACE);
+		if(hDevInfo == INVALID_HANDLE_VALUE){
+			return this;
+		}
+
+		spdata.cbSize = sizeof(spdata);
+		for(int i=0; SetupDiEnumDeviceInfo(hDevInfo, i, &spdata); i++){
+			char buff[1024] = {0};
+			if(SetupDiGetDeviceRegistryProperty(hDevInfo, &spdata, SPDRP_FRIENDLYNAME, NULL, 
+				PBYTE(buff), _countof(buff), NULL))
+			{
+				// Prolific com port (COMxx)
+				char* p = strstr(buff, "(COM");
+				if(p){
+					int id = atoi(p + 4);
+					if(p != buff) *(p-1) = '\0';
+					add(c_comport(id, buff));
+				}
+			}
+		}
+		SetupDiDestroyDeviceInfoList(hDevInfo);
+
+		return this;
+	}
+
 	CComm::CComm()
 		: _notifier(NULL)
 		, _hComPort(NULL)
 	{
 		_begin_threads();
+		static char* aBaudRate[]={"110","300","600","1200","2400","4800","9600","14400","19200","38400","57600","115200","128000","256000", NULL};
+		static DWORD iBaudRate[]={CBR_110,CBR_300,CBR_600,CBR_1200,CBR_2400,CBR_4800,CBR_9600,CBR_14400,CBR_19200,CBR_38400,CBR_57600,CBR_115200,CBR_128000,CBR_256000};
+		static char* aParity[] = {"ï¿½ï¿½","ï¿½ï¿½Ð£ï¿½ï¿½","Å¼Ð£ï¿½ï¿½", "ï¿½ï¿½ï¿½", "ï¿½Õ¸ï¿½", NULL};
+		static BYTE iParity[] = { NOPARITY, ODDPARITY,EVENPARITY, MARKPARITY, SPACEPARITY };
+		static char* aStopBit[] = {"1Î»", "1.5Î»","2Î»", NULL};
+		static BYTE iStopBit[] = {ONESTOPBIT,ONE5STOPBITS,TWOSTOPBITS};
+		static char* aDataSize[] = {"8Î»","7Î»","6Î»","5Î»",NULL};
+		static BYTE iDataSize[] = {8,7,6,5};
+
+		for(int i=0; aBaudRate[i]; i++)
+			_baudrate_list.add(c_baudrate(iBaudRate[i],aBaudRate[i], true));
+		for(int i=0; aParity[i]; i++)
+			_parity_list.add(t_com_item(iParity[i],aParity[i]));
+		for(int i=0; aStopBit[i]; i++)
+			_stopbit_list.add(t_com_item(iStopBit[i], aStopBit[i]));
+		for(int i=0; aDataSize[i]; i++)
+			_databit_list.add(t_com_item(iDataSize[i], aDataSize[i]));
 
 		_timeouts.ReadIntervalTimeout = MAXDWORD;
 		_timeouts.ReadTotalTimeoutMultiplier = 0;
@@ -82,13 +143,13 @@ namespace Common{
 		::SetEvent(_thread_write.hEventToExit);
 		::SetEvent(_thread_event.hEventToExit);
 		
-		// ÔÚ¶ÁÐ´Ïß³ÌÍË³öÖ®Ç°, Á½¸öend¾ùÎª¼¤·¢×´Ì¬
-		// ±ØÐëµÈµ½Á½¸öÏß³Ì¾ùÍË³ö¹¤×÷×´Ì¬²ÅÄÜÓÐÆäËü²Ù×÷
-		debug_out(("µÈ´ý [¶ÁÏß³Ì] ½áÊø...\n"));
+		// ï¿½Ú¶ï¿½Ð´ï¿½ß³ï¿½ï¿½Ë³ï¿½Ö®Ç°, ï¿½ï¿½ï¿½ï¿½endï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½×´Ì¬
+		// ï¿½ï¿½ï¿½ï¿½Èµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì¾ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		debug_out(("ï¿½È´ï¿½ [ï¿½ï¿½ï¿½ß³ï¿½] ï¿½ï¿½ï¿½ï¿½...\n"));
 		while (::WaitForSingleObject(_thread_read.hEventToExit, 0) == WAIT_OBJECT_0);
-		debug_out(("µÈ´ý [Ð´Ïß³Ì] ½áÊø...\n"));
+		debug_out(("ï¿½È´ï¿½ [Ð´ï¿½ß³ï¿½] ï¿½ï¿½ï¿½ï¿½...\n"));
 		while (::WaitForSingleObject(_thread_write.hEventToExit, 0) == WAIT_OBJECT_0);
-		debug_out(("µÈ´ý [ÊÂ¼þÏß³Ì] ½áÊø...\n"));
+		debug_out(("ï¿½È´ï¿½ [ï¿½Â¼ï¿½ï¿½ß³ï¿½] ï¿½ï¿½ï¿½ï¿½...\n"));
 		while (::WaitForSingleObject(_thread_event.hEventToExit, 0) == WAIT_OBJECT_0);
 
 		return true;
@@ -122,13 +183,13 @@ namespace Common{
 		DWORD dw,dw2;
 
 	_wait_for_work:
-		debug_out(("[ÊÂ¼þÏß³Ì] ¾ÍÐ÷!\n"));
+		debug_out(("[ï¿½Â¼ï¿½ï¿½ß³ï¿½] ï¿½ï¿½ï¿½ï¿½!\n"));
 		dw = ::WaitForSingleObject(_thread_event.hEventToBegin, INFINITE);
 		SMART_ASSERT(dw == WAIT_OBJECT_0)(dw).Fatal();
 
-		debug_out(("[ÊÂ¼þÏß³Ì] ¿ªÊ¼¹¤×÷...\n"));
+		debug_out(("[ï¿½Â¼ï¿½ï¿½ß³ï¿½] ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½...\n"));
 		if (!is_opened()){
-			debug_out(("[ÊÂ¼þÏß³Ì] Ã»ÓÐ¹¤×÷, ÍË³öÖÐ...\n"));
+			debug_out(("[ï¿½Â¼ï¿½ï¿½ß³ï¿½] Ã»ï¿½Ð¹ï¿½ï¿½ï¿½, ï¿½Ë³ï¿½ï¿½ï¿½...\n"));
 			::SetEvent(_thread_event.hEventToExit);
 			return 0;
 		}
@@ -152,17 +213,17 @@ namespace Common{
 				switch (::WaitForMultipleObjects(_countof(handles), handles, FALSE, INFINITE))
 				{
 				case WAIT_FAILED:
-					_notifier->msgerr("[ÊÂ¼þÏß³Ì::WaitÊ§°Ü]");
+					_notifier->msgerr("[ï¿½Â¼ï¿½ï¿½ß³ï¿½::WaitÊ§ï¿½ï¿½]");
 					goto _restart;
 					break;
 				case WAIT_OBJECT_0 + 0:
-					debug_out(("[ÊÂ¼þÏß³Ì] ÊÕµ½ÍË³öÊÂ¼þ!\n"));
+					debug_out(("[ï¿½Â¼ï¿½ï¿½ß³ï¿½] ï¿½Õµï¿½ï¿½Ë³ï¿½ï¿½Â¼ï¿½!\n"));
 					goto _restart;
 					break;
 				case WAIT_OBJECT_0 + 1:
 					bRet = ::GetOverlappedResult(_hComPort, &o, &dw2, FALSE);
 					if (bRet == FALSE){
-						_notifier->msgerr("[ÊÂ¼þÏß³Ì::WaitÊ§°Ü]");
+						_notifier->msgerr("[ï¿½Â¼ï¿½ï¿½ß³ï¿½::WaitÊ§ï¿½ï¿½]");
 						goto _restart;
 					}
 					else{
@@ -173,7 +234,7 @@ namespace Common{
 				}
 			}
 			else{
-				_notifier->msgerr("[ÊÂ¼þÏß³Ì]::GetLastError() != ERROR_IO_PENDING\n\n");
+				_notifier->msgerr("[ï¿½Â¼ï¿½ï¿½ß³ï¿½]::GetLastError() != ERROR_IO_PENDING\n\n");
 			}
 		}
 
@@ -196,13 +257,13 @@ namespace Common{
 		c_event_event_listener listener;
 
 	_wait_for_work:
-		debug_out(("[Ð´Ïß³Ì] ¾ÍÐ÷\n"));
+		debug_out(("[Ð´ï¿½ß³ï¿½] ï¿½ï¿½ï¿½ï¿½\n"));
 		dw = ::WaitForSingleObject(_thread_write.hEventToBegin, INFINITE);
 		SMART_ASSERT(dw == WAIT_OBJECT_0)(dw).Fatal();
 		
-		debug_out(("[Ð´Ïß³Ì] ¿ªÊ¼¹¤×÷...\n"));
+		debug_out(("[Ð´ï¿½ß³ï¿½] ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½...\n"));
 		if (!is_opened()){
-			debug_out(("[Ð´Ïß³Ì] Ã»ÓÐ¹¤×÷, ÍË³öÖÐ...\n"));
+			debug_out(("[Ð´ï¿½ß³ï¿½] Ã»ï¿½Ð¹ï¿½ï¿½ï¿½, ï¿½Ë³ï¿½ï¿½ï¿½...\n"));
 			::SetEvent(_thread_write.hEventToExit);
 			return 0;
 		}
@@ -212,23 +273,23 @@ namespace Common{
 		_event_listener.add_listener(listener, EV_TXEMPTY);
 
 	_get_packet:
-		debug_out(("[Ð´Ïß³Ì] È¡Êý¾Ý°üÖÐ...\n"));
+		debug_out(("[Ð´ï¿½ß³ï¿½] È¡ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½...\n"));
 		c_send_data_packet* psdp = _send_data.get();
 		if (psdp->type == csdp_type::csdp_alloc || psdp->type == csdp_type::csdp_local){
-			debug_out(("[Ð´Ïß³Ì] È¡µÃÒ»¸ö·¢ËÍÊý¾Ý°ü, ³¤¶ÈÎª %d ×Ö½Ú\n", psdp->cb));
+			debug_out(("[Ð´ï¿½ß³ï¿½] È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½, ï¿½ï¿½ï¿½ï¿½Îª %d ï¿½Ö½ï¿½\n", psdp->cb));
 
-			DWORD	nWritten = 0;		// Ð´²Ù×÷Ò»´ÎÐ´ÈëµÄ³¤¶È
-			int		nWrittenData;		// µ±Ç°Ñ­»·×Ü¹²Ð´Èë³¤¶È
+			DWORD	nWritten = 0;		// Ð´ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ð´ï¿½ï¿½Ä³ï¿½ï¿½ï¿½
+			int		nWrittenData;		// ï¿½ï¿½Ç°Ñ­ï¿½ï¿½ï¿½Ü¹ï¿½Ð´ï¿½ë³¤ï¿½ï¿½
 
 			for (nWrittenData = 0; nWrittenData < psdp->cb;){
 				bRet = ::WriteFile(_hComPort, &psdp->data[0] + nWrittenData, psdp->cb - nWrittenData, NULL, &overlap);
 				if (bRet != FALSE){ // I/O is completed
 					bRet = ::GetOverlappedResult(_hComPort, &overlap, &nWritten, FALSE);
 					if (bRet){
-						debug_out(("[Ð´Ïß³Ì] I/O completed immediately, bytes : %d\n", nWritten));
+						debug_out(("[Ð´ï¿½ß³ï¿½] I/O completed immediately, bytes : %d\n", nWritten));
 					}
 					else{
-						_notifier->msgerr("[Ð´Ïß³Ì] GetOverlappedResultÊ§°Ü(I/O completed)!\n");
+						_notifier->msgerr("[Ð´ï¿½ß³ï¿½] GetOverlappedResultÊ§ï¿½ï¿½(I/O completed)!\n");
 						goto _restart;
 					}
 				}
@@ -241,27 +302,27 @@ namespace Common{
 						switch (::WaitForMultipleObjects(_countof(handles), &handles[0], FALSE, INFINITE))
 						{
 						case WAIT_FAILED:
-							_notifier->msgerr("[Ð´Ïß³Ì] WaitÊ§°Ü!\n");
+							_notifier->msgerr("[Ð´ï¿½ß³ï¿½] WaitÊ§ï¿½ï¿½!\n");
 							goto _restart;
 							break;
 						case WAIT_OBJECT_0 + 0: // now we exit
-							debug_out(("[Ð´Ïß³Ì] ÊÕµ½ÍË³öÊÂ¼þ!\n"));
+							debug_out(("[Ð´ï¿½ß³ï¿½] ï¿½Õµï¿½ï¿½Ë³ï¿½ï¿½Â¼ï¿½!\n"));
 							goto _restart;
 							break;
 						case WAIT_OBJECT_0 + 1: // the I/O operation is now completed
 							bRet = ::GetOverlappedResult(_hComPort, &overlap, &nWritten, FALSE);
 							if (bRet){
-								debug_out(("[Ð´Ïß³Ì] Ð´Èë %d ¸ö×Ö½Ú!\n", nWritten));
+								debug_out(("[Ð´ï¿½ß³ï¿½] Ð´ï¿½ï¿½ %d ï¿½ï¿½ï¿½Ö½ï¿½!\n", nWritten));
 							}
 							else{
-								_notifier->msgerr("[Ð´Ïß³Ì] GetOverlappedResultÊ§°Ü(I/O pending)!\n");
+								_notifier->msgerr("[Ð´ï¿½ß³ï¿½] GetOverlappedResultÊ§ï¿½ï¿½(I/O pending)!\n");
 								goto _restart;
 							}
 							break;
 						}
 					}
 					else{
-						_notifier->msgerr("[Ð´Ïß³Ì] ::GetLastError() != ERROR_IO_PENDING");
+						_notifier->msgerr("[Ð´ï¿½ß³ï¿½] ::GetLastError() != ERROR_IO_PENDING");
 						goto _restart;
 					}
 				}
@@ -275,7 +336,7 @@ namespace Common{
 			goto _get_packet;
 		}
 		else if (psdp->type == csdp_type::csdp_exit){
-			debug_out(("[Ð´Ïß³Ì] ÊÕµ½ÍË³öÊÂ¼þ!\n"));
+			debug_out(("[Ð´ï¿½ß³ï¿½] ï¿½Õµï¿½ï¿½Ë³ï¿½ï¿½Â¼ï¿½!\n"));
 			_send_data.release(psdp);
 			goto _restart;
 		}
@@ -307,13 +368,13 @@ namespace Common{
 		block_data = new unsigned char[kReadBufSize];
 
 	_wait_for_work:
-		debug_out(("[¶ÁÏß³Ì] ¾ÍÐ÷\n"));
+		debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½ï¿½ï¿½ï¿½\n"));
 		dw = ::WaitForSingleObject(_thread_read.hEventToBegin, INFINITE);
 		SMART_ASSERT(dw == WAIT_OBJECT_0)(dw).Fatal();
 
-		debug_out(("[¶ÁÏß³Ì] ¿ªÊ¼¹¤×÷...\n"));
+		debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½...\n"));
 		if (!is_opened()){
-			debug_out(("[¶ÁÏß³Ì] Ã»ÓÐ¹¤×÷, ÍË³öÖÐ...\n"));
+			debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] Ã»ï¿½Ð¹ï¿½ï¿½ï¿½, ï¿½Ë³ï¿½ï¿½ï¿½...\n"));
 			delete[] block_data;
 			::SetEvent(_thread_read.hEventToExit);
 			return 0;
@@ -332,10 +393,10 @@ namespace Common{
 		switch (::WaitForMultipleObjects(_countof(handles), handles, FALSE, INFINITE))
 		{
 		case WAIT_FAILED:
-			_notifier->msgerr("[¶ÁÏß³Ì] WaitÊ§°Ü!\n");
+			_notifier->msgerr("[ï¿½ï¿½ï¿½ß³ï¿½] WaitÊ§ï¿½ï¿½!\n");
 			goto _restart;
 		case WAIT_OBJECT_0 + 0:
-			debug_out(("[¶ÁÏß³Ì] ÊÕµ½ÍË³öÊÂ¼þ!\n"));
+			debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½Õµï¿½ï¿½Ë³ï¿½ï¿½Â¼ï¿½!\n"));
 			goto _restart;
 		case WAIT_OBJECT_0 + 1:
 			break;
@@ -362,10 +423,10 @@ namespace Common{
 			if (bRet != FALSE){
 				bRet = ::GetOverlappedResult(_hComPort, &overlap, &nRead, FALSE);
 				if (bRet) {
-					debug_out(("[¶ÁÏß³Ì] ¶ÁÈ¡ %d ×Ö½Ú, bRet==TRUE, nBytesToRead: %d\n", nRead, nBytesToRead));
+					debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½ï¿½È¡ %d ï¿½Ö½ï¿½, bRet==TRUE, nBytesToRead: %d\n", nRead, nBytesToRead));
 				}
 				else{
-					_notifier->msgerr("[Ð´Ïß³Ì] GetOverlappedResultÊ§°Ü!\n");
+					_notifier->msgerr("[Ð´ï¿½ß³ï¿½] GetOverlappedResultÊ§ï¿½ï¿½!\n");
 					goto _restart;
 				}
 			}
@@ -378,25 +439,25 @@ namespace Common{
 					switch (::WaitForMultipleObjects(_countof(handles), &handles[0], FALSE, INFINITE))
 					{
 					case WAIT_FAILED:
-						debug_out(("[¶ÁÏß³Ì] µÈ´ýÊ§°Ü!\n"));
+						debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½È´ï¿½Ê§ï¿½ï¿½!\n"));
 						goto _restart;
 					case WAIT_OBJECT_0 + 0:
-						debug_out(("[¶ÁÏß³Ì] ÊÕµ½ÍË³öÊÂ¼þ!\n"));
+						debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½Õµï¿½ï¿½Ë³ï¿½ï¿½Â¼ï¿½!\n"));
 						goto _restart;
 					case WAIT_OBJECT_0 + 1:
 						bRet = ::GetOverlappedResult(_hComPort, &overlap, &nRead, FALSE);
 						if (bRet){
-							debug_out(("[¶ÁÏß³Ì] ¶ÁÈ¡ %d ×Ö½Ú, bRet==FALSE\n", nRead));
+							debug_out(("[ï¿½ï¿½ï¿½ß³ï¿½] ï¿½ï¿½È¡ %d ï¿½Ö½ï¿½, bRet==FALSE\n", nRead));
 						}
 						else{
-							_notifier->msgerr("[¶ÁÏß³Ì] GetOverlappedResultÊ§°Ü!\n");
+							_notifier->msgerr("[ï¿½ï¿½ï¿½ß³ï¿½] GetOverlappedResultÊ§ï¿½ï¿½!\n");
 							goto _restart;
 						}
 						break;
 					}
 				}
 				else{
-					_notifier->msgerr("[¶ÁÏß³Ì] ::GetLastError() != ERROR_IO_PENDING");
+					_notifier->msgerr("[ï¿½ï¿½ï¿½ß³ï¿½] ::GetLastError() != ERROR_IO_PENDING");
 					goto _restart;
 				}
 			}
@@ -441,7 +502,7 @@ namespace Common{
 		_data_receiver_lock.unlock();
 	}
 
-	void CComm::remove_data_receiver(IDataReceiver* receiver)
+	void CComm::remove_data_receiver(i_data_receiver* receiver)
 	{
 		_data_receiver_lock.lock();
 		_data_receivers.remove(receiver);
@@ -449,7 +510,7 @@ namespace Common{
 
 	}
 
-	void CComm::add_data_receiver(IDataReceiver* receiver)
+	void CComm::add_data_receiver(i_data_receiver* receiver)
 	{
 		_data_receiver_lock.lock();
 		_data_receivers.add(receiver);
@@ -462,7 +523,7 @@ namespace Common{
 		SMART_ASSERT(is_opened()).Fatal();
 
 		if (!::GetCommState(get_handle(), &_dcb)){
-			_notifier->msgerr("GetCommState()´íÎó");
+			_notifier->msgerr("GetCommState()ï¿½ï¿½ï¿½ï¿½");
 			return false;
 		}
 
@@ -474,7 +535,7 @@ namespace Common{
 		_dcb.StopBits = pssc->stopbit;
 
 		if (!::SetCommState(_hComPort, &_dcb)){
-			_notifier->msgerr("SetCommState()´íÎó");
+			_notifier->msgerr("SetCommState()ï¿½ï¿½ï¿½ï¿½");
 			return false;
 		}
 
@@ -485,11 +546,11 @@ namespace Common{
 			| EV_RING
 			| EV_PERR | EV_RX80FULL))
 		{
-			_notifier->msgerr("SetCommMask()´íÎó");
+			_notifier->msgerr("SetCommMask()ï¿½ï¿½ï¿½ï¿½");
 			return false;
 		}
 		if (!::SetCommTimeouts(get_handle(), &_timeouts)){
-			_notifier->msgerr("ÉèÖÃ´®¿Ú³¬Ê±´íÎó");
+			_notifier->msgerr("ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½");
 			return false;
 		}
 
@@ -503,7 +564,7 @@ namespace Common{
 	{
 		thread_helper_context* pctx = nullptr;
 
-		// ¿ªÆô¶ÁÏß³Ì
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
 		_thread_read.hEventToBegin = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
 		_thread_read.hEventToExit = ::CreateEvent(nullptr, TRUE, FALSE, nullptr);
 
@@ -513,11 +574,11 @@ namespace Common{
 		_thread_read.hThread = (HANDLE)::_beginthreadex(nullptr, 0, thread_helper, pctx, 0, nullptr);
 
 		if (!_thread_read.hEventToBegin || !_thread_read.hEventToExit || !_thread_read.hThread){
-			::MessageBox(NULL, "Ó¦ÓÃ³ÌÐò³õÊ¼»¯Ê§°Ü, ¼´½«ÍË³ö!", NULL, MB_ICONHAND);
+			::MessageBox(NULL, "Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ê§ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½!", NULL, MB_ICONHAND);
 			::exit(1);
 		}
 
-		// ¿ªÆôÐ´Ïß³Ì
+		// ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ß³ï¿½
 		_thread_write.hEventToBegin = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
 		_thread_write.hEventToExit = ::CreateEvent(nullptr, TRUE, FALSE, nullptr);
 
@@ -527,11 +588,11 @@ namespace Common{
 		_thread_write.hThread = (HANDLE)::_beginthreadex(nullptr, 0, thread_helper, pctx, 0, nullptr);
 
 		if (!_thread_write.hEventToBegin || !_thread_write.hEventToExit || !_thread_write.hThread){
-			::MessageBox(NULL, "Ó¦ÓÃ³ÌÐò³õÊ¼»¯Ê§°Ü, ¼´½«ÍË³ö!", NULL, MB_ICONHAND);
+			::MessageBox(NULL, "Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ê§ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½!", NULL, MB_ICONHAND);
 			::exit(1);
 		}
 
-		// ¿ªÆôÊÂ¼þÏß³Ì
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ß³ï¿½
 		_thread_event.hEventToBegin = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
 		_thread_event.hEventToExit = ::CreateEvent(nullptr, TRUE, FALSE, nullptr);
 
@@ -541,7 +602,7 @@ namespace Common{
 		_thread_event.hThread = (HANDLE)::_beginthreadex(nullptr, 0, thread_helper, pctx, 0, nullptr);
 
 		if (!_thread_event.hEventToBegin || !_thread_event.hEventToExit || !_thread_event.hThread){
-			::MessageBox(NULL, "Ó¦ÓÃ³ÌÐò³õÊ¼»¯Ê§°Ü, ¼´½«ÍË³ö!", NULL, MB_ICONHAND);
+			::MessageBox(NULL, "Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ê§ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½!", NULL, MB_ICONHAND);
 			::exit(1);
 		}
 
@@ -552,17 +613,17 @@ namespace Common{
 	{
 		SMART_ASSERT(is_opened() == false).Fatal();
 
-		// ÓÉÏß³ÌÔÚÍË³öÖ®Ç°ÉèÖÃ²¢ÈÃµ±Ç°Ïß³ÌµÈ´ýËûÃÇµÄ½áÊø
+		// ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½Ë³ï¿½Ö®Ç°ï¿½ï¿½ï¿½Ã²ï¿½ï¿½Ãµï¿½Ç°ï¿½ß³ÌµÈ´ï¿½ï¿½ï¿½ï¿½ÇµÄ½ï¿½ï¿½ï¿½
 		::ResetEvent(_thread_read.hEventToExit);
 		::ResetEvent(_thread_write.hEventToExit);
 		::ResetEvent(_thread_event.hEventToExit);
 
-		// ´ËÊ±´®¿ÚÊÇ¹Ø±ÕµÄ, ÊÕµ½´ËÊÂ¼þ¼´×¼±¸ÍË³öÏß³Ì
+		// ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ç¹Ø±Õµï¿½, ï¿½Õµï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ß³ï¿½
 		::SetEvent(_thread_read.hEventToBegin);
 		::SetEvent(_thread_write.hEventToBegin);
 		::SetEvent(_thread_event.hEventToBegin);
 
-		// µÈ´ýÏß³ÌÍêÈ«ÍË³ö
+		// ï¿½È´ï¿½ï¿½ß³ï¿½ï¿½ï¿½È«ï¿½Ë³ï¿½
 		::WaitForSingleObject(_thread_read.hEventToExit, INFINITE);
 		::WaitForSingleObject(_thread_write.hEventToExit, INFINITE);
 		::WaitForSingleObject(_thread_event.hEventToExit, INFINITE);
@@ -625,7 +686,7 @@ namespace Common{
 		}
 
 		while (psdp == NULL){
-			psdp = (c_send_data_packet*)new char[sizeof(c_send_data_packet) + size];
+			psdp = (c_send_data_packet*)GET_MEM(sizeof(c_send_data_packet) + size);
 		}
 		psdp->type = csdp_type::csdp_alloc;
 		psdp->used = true;
@@ -644,7 +705,7 @@ namespace Common{
 		switch (psdp->type)
 		{
 		case csdp_type::csdp_alloc:
-            delete[](char*)psdp;
+			memory.free((void**)&psdp, "");
 			break;
 		case csdp_type::csdp_local:
 		case csdp_type::csdp_exit:
@@ -669,7 +730,7 @@ namespace Common{
 	{
 		c_send_data_packet* psdp = NULL;
 
-		for (;;){ // ÎÞÏÞµÈ´ý, Ö±µ½ÊÕµ½Ò»¸öÊý¾Ý°ü
+		for (;;){ // ï¿½ï¿½ï¿½ÞµÈ´ï¿½, Ö±ï¿½ï¿½ï¿½Õµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½
 			_lock.lock();
 			list_s* pls = list_remove_head(&_list);
 			_lock.unlock();

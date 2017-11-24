@@ -23,7 +23,7 @@ public:
 
 	virtual bool SetFocus();
 
-    // Î»ÖÃÏà¹Ø
+    // Î»ï¿½ï¿½ï¿½ï¿½ï¿½
     virtual const CDuiRect& GetPos() const;
     virtual void SetPos(const CDuiRect& rc);
 	virtual void SetPostSize(const SIZE& sz) {m_szPostSize = sz;}
@@ -32,12 +32,12 @@ public:
     virtual int GetHeight() const;
     virtual int GetX() const;
     virtual int GetY() const;
-    virtual SIZE GetFixedXY() const;         // Êµ¼Ê´óÐ¡Î»ÖÃÊ¹ÓÃGetPos»ñÈ¡£¬ÕâÀïµÃµ½µÄÊÇÔ¤ÉèµÄ²Î¿¼Öµ
-    virtual void SetFixedXY(SIZE szXY);      // ½öfloatÎªtrueÊ±ÓÐÐ§
-    virtual int GetFixedWidth() const;       // Êµ¼Ê´óÐ¡Î»ÖÃÊ¹ÓÃGetPos»ñÈ¡£¬ÕâÀïµÃµ½µÄÊÇÔ¤ÉèµÄ²Î¿¼Öµ
-    virtual void SetFixedWidth(int cx);      // Ô¤ÉèµÄ²Î¿¼Öµ
-    virtual int GetFixedHeight() const;      // Êµ¼Ê´óÐ¡Î»ÖÃÊ¹ÓÃGetPos»ñÈ¡£¬ÕâÀïµÃµ½µÄÊÇÔ¤ÉèµÄ²Î¿¼Öµ
-    virtual void SetFixedHeight(int cy);     // Ô¤ÉèµÄ²Î¿¼Öµ
+    virtual SIZE GetFixedXY() const;         // Êµï¿½Ê´ï¿½Ð¡Î»ï¿½ï¿½Ê¹ï¿½ï¿½GetPosï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Ä²Î¿ï¿½Öµ
+    virtual void SetFixedXY(SIZE szXY);      // ï¿½ï¿½floatÎªtrueÊ±ï¿½ï¿½Ð§
+    virtual int GetFixedWidth() const;       // Êµï¿½Ê´ï¿½Ð¡Î»ï¿½ï¿½Ê¹ï¿½ï¿½GetPosï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Ä²Î¿ï¿½Öµ
+    virtual void SetFixedWidth(int cx);      // Ô¤ï¿½ï¿½Ä²Î¿ï¿½Öµ
+    virtual int GetFixedHeight() const;      // Êµï¿½Ê´ï¿½Ð¡Î»ï¿½ï¿½Ê¹ï¿½ï¿½GetPosï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Ä²Î¿ï¿½Öµ
+    virtual void SetFixedHeight(int cy);     // Ô¤ï¿½ï¿½Ä²Î¿ï¿½Öµ
     virtual int GetMinWidth() const;
     virtual void SetMinWidth(int cx);
     virtual int GetMaxWidth() const;
