@@ -1,21 +1,20 @@
 #include "StdAfx.h"
 #include "../res/resource.h"
 
-#pragma comment(lib,"WinInet")
+#include "about.h"
 
-static char* __THIS_FILE__ = __FILE__;
+#pragma comment(lib,"WinInet")
 
 const char* Common::c_about_dlg::about_str = 
 	"������Ϣ��\r\n"
 	"������漰����Ӳ���������п��ܻᱻɱ����������в������������ʹ�á�\r\n"
 	"��Ӧ�ó���Ϊ�������������ȡ�κη��ã���ʹ�ù������������ʻ򱨸��쳣���ɷ��ʼ����û��������䡣\r\n"
-	//"�汾�ţ�2.01 �ڲ����԰汾\r\n"
-	"�汾�ţ�2.01 �����汾\r\n"
+	"�汾�ţ�2.02 �����汾\r\n"
 	"�ַ�����ANSI�ַ�\r\n"
 	"����ƽ̨��Visual Studio 2015\r\n"
 	"�û�������370242479@qq.com\r\n"
-	"��ʷ�����ߣ�Ů�����ޣ�http://blog.twofei.com/566/��\r\n"
-	"��ǰά���ߣ�KondeU��http://github.com/KondeU��\r\n"
+	"������(v1)��Ů�����ޣ�http://blog.twofei.com/566/��\r\n"
+	"������(v2)��KondeU��http://github.com/KondeU��\r\n"
 	"-----------------------------------------------------\r\n"
 	"����˵��:\r\n"
 	"    1.������C/C++����+Win32API��ʽ��д�������Ч��࣬��������κ�ϵͳ�����ļ���\r\n"
@@ -209,6 +208,9 @@ const char* Common::c_about_dlg::about_str =
     "2017-11-17: 2.01 �����Ȩ������ԭ���ߵĴ������ά���������汾��\r\n"
 	"    ԭ�����к��е�ʵ��û��ʵ�ֻ����Ƴ��Ĺ����У���ʱ���á������ṩ�����á������մ�����ͣ��ʾ����״���ơ������������ˡ��ַ���ת16���ơ���������°汾��\r\n"
     "    �޸��˲��ִ��뼰ͼ�꣬�����˲��λ��ƵĹ��ܡ�\r\n"
+    "-----------------------------------------------------\r\n"
+    "(2021-08-26)[2015-12-28]: v1�汾���и��£�ͬ�����µ�v2\r\n"
+    "    fix issue: ����DTR/RTS���ŵ�ƽ����\r\n"
 	"\r\n\r\n"
 	;
 
@@ -277,8 +279,6 @@ R"feifei(
 		auto& name = ctrl->GetName();
 		if (name == "btn_website"){
 			if (code == BN_CLICKED){
-				char* web = "http://blog.twofei.com/566/";
-				ShellExecute(NULL, "open", web, NULL, NULL, SW_SHOWNORMAL);
 				return 0;
 			}
 		}

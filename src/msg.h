@@ -1,5 +1,8 @@
 #pragma once
 
+#include "data.h"
+#include "comm.h"
+
 namespace Common {
 	// �����ļ���ʽѡ��Ի���
 	class c_send_file_format_dlg : public c_dialog_builder
@@ -116,6 +119,124 @@ namespace Common {
 		LRESULT on_command_ctrl(HWND hwnd, int id, int code);
 
 	private:
+		// һЩ�������
+		void init_from_config_file();
+		void save_to_config_file();
+
+		void switch_rich_edit_fullscreen(bool full);
+		void switch_window_top_most(bool manual=false, bool topmost = true);
+		void switch_simple_ui(bool manual=false, bool bsimple=false);
+		void switch_send_data_format(bool manual=false, bool bhex=false, DWORD fmthex=0,DWORD fmtchar=0);
+		void switch_recv_data_format(bool manual = false, bool bhex = false, DWORD fmthex = 0, DWORD fmtchar = 0);
+		bool is_send_data_format_hex() { return _b_send_data_format_hex; }
+		bool is_send_data_format_char(){ return !is_send_data_format_hex(); }
+		bool is_recv_data_format_hex() { return _b_recv_data_format_hex; }
+		bool is_recv_data_format_char(){ return !is_recv_data_format_hex(); }
+		void switch_auto_send(bool manual=false, bool bauto=false, int interval=-1);
+		
+
+	public:
+		Window::c_edit*			editor_send()		{return &_send_edit;}
+		Window::c_edit*			editor_recv_hex()	{return &_recv_hex_edit;}
+		Window::c_rich_edit*	editor_recv_char()	{return &_recv_char_edit;}
+
+	//////////////////////////////////////////////////////////////////////////
+	// ���¹���������ص�һЩ����, ��: �������б� ...
+
+	// ���ڶ���
+	class t_com_item
+	{
+	public:
+		t_com_item(int i,const char* s){_s = s; _i=i;}
+
+		// �����ַ�������: ����: ��У��λ
+		std::string get_s() const {return _s;}
+		// ������������ : ����: NOPARITY(��)
+		int get_i() const {return _i;}
+
+	protected:
+		std::string _s;
+		int _i;
+	};
+
+	// ˢ�´��ڶ����б�ʱ��Ҫ�õ��Ļص���������
+	typedef void t_list_callback(void* ud, const t_com_item* t);
+
+	// ���ڶ���ˢ��ʱ�Ļص����ͽӿ�
+	class i_com_list
+	{
+	public:
+		virtual void callback(t_list_callback* cb, void* ud) = 0;
+	};
+
+	// ���ڶ�������: ���� ����ϵͳ���еĴ����б�
+	template<class T>
+	class t_com_list : public i_com_list
+	{
+	public:
+		void empty() {_list.clear();}
+		const T& add(T t) { _list.push_back(t); return _list[_list.size() - 1]; }
+		int size() {return _list.size();}
+		const T& operator[](int i) {return _list[i];}
+
+		// ���¶����б�, �������ϵͳ�����б�
+		virtual i_com_list* update_list(){return this;}
+
+		virtual operator i_com_list*() {return static_cast<i_com_list*>(this);}
+		virtual void callback(t_list_callback* cb, void* ud)
+		{
+			for(int i=0,c=_list.size(); i<c; i++){
+				cb(ud, &_list[i]);
+			}
+		}
+
+	protected:
+		std::vector<T> _list;
+	};
+
+	// ���ڶ˿��б�, �̳е�ԭ����: �˿���һ����ν�� "�Ѻ���"
+	// ���糣����: Prolific USB-to-Serial Comm Port
+	// ���µ������б��ؼ���ʱ��Ҫ��������һ��
+	class c_comport : public t_com_item
+	{
+	public:
+		c_comport(int id,const char* s)
+			: t_com_item(id, s)
+		{}
+
+		std::string get_id_and_name() const;
+	};
+
+	// ���ڶ˿�����: Ҫ��ϵͳȡ���б�, ������д
+	class c_comport_list : public t_com_list<c_comport>
+	{
+	public:
+		virtual i_com_list* update_list();
+	};
+
+	// ���ڲ����ʿ����ⲿ�ֶ�����, ���Զ��һ����Ա
+	class c_baudrate : public t_com_item
+	{
+	public:
+		c_baudrate(int id, const char* s, bool inner)
+			: t_com_item(id, s)
+			, _inner(inner)
+		{}
+
+		bool is_added_by_user() const { return !_inner; }
+	protected:
+		bool _inner;
+	};
+
+	// ���ڶ����б�
+	private:
+		c_comport_list			_comport_list;
+		t_com_list<c_baudrate>	_baudrate_list;
+		t_com_list<t_com_item>	_parity_list;
+		t_com_list<t_com_item>	_stopbit_list;
+		t_com_list<t_com_item>	_databit_list;
+
+	private:
 		struct list_callback_ud{
 			enum e_type{
 				cp,br,pa,sb,db
@@ -139,28 +260,6 @@ namespace Common {
 		bool _com_load_file_prompt_size(SdkLayout::CTinyString& selected, c_binary_file& bf);
 		bool com_do_send(bool callfromautosend);
 
-		// һЩ�������
-		void init_from_config_file();
-		void save_to_config_file();
-
-		void switch_rich_edit_fullscreen(bool full);
-		void switch_window_top_most(bool manual=false, bool topmost = true);
-		void switch_simple_ui(bool manual=false, bool bsimple=false);
-		void switch_send_data_format(bool manual=false, bool bhex=false, DWORD fmthex=0,DWORD fmtchar=0);
-		void switch_recv_data_format(bool manual = false, bool bhex = false, DWORD fmthex = 0, DWORD fmtchar = 0);
-		bool is_send_data_format_hex() { return _b_send_data_format_hex; }
-		bool is_send_data_format_char(){ return !is_send_data_format_hex(); }
-		bool is_recv_data_format_hex() { return _b_recv_data_format_hex; }
-		bool is_recv_data_format_char(){ return !is_recv_data_format_hex(); }
-		void switch_auto_send(bool manual=false, bool bauto=false, int interval=-1);
-		
-
-	public:
-		Window::c_edit*			editor_send()		{return &_send_edit;}
-		Window::c_edit*			editor_recv_hex()	{return &_recv_hex_edit;}
-		Window::c_rich_edit*	editor_recv_char()	{return &_recv_char_edit;}
-
-	private:
 		HWND _hCP, _hBR, _hPA, _hSB, _hDB;
 		HWND _hStatus, _hOpen;
 		Window::c_rich_edit	_recv_char_edit;
@@ -181,9 +280,9 @@ namespace Common {
 		DWORD				_send_data_format_hex;
 		DWORD				_send_data_format_char;
 
-		c_hex_data_receiver		_hex_data_receiver;
-		c_text_data_receiver	_text_data_receiver;
-		c_file_data_receiver	_file_data_receiver;
+		HexReceiver		_hex_data_receiver;
+		TextReceiver	_text_data_receiver;
+		FileReceiver	_file_data_receiver;
 
 		AThunk				_thunk_rich_edit;
 		WNDPROC				_thunk_rich_edit_old_proc;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "data.h"
+
 namespace Common {
 	// ����, ����, δ�������ݼ������ӿ�
 	class i_data_counter
@@ -112,94 +114,6 @@ namespace Common {
 		c_critical_locker			_lock;		// ���߳���
 		HANDLE						_hEvent;	// ����get()�ɲ�������, ��Ϊ�����ط�Ҫput()!
 		list_s						_list;		// �������ݰ�����
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-	// ���¹���������ص�һЩ����, ��: �������б� ...
-
-	// ���ڶ���
-	class t_com_item
-	{
-	public:
-		t_com_item(int i,const char* s){_s = s; _i=i;}
-
-		// �����ַ�������: ����: ��У��λ
-		std::string get_s() const {return _s;}
-		// ������������ : ����: NOPARITY(��)
-		int get_i() const {return _i;}
-
-	protected:
-		std::string _s;
-		int _i;
-	};
-
-	// ˢ�´��ڶ����б�ʱ��Ҫ�õ��Ļص���������
-	typedef void t_list_callback(void* ud, const t_com_item* t);
-
-	// ���ڶ���ˢ��ʱ�Ļص����ͽӿ�
-	class i_com_list
-	{
-	public:
-		virtual void callback(t_list_callback* cb, void* ud) = 0;
-	};
-
-	// ���ڶ�������: ���� ����ϵͳ���еĴ����б�
-	template<class T>
-	class t_com_list : public i_com_list
-	{
-	public:
-		void empty() {_list.clear();}
-		const T& add(T t) { _list.push_back(t); return _list[_list.size() - 1]; }
-		int size() {return _list.size();}
-		const T& operator[](int i) {return _list[i];}
-
-		// ���¶����б�, �������ϵͳ�����б�
-		virtual i_com_list* update_list(){return this;}
-
-		virtual operator i_com_list*() {return static_cast<i_com_list*>(this);}
-		virtual void callback(t_list_callback* cb, void* ud)
-		{
-			for(int i=0,c=_list.size(); i<c; i++){
-				cb(ud, &_list[i]);
-			}
-		}
-
-	protected:
-		std::vector<T> _list;
-	};
-
-	// ���ڶ˿��б�, �̳е�ԭ����: �˿���һ����ν�� "�Ѻ���"
-	// ���糣����: Prolific USB-to-Serial Comm Port
-	// ���µ������б��ؼ���ʱ��Ҫ��������һ��
-	class c_comport : public t_com_item
-	{
-	public:
-		c_comport(int id,const char* s)
-			: t_com_item(id, s)
-		{}
-
-		std::string get_id_and_name() const;
-	};
-
-	// ���ڶ˿�����: Ҫ��ϵͳȡ���б�, ������д
-	class c_comport_list : public t_com_list<c_comport>
-	{
-	public:
-		virtual i_com_list* update_list();
-	};
-
-	// ���ڲ����ʿ����ⲿ�ֶ�����, ���Զ��һ����Ա
-	class c_baudrate : public t_com_item
-	{
-	public:
-		c_baudrate(int id, const char* s, bool inner)
-			: t_com_item(id, s)
-			, _inner(inner)
-		{}
-
-		bool is_added_by_user() const { return !_inner; }
-	protected:
-		bool _inner;
 	};
 
 	// �����¼��������ӿ�
@@ -341,11 +255,11 @@ namespace Common {
 
 	// ���ݽ�����
 	public:
-		void add_data_receiver(i_data_receiver* receiver);
-		void remove_data_receiver(i_data_receiver* receiver);
+		void add_data_receiver(IDataReceiver* receiver);
+		void remove_data_receiver(IDataReceiver* receiver);
 		void call_data_receivers(const unsigned char* ba, int cb);
 	private:
-		c_ptr_array<i_data_receiver>	_data_receivers;
+		c_ptr_array<IDataReceiver>	_data_receivers;
 		c_critical_locker				_data_receiver_lock;
 
 	// �ڲ������߳�
@@ -417,20 +331,6 @@ namespace Common {
         }
 
 
-	// ���ڶ����б�
-	public:
-		c_comport_list*			comports()	{ return &_comport_list; }
-		t_com_list<c_baudrate>*	baudrates()	{ return &_baudrate_list; }
-		t_com_list<t_com_item>*	parities()	{ return &_parity_list; }
-		t_com_list<t_com_item>*	stopbits()	{ return &_stopbit_list; }
-		t_com_list<t_com_item>*	databits()	{ return &_databit_list; }
-	private:
-		c_comport_list			_comport_list;
-		t_com_list<c_baudrate>	_baudrate_list;
-		t_com_list<t_com_item>	_parity_list;
-		t_com_list<t_com_item>	_stopbit_list;
-		t_com_list<t_com_item>	_databit_list;
-
 	// �ⲿ��ز����ӿ�
 	private:
 		HANDLE		_hComPort;
@@ -449,12 +349,3 @@ namespace Common {
 		~CComm();
 	};
 }
-
-// ע������Ķ����ܶ�����Ч�ģ�δ���ü�ɾ��
-#define COMMON_MAX_LOAD_SIZE			((unsigned long)1<<20)
-#define COMMON_LINE_CCH_SEND			16
-#define COMMON_LINE_CCH_RECV			16
-#define COMMON_SEND_BUF_SIZE			COMMON_MAX_LOAD_SIZE
-#define COMMON_RECV_BUF_SIZE			0 // un-limited //(((unsigned long)1<<20)*10)
-#define COMMON_INTERNAL_RECV_BUF_SIZE	((unsigned long)1<<20)
-#define COMMON_READ_BUFFER_SIZE			((unsigned long)1<<20)

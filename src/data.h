@@ -1,34 +1,34 @@
 #pragma once
 
 namespace Common{
-	// Êý¾Ý´¦ÀíÆ÷½Ó¿Ú: ±ÈÈçÎÄ±¾¹ÜÀíÆ÷ 16½øÖÆ¹ÜÀíÆ÷, ÓÉÏÂÃæµÄÊý¾Ý½ÓÊÕÆ÷µ÷ÓÃ
-	// Ò»°ãÓÉÐèÒªÓÐºóÐø´¦ÀíµÄÊý¾Ý´¦Àí¼Ì³Ð´Ë½Ó¿Ú, ·ñÔò¿ÉÒÔÖ±½Ó´¦Àí, ±ÈÈç'\t'µÄ´¦Àí¾Í²»ÐèÒª
+	// ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 16ï¿½ï¿½ï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½Ì³Ð´Ë½Ó¿ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó´ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½'\t'ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½Òª
 	class IDataProcessor
 	{
 	public:
-		// ´¦Àí²¿·ÖÊý¾Ý: 
-		//		follow:	Ç°Ò»´Îµ÷ÓÃÊÇ·ñÎª±¾´¦Àíº¯Êý, Ò²¼´ºóÐøÁ¬Ðøµ÷ÓÃ
-		//		ba:		Byte Array, ×Ö½ÚÊý×é
-		//		cb:		Count of Bytes, ×Ö½ÚÊý
-		//		*pn:	±¾´Î´¦ÀíÁË¶àÉÙÊý¾Ý
-		// ·µ»ØÖµ:
-		//		bool:	ÊÇ·ñÏ£Íû¼ÌÐø´¦Àí, Ó°ÏìÏÂÒ»´Îµ÷ÓÃÊ±followµÄÖµ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: 
+		//		follow:	Ç°Ò»ï¿½Îµï¿½ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//		ba:		Byte Array, ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//		cb:		Count of Bytes, ï¿½Ö½ï¿½ï¿½ï¿½
+		//		*pn:	ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ï¿½ï¿½Öµ:
+		//		bool:	ï¿½Ç·ï¿½Ï£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ó°ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Îµï¿½ï¿½ï¿½Ê±followï¿½ï¿½Öµ
 		virtual bool process_some(bool follow, const unsigned char* ba, int cb, int* pn) = 0;
 
-		// ÖØÖÃÊý¾Ý´¦Àí»º³å: ±ÈÈç, ÔÚ¹Ø±Õ´®¿Úºó, »òÇå¿Õ16½øÖÆÊý¾Ýºó
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½, ï¿½Ú¹Ø±Õ´ï¿½ï¿½Úºï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýºï¿½
 		virtual void reset_buffer() = 0;
 	};
 
-	// Êý¾Ý½ÓÊÕÆ÷½Ó¿Ú: ´®¿ÚÔÚ½ÓÊÕµ½Êý¾Ýºóµ÷ÓÃËùÓÐµÄ½ÓÊÕÆ÷
+	// ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½Ýºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ½ï¿½ï¿½ï¿½ï¿½ï¿½
 	class IDataReceiver
 	{
 	public:
-		// Êý¾Ý½ÓÊÕº¯Êý, ¶ÁÏß³Ì½ÓÊÕµ½Êý¾ÝÊ±µ÷ÓÃ´Ëº¯Êý
-		// baÖ¸ÏòµÄÄÚÈÝ²»Ó¦¸Ã±»¸ü¸Ä!
+		// ï¿½ï¿½ï¿½Ý½ï¿½ï¿½Õºï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ß³Ì½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ã´Ëºï¿½ï¿½ï¿½
+		// baÖ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½Ó¦ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½!
 		virtual void receive(const unsigned char* ba, int cb) = 0;
 		virtual void reset_buffer() = 0;
 	protected:
-		// Ò»¸öµ÷ÓÃ´¦ÀíÆ÷²¢ÉèÖÃÊ£ÓàÊý¾ÝÓëºóÐøµ÷ÓÃ±êÖ¾µÄ¸¨Öúº¯Êý
+		// Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã±ï¿½Ö¾ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		virtual bool process(IDataProcessor* proc, bool follow, const unsigned char** pba, int* pcb, IDataProcessor** ppre)
 		{
 			int n;
@@ -68,7 +68,7 @@ namespace Common{
 		Window::c_rich_edit* _richedit;
 	};
 
-	// Linux¿ØÖÆ×Ö·û´¦Àí
+	// Linuxï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½
 	// http://www.cnblogs.com/memset/p/linux_printf_with_color.html
 	// http://ascii-table.com/ansi-escape-sequences.php
 	class EscapeProcessor : public IDataProcessor
@@ -86,7 +86,7 @@ namespace Common{
 			LCS_h,LCS_l,LCS_EQU,
 			LCS_m,LCS_P
 		} _state;
-		c_byte_array<64, 64> _data;		// Êý¾ÝÕ»
+		c_byte_array<64, 64> _data;		// ï¿½ï¿½ï¿½ï¿½Õ»
 		std::vector<lcs_state> _stack;	// ×´Ì¬Õ»
 	public:
 		Window::c_rich_edit* _richedit;
@@ -102,7 +102,7 @@ namespace Common{
 		Window::c_rich_edit* _richedit;
 	};
 
-	// ÖÐÎÄÀ©Õ¹ASCII×Ö·û´¦Àí (CodePage936 compatible, EUC-CN)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ASCIIï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ (CodePage936 compatible, EUC-CN)
 	// http://en.wikipedia.org/wiki/GB_2312
 	// http://zh.wikipedia.org/wiki/GB_2312
 	// http://www.knowsky.com/resource/gb2312tbl.htm
@@ -116,7 +116,7 @@ namespace Common{
 		virtual void reset_buffer();
 
 	public:
-		unsigned char _lead_byte;			// ÖÐÎÄÇ°µ¼×Ö·û
+		unsigned char _lead_byte;			// ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ö·ï¿½
 		Window::c_rich_edit* _richedit;
 	};
 
