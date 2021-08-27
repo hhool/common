@@ -8,8 +8,8 @@ Common::CComConfig* comcfg;
 void com_load_config(void)
 {
 	char mp[MAX_PATH]={0};
-	GetModuleFileName(NULL, mp, __ARRAY_SIZE(mp));
-	strcpy(strrchr(mp, '\\')+1, "common.ini");
+	GetModuleFileName(NULL, mp, _countof(mp));
+	strcpy(strrchr(mp, '\\')+1, "Common.cfg");
 	comcfg = new Common::CComConfig;
 	comcfg->LoadFile(mp);
 }
