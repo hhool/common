@@ -61,7 +61,7 @@ namespace Common {
 		, m_hAccel(0)
 	{
 		_b_recv_char_edit_fullscreen = false;
-		_b_send_data_format_hex = false; // ×Ö·û
+		_b_send_data_format_hex = false; // å­—ç¬¦
 		_send_data_format_hex   = SendDataFormatHex::sdfh_kNone;
 		_send_data_format_char  = SendDataFormatChar::sdfc_kNone;
 		_recv_cur_edit          = NULL;
@@ -122,11 +122,11 @@ namespace Common {
 
 		static char* aBaudRate[]={"110","300","600","1200","2400","4800","9600","14400","19200","38400","57600","115200","128000","256000", NULL};
 		static DWORD iBaudRate[]={CBR_110,CBR_300,CBR_600,CBR_1200,CBR_2400,CBR_4800,CBR_9600,CBR_14400,CBR_19200,CBR_38400,CBR_57600,CBR_115200,CBR_128000,CBR_256000};
-		static char* aParity[] = {"ÎŞ","ÆæĞ£Ñé","Å¼Ğ£Ñé", "±ê¼Ç", "¿Õ¸ñ", NULL};
+		static char* aParity[] = {"æ— ","å¥‡æ ¡éªŒ","å¶æ ¡éªŒ", "æ ‡è®°", "ç©ºæ ¼", NULL};
 		static BYTE iParity[] = { NOPARITY, ODDPARITY,EVENPARITY, MARKPARITY, SPACEPARITY };
-		static char* aStopBit[] = {"1Î»", "1.5Î»","2Î»", NULL};
+		static char* aStopBit[] = {"1ä½", "1.5ä½","2ä½", NULL};
 		static BYTE iStopBit[] = {ONESTOPBIT,ONE5STOPBITS,TWOSTOPBITS};
-		static char* aDataSize[] = {"8Î»","7Î»","6Î»","5Î»",NULL};
+		static char* aDataSize[] = {"8ä½","7ä½","6ä½","5ä½",NULL};
 		static BYTE iDataSize[] = {8,7,6,5};
 
 		for(int i=0; aBaudRate[i]; i++)
@@ -164,18 +164,18 @@ namespace Common {
 		layout_visible(layout_control(m_layout, "recv_wnd_recv"), FALSE);
 		layout_resize(m_layout, NULL);
 
-		// ½çÃæÔªËØ
+		// ç•Œé¢å…ƒç´ 
 		::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 350, 0);
 		::SetDlgItemText(m_hWnd, IDC_STATIC_TIMER, "00:00:00");
 		
-		// ½çÃæÔ¤¶¨Òå
+		// ç•Œé¢é¢„å®šä¹‰
 		switch_simple_ui(true, false);
 		switch_window_top_most(true, false);
 		switch_send_data_format(true, false);
 		switch_recv_data_format(true, false);
 		switch_auto_send(true, false, -1);
 
-		// ´°¿Ú¹Ø±ÕÊÂ¼ş
+		// çª—å£å…³é—­äº‹ä»¶
 		_window_close_handler.add([&](){
 			if (_b_recv_char_edit_fullscreen){
 				_b_recv_char_edit_fullscreen = false;
@@ -200,7 +200,7 @@ namespace Common {
 			return false;
 		});
 
-		// Ïà¹Ø½Ó¿Ú
+		// ç›¸å…³æ¥å£
 		_comm.set_notifier(this);
 		_comm.counter()->set_updater(this);
 		_timer.set_period(1000);
@@ -210,7 +210,7 @@ namespace Common {
 		_auto_send_timer.set_period_timer(this);
 		_auto_send_timer.set_notifier(this);
 
-		// ½ÓÊÕÆ÷
+		// æ¥æ”¶å™¨
 		_hex_data_receiver.set_editor(&_recv_hex_edit);
 		_text_data_receiver.set_editor(&_recv_char_edit);
 		_comm.add_data_receiver(&_hex_data_receiver);
@@ -221,11 +221,11 @@ namespace Common {
 		com_update_item_list();
 		com_add_prompt_if_no_cp_presents();
 
-		// ´ÓÅäÖÃÎÄ¼ş¼ÓÔØÅäÖÃ
+		// ä»é…ç½®æ–‡ä»¶åŠ è½½é…ç½®
 		init_from_config_file();
 
-		// »¶Ó­Óï
-		update_status("»¶Ó­Ê¹ÓÃCommonSerial´®¿Úµ÷ÊÔ¹¤¾ß£¡");
+		// æ¬¢è¿è¯­
+		update_status("æ¬¢è¿ä½¿ç”¨CommonSerialä¸²å£è°ƒè¯•å·¥å…·ï¼");
 
 		return 0;
 	}
@@ -278,7 +278,7 @@ namespace Common {
 				if (_strnicmp("COM", name, 3) == 0){
 					int comid = atoi(name + 3);
 					if (event == DBT_DEVICEARRIVAL){
-						update_status("´®¿ÚÉè±¸ %s ÒÑ²åÈë!", name);
+						update_status("ä¸²å£è®¾å¤‡ %s å·²æ’å…¥!", name);
 						if (!_comm.is_opened()){
 							com_update_comport_list_and_select_current();
 						}
@@ -287,12 +287,12 @@ namespace Common {
                         }
 					}
 					else{
-						update_status("´®¿ÚÉè±¸ %s ÒÑÒÆ³ı!", name);
-						// ±£³Öµ±Ç°Ñ¡ÖĞµÄÉè±¸ÒÀÈ»ÎªÑ¡ÖĞ×´Ì¬
+						update_status("ä¸²å£è®¾å¤‡ %s å·²ç§»é™¤!", name);
+						// ä¿æŒå½“å‰é€‰ä¸­çš„è®¾å¤‡ä¾ç„¶ä¸ºé€‰ä¸­çŠ¶æ€
 						if (!_comm.is_opened()){
 							com_update_comport_list_and_select_current();
 						}
-						else{ // Èç¹ûÒÆ³ıµÄÊÇµ±Ç°COM
+						else{ // å¦‚æœç§»é™¤çš„æ˜¯å½“å‰COM
 							int index = ComboBox_GetCurSel(_hCP);
 							c_comport* cp = index >= 0 ? (c_comport*)ComboBox_GetItemData(_hCP, index) : nullptr;
 							int comidcur = (int)cp > 0xFFFF ? cp->get_i() : 0;
@@ -331,8 +331,8 @@ namespace Common {
 		case kUpdateCounter:
 		{
 			long* a = (long*)lParam;
-			char status[128] = { "×´Ì¬: " };
-			sprintf(status + 6, "½ÓÊÕ¼ÆÊı:%u,·¢ËÍ¼ÆÊı:%u,µÈ´ı·¢ËÍ:%u", a[0],a[1],a[2]);
+			char status[128] = { "çŠ¶æ€: " };
+			sprintf(status + 6, "æ¥æ”¶è®¡æ•°:%u,å‘é€è®¡æ•°:%u,ç­‰å¾…å‘é€:%u", a[0],a[1],a[2]);
 			SetWindowText(_hStatus, status);
 			return 0;
 		}
@@ -365,7 +365,7 @@ namespace Common {
 			return x;
 		}
 		case kAutoSend:
-			debug_out(("×Ô¶¯·¢ËÍÖĞ...\n"));
+			debug_out(("è‡ªåŠ¨å‘é€ä¸­...\n"));
 			com_do_send(true);
 			return 0;
 		}
@@ -421,8 +421,8 @@ namespace Common {
 			}
 		}
 
-		int ii = ComboBox_InsertString(_hBR, -1, "<ÊäÈë>");
-		ComboBox_SetItemData(_hBR, ii, 1);	// 1 - ×Ô¶¨Òå
+		int ii = ComboBox_InsertString(_hBR, -1, "<è¾“å…¥>");
+		ComboBox_SetItemData(_hBR, ii, 1);	// 1 - è‡ªå®šä¹‰
 	}
 
 	void CComWnd::com_udpate_list_callback( void* ud, const t_com_item* t )
@@ -485,7 +485,7 @@ namespace Common {
 	{
 		switch (id)
 		{
-		// ¹¤¾ßÏä/°ïÖú²Ëµ¥
+		// å·¥å…·ç®±/å¸®åŠ©èœå•
 		case MENU_OTHER_HELP:		(new c_about_dlg)->do_modal(*this); break;
 		//case MENU_OTHER_STR2HEX:	(new c_str2hex_dlg)->do_modeless(this); break;
 		case MENU_OTHER_ASCII:		(new c_asctable_dlg)->do_modeless(*this);break;
@@ -498,7 +498,7 @@ namespace Common {
 		case MENU_OTHER_MONITOR: msgbox(MB_ICONINFORMATION, 0, "not implemented!"); break;
 		case MENU_OTHER_NEWVERSION: break;
 
-		// ÎÄ±¾½ÓÊÕÊı¾İÇø²Ëµ¥
+		// æ–‡æœ¬æ¥æ”¶æ•°æ®åŒºèœå•
 		case ID_EDITCONTEXTMENU_COPY:		_recv_char_edit.do_copy(); break;
 		case ID_EDITCONTEXTMENU_CUT:		_recv_char_edit.do_cut(); break;
 		case ID_EDITCONTEXTMENU_PASTE:		_recv_char_edit.do_paste(); break;
@@ -540,18 +540,18 @@ namespace Common {
 		case IDC_BTN_SAVEFILE:
 		{
 			if(_file_data_receiver.size() == 0) {
-				msgbox(MB_ICONINFORMATION, "ÌáÊ¾", "»º³åÇøÃ»ÓĞÊı¾İ¡£");
+				msgbox(MB_ICONINFORMATION, "æç¤º", "ç¼“å†²åŒºæ²¡æœ‰æ•°æ®ã€‚");
 				return -1;
 			}
 
 			c_file_save_dlg dlg;
-			dlg.set_title("Ñ¡Ôñ±£´æÎÄ¼şÃû");
-			dlg.set_filter("ËùÓĞÎÄ¼ş(*.*), ÇëÊÖĞ´ÎÄ¼şÃû+À©Õ¹Ãû\0*.*\0");
+			dlg.set_title("é€‰æ‹©ä¿å­˜æ–‡ä»¶å");
+			dlg.set_filter("æ‰€æœ‰æ–‡ä»¶(*.*), è¯·æ‰‹å†™æ–‡ä»¶å+æ‰©å±•å\0*.*\0");
 			if(!dlg.do_modal(*this)) return 0;
 
 			c_binary_file file;
 			if(!file.open(dlg.get_buffer(), "wb")) {
-				msgerr("ÎÄ¼ş´ò¿ªÊ§°Ü");
+				msgerr("æ–‡ä»¶æ‰“å¼€å¤±è´¥");
 				return -1;
 			}
 
@@ -559,14 +559,14 @@ namespace Common {
 			auto size = _file_data_receiver.size();
 
 			if(!file.write(data, (int)size)) {
-				msgerr("ÎÄ¼şĞ´ÈëÊ§°Ü¡£");
+				msgerr("æ–‡ä»¶å†™å…¥å¤±è´¥ã€‚");
 				return -1;
 			}
 
 			file.flush();
 			file.close();
 
-			msgbox(MB_ICONINFORMATION, dlg.get_buffer(), "ÎÄ¼şÒÑ³É¹¦±£´æ¡£\nÎÄ¼ş´óĞ¡: %d", size);
+			msgbox(MB_ICONINFORMATION, dlg.get_buffer(), "æ–‡ä»¶å·²æˆåŠŸä¿å­˜ã€‚\næ–‡ä»¶å¤§å°: %d", size);
 			return 0;
 		}
 		case IDC_BTN_SEND:
@@ -618,7 +618,7 @@ namespace Common {
 						virtual bool check_valid(const char* str)
 						{
 							if (!_that->test_get_int_value() || _that->get_int_value()<=0){
-								_notifier->msgbox(MB_ICONEXCLAMATION, nullptr, "ÇëÊäÈëÕıÕûÊıÖµ!");
+								_notifier->msgbox(MB_ICONEXCLAMATION, nullptr, "è¯·è¾“å…¥æ­£æ•´æ•°å€¼!");
 								return false;
 
 							}
@@ -638,7 +638,7 @@ namespace Common {
 						}
 						virtual const char* get_prompt_text()
 						{
-							return "ÇëÊäÈë×Ô¶¨Òå²¨ÌØÂÊ:";
+							return "è¯·è¾“å…¥è‡ªå®šä¹‰æ³¢ç‰¹ç‡:";
 						}
 
 					protected:
@@ -690,7 +690,7 @@ namespace Common {
 		case IDC_CHK_AUTO_SEND:
 			switch_auto_send();
 			return 0;
-		// ½ÓÊÕÊı¾İÖĞ¼äµÄ°´Å¥
+		// æ¥æ”¶æ•°æ®ä¸­é—´çš„æŒ‰é’®
 		case IDC_BTN_HELP:
 			if(code==BN_CLICKED){
 				HMENU hMenu;
@@ -701,10 +701,10 @@ namespace Common {
 				return 0;
 			}
 			break;
-		// ·¢ËÍÊı¾İ°´Å¥
+		// å‘é€æ•°æ®æŒ‰é’®
 		case IDC_BTN_CLR_COUNTER:
 			if(code==BN_CLICKED){
-				//Î´·¢ËÍ¼ÆÊı²»ĞèÒªÇåÁã
+				//æœªå‘é€è®¡æ•°ä¸éœ€è¦æ¸…é›¶
 				c_data_counter* counter = _comm.counter();
 				counter->reset_wr_rd();
 				counter->call_updater();
@@ -712,7 +712,7 @@ namespace Common {
 			}
 			break;
 
-		// Êı¾İ¸´ÖÆ°´Å¥
+		// æ•°æ®å¤åˆ¶æŒ‰é’®
 		case IDC_BTN_COPY_RECV:
 			if (code == BN_CLICKED){
 				if (_recv_cur_edit && ::IsWindow(*_recv_cur_edit)){
@@ -720,7 +720,7 @@ namespace Common {
 					return 0;
 				}
 				else{
-					msgbox(MB_ICONINFORMATION, "", "µ±Ç°Ã»ÓĞÊı¾İÏÔÊ¾¿Ø¼ş!");
+					msgbox(MB_ICONINFORMATION, "", "å½“å‰æ²¡æœ‰æ•°æ®æ˜¾ç¤ºæ§ä»¶!");
 					return 0;
 				}
 			}
@@ -732,7 +732,7 @@ namespace Common {
 			}
 			break;
 
-		// Êı¾İÇå³ı°´Å¥
+		// æ•°æ®æ¸…é™¤æŒ‰é’®
 		case IDC_BTN_CLR_RECV:
 		case IDC_BTN_CLR_SEND:
 			if (code == BN_CLICKED){
@@ -748,7 +748,7 @@ namespace Common {
 				return 0;
 			}
 			break;
-		// ÖÃ¶¥ && ¼ò½àÄ£Ê½
+		// ç½®é¡¶ && ç®€æ´æ¨¡å¼
 		case IDC_CHK_TOP:
 			if (code == BN_CLICKED){
 				switch_window_top_most();
@@ -762,7 +762,7 @@ namespace Common {
 			}
 			break;
 
-		// ´ÓÎÄ¼ş¼ÓÔØ
+		// ä»æ–‡ä»¶åŠ è½½
 		case IDC_BTN_LOADFILE:
 			if (code == BN_CLICKED){
 				com_load_file();
@@ -803,7 +803,7 @@ namespace Common {
 		int cursel = ComboBox_GetCurSel(_hCP);
 		t_com_item* pi = (t_com_item*)(cursel == -1 ? 0 : ComboBox_GetItemData(_hCP,cursel));
 		if (!pi){
-			msgbox(MB_ICONEXCLAMATION, NULL, "Ã»ÓĞ¿ÉÓÃµÄ´®¿Ú, Çëµã»÷´®¿ÚÁĞ±íË¢ĞÂ!");
+			msgbox(MB_ICONEXCLAMATION, NULL, "æ²¡æœ‰å¯ç”¨çš„ä¸²å£, è¯·ç‚¹å‡»ä¸²å£åˆ—è¡¨åˆ·æ–°!");
 			return false;
 		}
 
@@ -814,12 +814,12 @@ namespace Common {
 	{
 		int count = ComboBox_GetCount(_hCP);
 		if (count == 0){
-			ComboBox_InsertString(_hCP, -1, "<Ã»ÓĞÕÒµ½ÈÎºÎ¿ÉÓÃµÄ´®¿Ú£¡µã»÷Ë¢ĞÂÁĞ±í£¡>");
+			ComboBox_InsertString(_hCP, -1, "<æ²¡æœ‰æ‰¾åˆ°ä»»ä½•å¯ç”¨çš„ä¸²å£ï¼ç‚¹å‡»åˆ·æ–°åˆ—è¡¨ï¼>");
 			ComboBox_SetItemData(_hCP, 0, 0);
-			update_status("Ã»ÓĞÕÒµ½¿ÉÓÃµÄ´®¿Ú!");
+			update_status("æ²¡æœ‰æ‰¾åˆ°å¯ç”¨çš„ä¸²å£!");
 		}
 		else{
-			update_status("¹²ÕÒµ½ %d ¸ö´®¿ÚÉè±¸!", count);
+			update_status("å…±æ‰¾åˆ° %d ä¸ªä¸²å£è®¾å¤‡!", count);
 		}
 	}
 
@@ -841,7 +841,7 @@ namespace Common {
 
 	void CComWnd::com_update_open_btn_text()
 	{
-		::SetWindowText(_hOpen, _comm.is_opened() ? "¹Ø±Õ´®¿Ú(&W)" : "´ò¿ª´®¿Ú(&W)");
+		::SetWindowText(_hOpen, _comm.is_opened() ? "å…³é—­ä¸²å£(&W)" : "æ‰“å¼€ä¸²å£(&W)");
 	}
 
 	void CComWnd::update_timer(int h, int m, int s)
@@ -865,8 +865,8 @@ namespace Common {
 			bsimple = !!::IsDlgButtonChecked(m_hWnd, IDC_CHECK_SIMPLE);
 		}
 
-		// ÒòÎªÓĞĞ©²¼¾Ö¹²ÓÃÁËÏàÍ¬µÄ¿Ø¼ş, ËùÒÔÉèÖÃÒş²ØÓĞÏÈºóË³Ğò
-		if (bsimple){ // ¼ò½àÄ£Ê½
+		// å› ä¸ºæœ‰äº›å¸ƒå±€å…±ç”¨äº†ç›¸åŒçš„æ§ä»¶, æ‰€ä»¥è®¾ç½®éšè—æœ‰å…ˆåé¡ºåº
+		if (bsimple){ // ç®€æ´æ¨¡å¼
 			layout_visible(layout_control(m_layout, "recv_btns"), FALSE);
 			layout_visible(layout_control(m_layout, "simple_mode_help_btn"), TRUE);
 			layout_visible(layout_control(m_layout, "simple_mode_panel"), TRUE);
@@ -944,7 +944,7 @@ namespace Common {
 			::EnableWindow(GetDlgItem(m_hWnd, IDC_EDIT_DELAY), bauto && valid && _comm.is_opened() ? FALSE : TRUE);
 			::SetDlgItemInt(m_hWnd, IDC_EDIT_DELAY, valid ? interval : interval_default, FALSE);
 			if (!valid){
-				msgbox(MB_ICONEXCLAMATION, nullptr, "×Ô¶¯·¢ËÍÊ±¼ä²»ºÏ·¨, ÒÑÉèÖÃÎªÄ¬ÈÏÖµ!");
+				msgbox(MB_ICONEXCLAMATION, nullptr, "è‡ªåŠ¨å‘é€æ—¶é—´ä¸åˆæ³•, å·²è®¾ç½®ä¸ºé»˜è®¤å€¼!");
 			}
 			else{
 				_auto_send_timer.set_period(interval);
@@ -957,7 +957,7 @@ namespace Common {
 					BOOL bTranslated;
 					int ti = ::GetDlgItemInt(m_hWnd, IDC_EDIT_DELAY, &bTranslated, FALSE);
 					if (!bTranslated || !(ti >= interval_min && ti <= interval_max)){
-						msgbox(MB_ICONEXCLAMATION, nullptr, "×Ô¶¯·¢ËÍÊ±¼äÉèÖÃÓĞÎó!");
+						msgbox(MB_ICONEXCLAMATION, nullptr, "è‡ªåŠ¨å‘é€æ—¶é—´è®¾ç½®æœ‰è¯¯!");
 						return;
 					}
 
@@ -1045,20 +1045,20 @@ namespace Common {
 	{
 		c_file_open_dlg fodlg;
 		if (selected == "text"){
-			fodlg.set_title("Ñ¡ÔñÒ»¸ö´¿ÎÄ±¾ÎÄ¼ş...");
-			fodlg.set_filter("ÎÄ±¾ÎÄ¼ş(*.txt)\0*.txt\0ËùÓĞÎÄ¼ş(*.*)\0*.*\0");
+			fodlg.set_title("é€‰æ‹©ä¸€ä¸ªçº¯æ–‡æœ¬æ–‡ä»¶...");
+			fodlg.set_filter("æ–‡æœ¬æ–‡ä»¶(*.txt)\0*.txt\0æ‰€æœ‰æ–‡ä»¶(*.*)\0*.*\0");
 		}
 		else if (selected == "any"){
-			fodlg.set_title("ÈÎÒâÑ¡ÔñÒ»¸öÎÄ¼ş, µ«²»ÒªÌ«´ó...");
-			fodlg.set_filter("ËùÓĞÎÄ¼ş(*.*)\0*.*\0");
+			fodlg.set_title("ä»»æ„é€‰æ‹©ä¸€ä¸ªæ–‡ä»¶, ä½†ä¸è¦å¤ªå¤§...");
+			fodlg.set_filter("æ‰€æœ‰æ–‡ä»¶(*.*)\0*.*\0");
 		}
 		else if (selected == "hexseq"){
-			fodlg.set_title("Ñ¡ÔñÒ»¸ö°üº¬16½øÖÆĞòÁĞµÄÎÄ±¾, ÄÚÈİÓ¦¸ÃÊÇ: XX XX XX XX ...");
-			fodlg.set_filter("Ê®Áù½øÖÆĞòÁĞÎÄ±¾ÎÄ¼ş(*.txt)\0*.txt\0ËùÓĞÎÄ¼ş(*.*)\0*.*\0");
+			fodlg.set_title("é€‰æ‹©ä¸€ä¸ªåŒ…å«16è¿›åˆ¶åºåˆ—çš„æ–‡æœ¬, å†…å®¹åº”è¯¥æ˜¯: XX XX XX XX ...");
+			fodlg.set_filter("åå…­è¿›åˆ¶åºåˆ—æ–‡æœ¬æ–‡ä»¶(*.txt)\0*.txt\0æ‰€æœ‰æ–‡ä»¶(*.*)\0*.*\0");
 		}
 		else if (selected == "cmd"){
-			fodlg.set_title("ÃüÁîÎÄ¼şÄÜ·½±ãµØ·¢ËÍÒ»×éÏà¹ØµÄÃüÁî, Ñ¡ÔñÒ»¸ö°É~");
-			fodlg.set_filter("ÃüÁîÎÄ±¾ÎÄ¼ş(*.xml)\0 * .xml\0ËùÓĞÎÄ¼ş(*.*)\0 * .*\0");
+			fodlg.set_title("å‘½ä»¤æ–‡ä»¶èƒ½æ–¹ä¾¿åœ°å‘é€ä¸€ç»„ç›¸å…³çš„å‘½ä»¤, é€‰æ‹©ä¸€ä¸ªå§~");
+			fodlg.set_filter("å‘½ä»¤æ–‡æœ¬æ–‡ä»¶(*.xml)\0 * .xml\0æ‰€æœ‰æ–‡ä»¶(*.*)\0 * .*\0");
 		}
 
 		if (!fodlg.do_modal(*this) || !bf.open(fodlg.get_buffer(), "rb"))
@@ -1071,10 +1071,10 @@ namespace Common {
 		bf.seek(0, SEEK_SET);
 		if (load_size > max_load_size)
 			return msgbox(MB_ICONQUESTION | MB_YESNO,
-			"ÎÄ¼şÌ«´ó",
-			"ÎÄ¼ş: %s\n"
-			"ÒÑ¾­³¬¹ı×î´ó´ò¿ªÎÄ¼ş´óĞ¡: %d ×Ö½Ú\n"
-			"\nÒª¼ÌĞøÂğ?"
+			"æ–‡ä»¶å¤ªå¤§",
+			"æ–‡ä»¶: %s\n"
+			"å·²ç»è¶…è¿‡æœ€å¤§æ‰“å¼€æ–‡ä»¶å¤§å°: %d å­—èŠ‚\n"
+			"\nè¦ç»§ç»­å—?"
 			, bf.get_fn().c_str()
 			, max_load_size) == IDYES;
 		else
@@ -1115,7 +1115,7 @@ namespace Common {
 				len = c_text_formatting::remove_string_cr(text);
 				break;
 			case SendDataFormatChar::sdfc_kCrlf:
-				// µ±Ç°ÊÇ Edit ¿Ø¼ş, ÒÔ '\r\n' »»ĞĞ, ÎŞĞè×÷×ª»»
+				// å½“å‰æ˜¯ Edit æ§ä»¶, ä»¥ '\r\n' æ¢è¡Œ, æ— éœ€ä½œè½¬æ¢
 				break;
 			}
 
@@ -1125,8 +1125,8 @@ namespace Common {
 				if ((n & 0x80000000) == 0){
 					cancel_auto_send();
 					msgbox(MB_ICONEXCLAMATION, NULL,
-						"½âÎö×ªÒå×Ö·û´®Ê±Óöµ½´íÎó!\n\n"
-						"ÔÚµÚ %d ¸ö×Ö·û¸½½ü³öÏÖÓï·¨½âÎö´íÎó!",
+						"è§£æè½¬ä¹‰å­—ç¬¦ä¸²æ—¶é‡åˆ°é”™è¯¯!\n\n"
+						"åœ¨ç¬¬ %d ä¸ªå­—ç¬¦é™„è¿‘å‡ºç°è¯­æ³•è§£æé”™è¯¯!",
 						len
 						);
 					return false;
@@ -1138,8 +1138,8 @@ namespace Common {
 			len = n & 0x7FFFFFFF;
 			if ((n & 0x80000000) == 0){
 				cancel_auto_send();
-				msgbox(MB_ICONEXCLAMATION, NULL, "·¢ËÍÇøµÄÊı¾İ½âÎö´íÎó, Çë¼ì²é!\n\nÊÇ²»ÊÇÑ¡´íÁË·¢ËÍÊı¾İµÄ¸ñÊ½\?\n\n"
-					"ÔÚµÚ %d ¸ö×Ö·û¸½½ü³öÏÖÓï·¨½âÎö´íÎó!", len);
+				msgbox(MB_ICONEXCLAMATION, NULL, "å‘é€åŒºçš„æ•°æ®è§£æé”™è¯¯, è¯·æ£€æŸ¥!\n\næ˜¯ä¸æ˜¯é€‰é”™äº†å‘é€æ•°æ®çš„æ ¼å¼\?\n\n"
+					"åœ¨ç¬¬ %d ä¸ªå­—ç¬¦é™„è¿‘å‡ºç°è¯­æ³•è§£æé”™è¯¯!", len);
 				return false;
 			}
 		}
@@ -1179,7 +1179,7 @@ namespace Common {
 				_file_data_receiver.reset_buffer();
 				_comm.begin_threads();
 				com_update_open_btn_text();
-				update_status("´®¿ÚÒÑ´ò¿ª!");
+				update_status("ä¸²å£å·²æ‰“å¼€!");
 				_timer.start();
 			}
 		}
@@ -1294,7 +1294,7 @@ namespace Common {
 			switch_window_top_most(true, item->get_bool());
 		}
 
-		// Êı¾İ·¢ËÍ¸ñÊ½ÉèÖÃ
+		// æ•°æ®å‘é€æ ¼å¼è®¾ç½®
 		if (auto item = comcfg->get_key("comm.send.format")){
 			switch_send_data_format(true, item->val() == "hex");
 		}
@@ -1310,7 +1310,7 @@ namespace Common {
 			else _send_data_format_char &= ~SendDataFormatChar::sdfc_kUseEscape;
 		}
 
-		// ´®¿Ú²ÎÊıÅäÖÃ
+		// ä¸²å£å‚æ•°é…ç½®
 		if (auto item = comcfg->get_key("comm.config.comport")){
 			auto& cp = _comport_list;
 			if (cp.size()){
@@ -1387,7 +1387,7 @@ namespace Common {
 			}
 		}
 
-		// ×Ô¶¯·¢ËÍ
+		// è‡ªåŠ¨å‘é€
 		bool bAutoSend = false;
 		int  interval = -1;
 		if (auto item = comcfg->get_key("comm.autosend.enable")){
@@ -1407,7 +1407,7 @@ namespace Common {
 		comcfg->set_key("gui.simplemode", !!::IsDlgButtonChecked(m_hWnd, IDC_CHECK_SIMPLE));
 		comcfg->set_key("gui.topmost", !!::IsDlgButtonChecked(m_hWnd, IDC_CHK_TOP));
 
-		// Êı¾İ·¢ËÍ¸ñÊ½ÉèÖÃ
+		// æ•°æ®å‘é€æ ¼å¼è®¾ç½®
 		comcfg->set_key("comm.send.format", _b_send_data_format_hex ? "hex" : "char");
 
 		const char* crlftype[] = { "none", "cr", "lf", "crlf" };
@@ -1416,14 +1416,14 @@ namespace Common {
 		comcfg->set_key("comm.send.format.char.escape",
 			_send_data_format_char & SendDataFormatChar::sdfc_kUseEscape ? "true" : "false");
 
-		// ´®¿Ú²ÎÊıÅäÖÃ
+		// ä¸²å£å‚æ•°é…ç½®
 		auto get_cbo_item_data = [](HWND hcbo){
 			int i = ComboBox_GetCurSel(hcbo);
 			SMART_ASSERT(i >= 0)(i).Fatal();
 			return reinterpret_cast<t_com_item*>(ComboBox_GetItemData(hcbo, i));
 		};
 
-		// µ±Ç°´®¿ÚºÅ
+		// å½“å‰ä¸²å£å·
 		int icp = ComboBox_GetCurSel(_hCP);
 		c_comport* cp = nullptr;
 		if (icp >= 0){
@@ -1437,7 +1437,7 @@ namespace Common {
 			comcfg->set_key("comm.config.comport", "");
 		}
 
-		// µ±Ç°²¨ÌØÂÊ
+		// å½“å‰æ³¢ç‰¹ç‡
 		auto& brs = _baudrate_list;
 		std::string user_baudrates;
 		for (int i = 0; i < brs.size(); i++){
@@ -1449,12 +1449,12 @@ namespace Common {
 		user_baudrates += get_cbo_item_data(_hBR)->get_s();
 		comcfg->set_key("comm.config.baudrate", user_baudrates.c_str());
 
-		// µ±Ç° Ğ£ÑéÎ», Êı¾İÎ», Í£Ö¹Î»
+		// å½“å‰ æ ¡éªŒä½, æ•°æ®ä½, åœæ­¢ä½
 		comcfg->set_key("comm.config.parity", get_cbo_item_data(_hPA)->get_i());
 		comcfg->set_key("comm.config.databit", get_cbo_item_data(_hDB)->get_i());
 		comcfg->set_key("comm.config.stopbit", get_cbo_item_data(_hSB)->get_i());
 
-		// ×Ô¶¯·¢ËÍ
+		// è‡ªåŠ¨å‘é€
 		comcfg->set_key("comm.autosend.enable", !!::IsDlgButtonChecked(m_hWnd, IDC_CHK_AUTO_SEND));
 		BOOL bTranslated;
 		int interval = ::GetDlgItemInt(m_hWnd, IDC_EDIT_DELAY, &bTranslated, FALSE);
@@ -1503,7 +1503,7 @@ namespace Common {
 			p[1] = cap;
 			p[2] = ico;
 
-			// ÓÃSendMessageºÃ²»?
+			// ç”¨SendMessageå¥½ä¸?
 			PostMessage(kMessageBox, 0, LPARAM(p));
 			return 0;
 		}
@@ -1515,22 +1515,22 @@ namespace Common {
 		return 
 			R"(
 			<Window size="430,330">
-				<Font name = "Î¢ÈíÑÅºÚ" size = "16" default = "true" />
-				<Font name = "Î¢ÈíÑÅºÚ" size = "12"/>
+				<Font name = "å¾®è½¯é›…é»‘" size = "16" default = "true" />
+				<Font name = "å¾®è½¯é›…é»‘" size = "12"/>
 				<Vertical>
 					<Vertical inset = "5,5,5,5">
 						<Container minheight="180" minwidth="180">
-							<Group text="Ñ¡ÔñÀàĞÍ" />
+							<Group text="é€‰æ‹©ç±»å‹" />
 							<Vertical inset="5,20,5,5">
-								<Option name="text" text="´¿ÎÄ±¾ÎÄ¼ş"/>
-								<Static text="¼´ÆÕÍ¨µÄ´¿ASCIIÂëÎÄ¼ş, °´Ô­ÎÄÄÚÈİÏÔÊ¾ÔÚÎÄ±¾¿òÖĞ!" font="1" inset="20,0,0,0"/>
-								<Option name="any" text="ÈÎÒâÊı¾İÎÄ¼ş"/>
-								<Static text="³£ËµµÄ¶ş½øÖÆÎÄ¼ş(Ö±½Ó´ò¿ªÓĞÂÒÂë), ½«ÒÔ16½øÖÆĞòÁĞ·½Ê½ÏÔÊ¾!" font="1" inset="20,0,0,0"/>
-								<Option name="hexseq" text="°üº¬16½øÖÆĞòÁĞµÄÎÄ±¾ÎÄ¼ş"/>
-								<Static text="Á½¸ö×Ö·ûÒ»×éµÄ16½øÖÆĞòÁĞÎÄ¼ş, ±ÈÈç: 12 AB FF" font="1" inset="20,0,0,0"/>
-								<Option name="cmd" text="ÃüÁîÁĞ±íÎÄ¼ş" style="disabled"/>
-								<Static text="°üº¬ÔÚÎÄ±¾ÎÄ¼şÖĞµÄÃüÁîÁĞ±íË÷Òı!" font="1" inset="20,0,0,0"/>
-								<Option name="nothing" text="È¡Ïû" />
+								<Option name="text" text="çº¯æ–‡æœ¬æ–‡ä»¶"/>
+								<Static text="å³æ™®é€šçš„çº¯ASCIIç æ–‡ä»¶, æŒ‰åŸæ–‡å†…å®¹æ˜¾ç¤ºåœ¨æ–‡æœ¬æ¡†ä¸­!" font="1" inset="20,0,0,0"/>
+								<Option name="any" text="ä»»æ„æ•°æ®æ–‡ä»¶"/>
+								<Static text="å¸¸è¯´çš„äºŒè¿›åˆ¶æ–‡ä»¶(ç›´æ¥æ‰“å¼€æœ‰ä¹±ç ), å°†ä»¥16è¿›åˆ¶åºåˆ—æ–¹å¼æ˜¾ç¤º!" font="1" inset="20,0,0,0"/>
+								<Option name="hexseq" text="åŒ…å«16è¿›åˆ¶åºåˆ—çš„æ–‡æœ¬æ–‡ä»¶"/>
+								<Static text="ä¸¤ä¸ªå­—ç¬¦ä¸€ç»„çš„16è¿›åˆ¶åºåˆ—æ–‡ä»¶, æ¯”å¦‚: 12 AB FF" font="1" inset="20,0,0,0"/>
+								<Option name="cmd" text="å‘½ä»¤åˆ—è¡¨æ–‡ä»¶" style="disabled"/>
+								<Static text="åŒ…å«åœ¨æ–‡æœ¬æ–‡ä»¶ä¸­çš„å‘½ä»¤åˆ—è¡¨ç´¢å¼•!" font="1" inset="20,0,0,0"/>
+								<Option name="nothing" text="å–æ¶ˆ" />
 							</Vertical>
 						</Container>
 					</Vertical>
@@ -1574,23 +1574,23 @@ namespace Common {
 			_bchar ?
 			R"feifei(
 			<Window size="260,110">
-				<Font name = "Î¢ÈíÑÅºÚ" size = "12" default = "true" />
-				<Font name = "Î¢ÈíÑÅºÚ" size = "12"/>
+				<Font name = "å¾®è½¯é›…é»‘" size = "12" default = "true" />
+				<Font name = "å¾®è½¯é›…é»‘" size = "12"/>
 				<Vertical>
 					<Horizontal>
 						<Container inset="5,5,5,5" height="110" width="130">
-							<Group text="»»ĞĞ·ûÀàĞÍ"/>
+							<Group text="æ¢è¡Œç¬¦ç±»å‹"/>
 							<Vertical inset="15,20,5,5">
-								<Option name="nlt_crlf" text="»Ø³µ»»ĞĞ(\r\n)" style="group"/>
-								<Option name = "nlt_cr" text = "»Ø³µ(\r)" />
-								<Option name = "nlt_lf" text = "»»ĞĞ(\n)" />
-								<Option name = "nlt_none" text = "ºöÂÔ" />
+								<Option name="nlt_crlf" text="å›è½¦æ¢è¡Œ(\r\n)" style="group"/>
+								<Option name = "nlt_cr" text = "å›è½¦(\r)" />
+								<Option name = "nlt_lf" text = "æ¢è¡Œ(\n)" />
+								<Option name = "nlt_none" text = "å¿½ç•¥" />
 							</Vertical>
 						</Container>
 						<Container inset="5,5,5,5" height="110" width="130">
-							<Group text="×ªÒå×Ö·û"/>
+							<Group text="è½¬ä¹‰å­—ç¬¦"/>
 							<Vertical inset="15,20,5,5">
-								<Check name="escape_use" text="Ê¹ÓÃ×ªÒå×Ö·û" />
+								<Check name="escape_use" text="ä½¿ç”¨è½¬ä¹‰å­—ç¬¦" />
 							</Vertical>
 						</Container>
 					</Horizontal>
@@ -1600,14 +1600,14 @@ namespace Common {
 			:
 		R"feifei(
 <Window size="300,100">
-	<Font name = "Î¢ÈíÑÅºÚ" size = "12" default = "true" />
-	<Font name = "ºÚÌå" size = "20"/>
+	<Font name = "å¾®è½¯é›…é»‘" size = "12" default = "true" />
+	<Font name = "é»‘ä½“" size = "20"/>
 	<Vertical>
 		<Vertical>
 			<Control />
 			<Horizontal height="30">
 				<Control />
-				<Static text="µ±Ç°Ã»ÓĞ¿ÉÉèÖÃµÄÊôĞÔ" font="1" width="200"/>
+				<Static text="å½“å‰æ²¡æœ‰å¯è®¾ç½®çš„å±æ€§" font="1" width="200"/>
 				<Control />
 			</Horizontal>
 			<Control />
@@ -1654,7 +1654,7 @@ namespace Common {
 		{
 		case WM_INITDIALOG:
 		{
-			::SetWindowText(m_hWnd, _bchar ? "ÉèÖÃ×Ö·û·¢ËÍ¸ñÊ½" : "ÉèÖÃÊ®Áù½øÖÆ·¢ËÍ¸ñÊ½");
+			::SetWindowText(m_hWnd, _bchar ? "è®¾ç½®å­—ç¬¦å‘é€æ ¼å¼" : "è®¾ç½®åå…­è¿›åˆ¶å‘é€æ ¼å¼");
 			CenterWindow();
 
 			if (_bchar){

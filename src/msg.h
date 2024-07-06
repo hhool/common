@@ -4,7 +4,7 @@
 #include "comm.h"
 
 namespace Common {
-	// ·¢ËÍÎÄ¼ş¸ñÊ½Ñ¡Ôñ¶Ô»°¿ò
+	// å‘é€æ–‡ä»¶æ ¼å¼é€‰æ‹©å¯¹è¯æ¡†
 	class c_send_file_format_dlg : public c_dialog_builder
 	{
 	public:
@@ -14,13 +14,13 @@ namespace Common {
 		virtual LRESULT		handle_message(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled) override;
 		virtual LPCTSTR		get_skin_xml() const override;
 		virtual LRESULT		on_command_ctrl(HWND hwnd, SdkLayout::CControlUI* ctrl, int code) override;
-		virtual LPCTSTR		get_window_name() const override { return _T("ÎÄ¼ş¸ñÊ½Ñ¡Ôñ"); }
+		virtual LPCTSTR		get_window_name() const override { return _T("æ–‡ä»¶æ ¼å¼é€‰æ‹©"); }
 
 	protected:
 		SdkLayout::CTinyString _selected;
 	};
 
-	// ·¢ËÍ¸ñÊ½¿ØÖÆ¶Ô»°¿ò
+	// å‘é€æ ¼å¼æ§åˆ¶å¯¹è¯æ¡†
 	class c_send_data_format_dlg : public c_dialog_builder
 	{
 	public:
@@ -37,7 +37,7 @@ namespace Common {
 		virtual DWORD		get_window_style() const { return WS_OVERLAPPEDWINDOW; }
 		virtual DWORD		get_window_ex_style() const override { return WS_EX_TOOLWINDOW; }
 		virtual void		on_final_message(HWND hwnd) { __super::on_final_message(hwnd); delete this; }
-		virtual LPCTSTR		get_window_name() const override { return _T("ÎÄ¼ş¸ñÊ½¿ØÖÆ"); }
+		virtual LPCTSTR		get_window_name() const override { return _T("æ–‡ä»¶æ ¼å¼æ§åˆ¶"); }
 
 	protected:
 		bool _bchar;
@@ -66,19 +66,19 @@ namespace Common {
 			kAutoSend,
 		};
 
-		// ·¢ËÍ·½Ê½Ö»ÓĞÁ½ÖÖ: 16½øÖÆ + ÎÄ±¾×Ö·û, ÓÉ_b_send_data_frmat_hex¾ö¶¨; µ÷ÓÃº¯ÊıÀ´·½±ã¾ö¶¨
-		// ÕâÀïÊÇÆäËüÑ¡Ïî, ±ÈÈç: »Ø³µÀàĞÍ, ÊÇ·ñ´¦Àí¿ØÖÆ×Ö·ûµÈ
+		// å‘é€æ–¹å¼åªæœ‰ä¸¤ç§: 16è¿›åˆ¶ + æ–‡æœ¬å­—ç¬¦, ç”±_b_send_data_frmat_hexå†³å®š; è°ƒç”¨å‡½æ•°æ¥æ–¹ä¾¿å†³å®š
+		// è¿™é‡Œæ˜¯å…¶å®ƒé€‰é¡¹, æ¯”å¦‚: å›è½¦ç±»å‹, æ˜¯å¦å¤„ç†æ§åˆ¶å­—ç¬¦ç­‰
 		enum SendDataFormatHex{
 			sdfh_kNone		= 0x00000000,
 		};
 		enum SendDataFormatChar{
 			sdfc_kNone		= 0x00000000,
-			// 01Á½Î»¾ö¶¨»»ĞĞ·ûÀàĞÍ
+			// 01ä¸¤ä½å†³å®šæ¢è¡Œç¬¦ç±»å‹
 			sdfc_kNoCrlf	= 0x00000000,
 			sdfc_kCr		= 0x00000001,
 			sdfc_kLf		= 0x00000002,
 			sdfc_kCrlf		= 0x00000003,
-			// µÚ2Î» ¾ö¶¨ÊÇ·ñÊ¹ÓÃ×ªÒå×Ö·û
+			// ç¬¬2ä½ å†³å®šæ˜¯å¦ä½¿ç”¨è½¬ä¹‰å­—ç¬¦
 			sdfc_kUseEscape = 0x00000004,
 		};
 
@@ -95,7 +95,7 @@ namespace Common {
 		// IAcceleratorTranslator interface
 		virtual bool TranslateAccelerator(MSG* pmsg);
 
-		// ´æÔÚ¶àÏß³Ì²Ù×÷, ËùÒÔÖØĞ´
+		// å­˜åœ¨å¤šçº¿ç¨‹æ“ä½œ, æ‰€ä»¥é‡å†™
 		virtual int msgbox(UINT msgicon, char* caption, char* fmt, ...);
 
 	protected:
@@ -121,7 +121,7 @@ namespace Common {
 		LRESULT on_command_ctrl(HWND hwnd, int id, int code);
 
 	private:
-		// Ò»Ğ©Ïà¹ØÅäÖÃ
+		// ä¸€äº›ç›¸å…³é…ç½®
 		void init_from_config_file();
 		void save_to_config_file();
 
@@ -143,17 +143,17 @@ namespace Common {
 		Window::c_rich_edit*	editor_recv_char()	{return &_recv_char_edit;}
 
 	//////////////////////////////////////////////////////////////////////////
-	// ÒÔÏÂ¹ÜÀí´®¿ÚÏà¹ØµÄÒ»Ğ©¶ÔÏó, Èç: ²¨ÌØÂÊÁĞ±í ...
+	// ä»¥ä¸‹ç®¡ç†ä¸²å£ç›¸å…³çš„ä¸€äº›å¯¹è±¡, å¦‚: æ³¢ç‰¹ç‡åˆ—è¡¨ ...
 
-	// ´®¿Ú¶ÔÏó
+	// ä¸²å£å¯¹è±¡
 	class t_com_item
 	{
 	public:
 		t_com_item(int i,const char* s){_s = s; _i=i;}
 
-		// ·µ»Ø×Ö·û´®²¿·Ö: ±ÈÈç: ÎŞĞ£ÑéÎ»
+		// è¿”å›å­—ç¬¦ä¸²éƒ¨åˆ†: æ¯”å¦‚: æ— æ ¡éªŒä½
 		std::string get_s() const {return _s;}
-		// ·µ»ØÕûÊı²¿·Ö : ±ÈÈç: NOPARITY(ºê)
+		// è¿”å›æ•´æ•°éƒ¨åˆ† : æ¯”å¦‚: NOPARITY(å®)
 		int get_i() const {return _i;}
 
 	protected:
@@ -161,17 +161,17 @@ namespace Common {
 		int _i;
 	};
 
-	// Ë¢ĞÂ´®¿Ú¶ÔÏóÁĞ±íÊ±ĞèÒªÓÃµ½µÄ»Øµ÷º¯ÊıÀàĞÍ
+	// åˆ·æ–°ä¸²å£å¯¹è±¡åˆ—è¡¨æ—¶éœ€è¦ç”¨åˆ°çš„å›è°ƒå‡½æ•°ç±»å‹
 	typedef void t_list_callback(void* ud, const t_com_item* t);
 
-	// ´®¿Ú¶ÔÏóË¢ĞÂÊ±µÄ»Øµ÷ÀàĞÍ½Ó¿Ú
+	// ä¸²å£å¯¹è±¡åˆ·æ–°æ—¶çš„å›è°ƒç±»å‹æ¥å£
 	class i_com_list
 	{
 	public:
 		virtual void callback(t_list_callback* cb, void* ud) = 0;
 	};
 
-	// ´®¿Ú¶ÔÏóÈİÆ÷: ±ÈÈç ±£´æÏµÍ³ËùÓĞµÄ´®¿ÚÁĞ±í
+	// ä¸²å£å¯¹è±¡å®¹å™¨: æ¯”å¦‚ ä¿å­˜ç³»ç»Ÿæ‰€æœ‰çš„ä¸²å£åˆ—è¡¨
 	template<class T>
 	class t_com_list : public i_com_list
 	{
@@ -181,7 +181,7 @@ namespace Common {
 		int size() {return _list.size();}
 		const T& operator[](int i) {return _list[i];}
 
-		// ¸üĞÂ¶ÔÏóÁĞ±í, ±ÈÈç¸üĞÂÏµÍ³´®¿ÚÁĞ±í
+		// æ›´æ–°å¯¹è±¡åˆ—è¡¨, æ¯”å¦‚æ›´æ–°ç³»ç»Ÿä¸²å£åˆ—è¡¨
 		virtual i_com_list* update_list(){return this;}
 
 		virtual operator i_com_list*() {return static_cast<i_com_list*>(this);}
@@ -196,9 +196,9 @@ namespace Common {
 		std::vector<T> _list;
 	};
 
-	// ´®¿Ú¶Ë¿ÚÁĞ±í, ¼Ì³ĞµÄÔ­ÒòÊÇ: ¶Ë¿ÚÓĞÒ»¸öËùÎ½µÄ "ÓÑºÃÃû"
-	// ±ÈÈç³£¼ûµÄ: Prolific USB-to-Serial Comm Port
-	// ¸üĞÂµ½´®¿ÚÁĞ±í¿Ø¼şÖĞÊ±ĞèÒªËıÃÇÁ½ÕßÒ»Æğ
+	// ä¸²å£ç«¯å£åˆ—è¡¨, ç»§æ‰¿çš„åŸå› æ˜¯: ç«¯å£æœ‰ä¸€ä¸ªæ‰€è°“çš„ "å‹å¥½å"
+	// æ¯”å¦‚å¸¸è§çš„: Prolific USB-to-Serial Comm Port
+	// æ›´æ–°åˆ°ä¸²å£åˆ—è¡¨æ§ä»¶ä¸­æ—¶éœ€è¦å¥¹ä»¬ä¸¤è€…ä¸€èµ·
 	class c_comport : public t_com_item
 	{
 	public:
@@ -209,14 +209,14 @@ namespace Common {
 		std::string get_id_and_name() const;
 	};
 
-	// ´®¿Ú¶Ë¿ÚÈİÆ÷: ÒªÏòÏµÍ³È¡µÃÁĞ±í, ËùÒÔÖØĞ´
+	// ä¸²å£ç«¯å£å®¹å™¨: è¦å‘ç³»ç»Ÿå–å¾—åˆ—è¡¨, æ‰€ä»¥é‡å†™
 	class c_comport_list : public t_com_list<c_comport>
 	{
 	public:
 		virtual i_com_list* update_list();
 	};
 
-	// ÓÉÓÚ²¨ÌØÂÊ¿ÉÓÉÍâ²¿ÊÖ¶¯Ìí¼Ó, ËùÒÔ¶à¼ÓÒ»¸ö³ÉÔ±
+	// ç”±äºæ³¢ç‰¹ç‡å¯ç”±å¤–éƒ¨æ‰‹åŠ¨æ·»åŠ , æ‰€ä»¥å¤šåŠ ä¸€ä¸ªæˆå‘˜
 	class c_baudrate : public t_com_item
 	{
 	public:
@@ -230,7 +230,7 @@ namespace Common {
 		bool _inner;
 	};
 
-	// ´®¿Ú¶ÔÏóÁĞ±í
+	// ä¸²å£å¯¹è±¡åˆ—è¡¨
 	private:
 		c_comport_list			_comport_list;
 		t_com_list<c_baudrate>	_baudrate_list;
@@ -275,8 +275,8 @@ namespace Common {
 		c_timer				_timer;
 		c_timer				_auto_send_timer;
 
-		char				_send_buffer[10240];	//ÓÃÓÚÄ¬ÈÏÈ¡·¢ËÍÊı¾İ¿òµÄÊı¾İ
-		Window::c_edit*		_recv_cur_edit;			// µ±Ç°½ÓÊÕÊı¾İ¸ñÊ½ÎÄ±¾¿Ø¼ş
+		char				_send_buffer[10240];	//ç”¨äºé»˜è®¤å–å‘é€æ•°æ®æ¡†çš„æ•°æ®
+		Window::c_edit*		_recv_cur_edit;			// å½“å‰æ¥æ”¶æ•°æ®æ ¼å¼æ–‡æœ¬æ§ä»¶
 		bool				_b_send_data_format_hex;
 		bool				_b_recv_data_format_hex;
 		DWORD				_send_data_format_hex;
@@ -291,7 +291,7 @@ namespace Common {
 
 		c_observable		_window_close_handler;
 
-        // ÊÇ·ñĞèÒªÔÚ¹Ø±ÕºóË¢ĞÂ´®¿ÚÁĞ±í£¬ÒòÎª´®¿Ú´ò¿ªÊ±ÎŞ·¨ĞŞ¸ÄÁĞ±í£¬ËùÒÔ~
+        // æ˜¯å¦éœ€è¦åœ¨å…³é—­ååˆ·æ–°ä¸²å£åˆ—è¡¨ï¼Œå› ä¸ºä¸²å£æ‰“å¼€æ—¶æ— æ³•ä¿®æ”¹åˆ—è¡¨ï¼Œæ‰€ä»¥~
         bool                _b_refresh_comport;
 	};
 }

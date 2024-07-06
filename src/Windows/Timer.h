@@ -5,14 +5,14 @@ namespace Common{
 	class i_timer
 	{
 	public:
-		// mm timer ÔËĞĞÔÚµ¥¶ÀµÄÏß³ÌÖĞ, ²»ÄÜÖ±½Ó²Ù×÷UI,Ó¦SendMessage
+		// mm timer è¿è¡Œåœ¨å•ç‹¬çš„çº¿ç¨‹ä¸­, ä¸èƒ½ç›´æ¥æ“ä½œUI,åº”SendMessage
 		virtual void update_timer(int h, int m, int s) = 0;
 	};
 
 	class i_timer_period
 	{
 	public:
-		// ÖÜÆÚÍ¨Öª¶¨Ê±Æ÷½Ó¿Ú
+		// å‘¨æœŸé€šçŸ¥å®šæ—¶å™¨æ¥å£
 		virtual void update_timer_period() = 0;
 	};
 

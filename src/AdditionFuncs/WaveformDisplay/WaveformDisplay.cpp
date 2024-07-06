@@ -38,7 +38,7 @@ History:     01, 17-11-22, Deyou Kong, Create file and implement it.
 namespace
 {
 	TCHAR szAppNameEng[] = TEXT("WaveformDisplay");
-	TCHAR szAppNameChn[] = TEXT("²¨ĞÎÏÔÊ¾");
+	TCHAR szAppNameChn[] = TEXT("æ³¢å½¢æ˜¾ç¤º");
 
 	Common::CComWnd * pMain = nullptr;
 
@@ -188,9 +188,9 @@ void LoadConfig()
 		{
 			TCHAR szMsg[64];
 			wsprintf(szMsg, TEXT("%s%s"),
-				TEXT("[ÄÚ²¿¹¦ÄÜ]£º×¢Òâ£¡\r\n"),
-				TEXT("µ±Ç°»æÍ¼ÑùÊ½²»ÎªÉ¢µã£¡\r\n")
-				TEXT("µ±Ç°ÑùÊ½Îª£ºÕÛÏß"));
+				TEXT("[å†…éƒ¨åŠŸèƒ½]ï¼šæ³¨æ„ï¼\r\n"),
+				TEXT("å½“å‰ç»˜å›¾æ ·å¼ä¸ä¸ºæ•£ç‚¹ï¼\r\n")
+				TEXT("å½“å‰æ ·å¼ä¸ºï¼šæŠ˜çº¿"));
 			MessageBox(pMain->GetHWND(), szMsg, szAppNameChn, MB_ICONWARNING);
 		}
 
@@ -198,9 +198,9 @@ void LoadConfig()
 		{
 			TCHAR szMsg[64];
 			wsprintf(szMsg, TEXT("%s%s%d"),
-				TEXT("[ÄÚ²¿¹¦ÄÜ]£º×¢Òâ£¡\r\n"),
-				TEXT("µ±Ç°²ÉÑù»æÍ¼¼ä¸ô²»Îª1£¡\r\n")
-				TEXT("µ±Ç°ÖµÎª£º"),
+				TEXT("[å†…éƒ¨åŠŸèƒ½]ï¼šæ³¨æ„ï¼\r\n"),
+				TEXT("å½“å‰é‡‡æ ·ç»˜å›¾é—´éš”ä¸ä¸º1ï¼\r\n")
+				TEXT("å½“å‰å€¼ä¸ºï¼š"),
 				iSampleDrawGap);
 			MessageBox(pMain->GetHWND(), szMsg, szAppNameChn, MB_ICONWARNING);
 		}
@@ -658,7 +658,7 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 		if (wParam == VK_SPACE)
 		{
 			bWaveformPause = !bWaveformPause;
-			SetDlgItemText(hdlgValue, IDOK, bWaveformPause ? TEXT("¼ÌĞøÏÔÊ¾") : TEXT("ÔİÍ£ÏÔÊ¾"));
+			SetDlgItemText(hdlgValue, IDOK, bWaveformPause ? TEXT("ç»§ç»­æ˜¾ç¤º") : TEXT("æš‚åœæ˜¾ç¤º"));
 		}
 		return 0;
 
@@ -708,7 +708,7 @@ BOOL CALLBACK DlgProcWaveformValue(HWND hdlg, UINT message, WPARAM wParam, LPARA
 		SetDlgItemTextA(hdlg, IDC_STATIC_POSY,   szStaticTextPosY);
 		SetDlgItemTextA(hdlg, IDC_STATIC_REALX, szStaticTextRealX);
 		SetDlgItemTextA(hdlg, IDC_STATIC_REALY, szStaticTextRealY);
-		SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("¼ÌĞøÏÔÊ¾") : TEXT("ÔİÍ£ÏÔÊ¾"));
+		SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("ç»§ç»­æ˜¾ç¤º") : TEXT("æš‚åœæ˜¾ç¤º"));
 		return TRUE;
 
 	case WM_COMMAND:
@@ -716,7 +716,7 @@ BOOL CALLBACK DlgProcWaveformValue(HWND hdlg, UINT message, WPARAM wParam, LPARA
 		{
 		case IDOK: // Pause/Continue
 			bWaveformPause = !bWaveformPause;
-			SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("¼ÌĞøÏÔÊ¾") : TEXT("ÔİÍ£ÏÔÊ¾"));
+			SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("ç»§ç»­æ˜¾ç¤º") : TEXT("æš‚åœæ˜¾ç¤º"));
 			return TRUE;
 
 		case IDCANCEL: // Rlease mouse select

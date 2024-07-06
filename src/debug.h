@@ -55,23 +55,23 @@ public:
 	}
 	void Warning()
 	{
-		std::string str("¾¯¸æ: Ó¦ÓÃ³ÌĞòÓöµ½¾¯¸æĞÔ´íÎó!\n\n");
+		std::string str("è­¦å‘Š: åº”ç”¨ç¨‹åºé‡åˆ°è­¦å‘Šæ€§é”™è¯¯!\n\n");
 		str += m_expr;
-		str += "\n\nÇë²é¿´debug.txtµ÷ÊÔÊä³ö!";
+		str += "\n\nè¯·æŸ¥çœ‹debug.txtè°ƒè¯•è¾“å‡º!";
 		::MessageBox(nullptr, str.c_str(), nullptr, MB_ICONWARNING);
 	}
 	void Fatal()
 	{
-		std::string str("´íÎó: Ó¦ÓÃ³ÌĞòÓöµ½ÑÏÖØĞÔ´íÎó!\n\n");
+		std::string str("é”™è¯¯: åº”ç”¨ç¨‹åºé‡åˆ°ä¸¥é‡æ€§é”™è¯¯!\n\n");
 		str += m_expr;
-		str += "\n\nÇë²é¿´debug.txtµ÷ÊÔÊä³ö!";
+		str += "\n\nè¯·æŸ¥çœ‹debug.txtè°ƒè¯•è¾“å‡º!";
 		::MessageBox(nullptr, str.c_str(), nullptr, MB_ICONERROR);
 	}
 	void Stop()
 	{
-		std::string str("Í£Ö¹: Ó¦ÓÃ³ÌĞò´íÎó!\n\nÇëÁ¢¼´È¡Ïûµ±Ç°²Ù×÷! ·ñÔò¿ÉÄÜÔì³É²»¿ÉÏëÏñµÄºó¹û!\n\n");
+		std::string str("åœæ­¢: åº”ç”¨ç¨‹åºé”™è¯¯!\n\nè¯·ç«‹å³å–æ¶ˆå½“å‰æ“ä½œ! å¦åˆ™å¯èƒ½é€ æˆä¸å¯æƒ³åƒçš„åæœ!\n\n");
 		str += m_expr;
-		str += "\n\nÇë²é¿´debug.txtµ÷ÊÔÊä³ö!";
+		str += "\n\nè¯·æŸ¥çœ‹debug.txtè°ƒè¯•è¾“å‡º!";
 		::MessageBox(nullptr, str.c_str(), nullptr, MB_ICONEXCLAMATION);
 	}
 

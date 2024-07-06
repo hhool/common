@@ -3,15 +3,15 @@
 #include "data.h"
 
 namespace Common {
-	// ·¢ËÍ, ½ÓÊÕ, Î´·¢ËÍÊı¾İ¼ÆÊıÆ÷½Ó¿Ú
+	// å‘é€, æ¥æ”¶, æœªå‘é€æ•°æ®è®¡æ•°å™¨æ¥å£
 	class i_data_counter
 	{
 	public:
-		// ¶Á, Ğ´, Î´Ğ´
+		// è¯», å†™, æœªå†™
 		virtual void update_counter(long rd, long wr, long uw) = 0;
 	};
 
-	// Êı¾İ¼ÆÊıÆ÷Àà
+	// æ•°æ®è®¡æ•°å™¨ç±»
 	class c_data_counter
 	{
 	public:
@@ -60,70 +60,70 @@ namespace Common {
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-	// ÒÔÏÂ¶¨Òå ·¢ËÍÊı¾İ·â×°Ïà¹ØÀàºÍ½á¹¹
+	// ä»¥ä¸‹å®šä¹‰ å‘é€æ•°æ®å°è£…ç›¸å…³ç±»å’Œç»“æ„
 
-	// Ä¬ÈÏ·¢ËÍ»º³åÇø´óĞ¡, ³¬¹ı´Ë´óĞ¡»á×Ô¶¯´ÓÄÚ´æ·ÖÅä
+	// é»˜è®¤å‘é€ç¼“å†²åŒºå¤§å°, è¶…è¿‡æ­¤å¤§å°ä¼šè‡ªåŠ¨ä»å†…å­˜åˆ†é…
 	const int csdp_def_size = 1024;
 	enum csdp_type{
-		csdp_local,		// ±¾µØ°ü, ²»ĞèÒªÊÍ·Å
-		csdp_alloc,		// ·ÖÅä°ü, ÔÚÊı¾İÁ¿´óÓÚÄ¬ÈÏ»º³åÇø»òÄÚ²¿»º³åÇø²»¹»Ê±±»·ÖÅä
+		csdp_local,		// æœ¬åœ°åŒ…, ä¸éœ€è¦é‡Šæ”¾
+		csdp_alloc,		// åˆ†é…åŒ…, åœ¨æ•°æ®é‡å¤§äºé»˜è®¤ç¼“å†²åŒºæˆ–å†…éƒ¨ç¼“å†²åŒºä¸å¤Ÿæ—¶è¢«åˆ†é…
 		csdp_exit,		
 	};
 
 #pragma warning(push)
 #pragma warning(disable:4200)	// nonstandard extension used : zero-sized array in struct/union
 #pragma pack(push,1)
-	// »ù´¡·¢ËÍÊı¾İ°ü, ²»°üº¬»º³åÇø
+	// åŸºç¡€å‘é€æ•°æ®åŒ…, ä¸åŒ…å«ç¼“å†²åŒº
 	struct c_send_data_packet{
-		csdp_type		type;			// °üÀàĞÍ
-		list_s			_list_entry;	// ÓÃÓÚÌí¼Óµ½·¢ËÍ¶ÓÁĞ
-		bool			used;			// ÊÇ·ñÒÑ±»Ê¹ÓÃ
-		int				cb;				// Êı¾İ°üÊı¾İ³¤¶È
+		csdp_type		type;			// åŒ…ç±»å‹
+		list_s			_list_entry;	// ç”¨äºæ·»åŠ åˆ°å‘é€é˜Ÿåˆ—
+		bool			used;			// æ˜¯å¦å·²è¢«ä½¿ç”¨
+		int				cb;				// æ•°æ®åŒ…æ•°æ®é•¿åº¦
 		unsigned char	data[0];
 	};
 
-	// À©Õ¹·¢ËÍÊı¾İ°ü, ÓĞÒ»¸ö csdp_def_size ´óĞ¡µÄ»º³åÇø
+	// æ‰©å±•å‘é€æ•°æ®åŒ…, æœ‰ä¸€ä¸ª csdp_def_size å¤§å°çš„ç¼“å†²åŒº
 	struct c_send_data_packet_extended{
-		csdp_type		type;			// °üÀàĞÍ
-		list_s			_list_entry;	// ÓÃÓÚÌí¼Óµ½·¢ËÍ¶ÓÁĞ
-		bool			used;			// ÊÇ·ñÒÑ±»Ê¹ÓÃ
-		int				cb;				// Êı¾İ°üÊı¾İ³¤¶È
+		csdp_type		type;			// åŒ…ç±»å‹
+		list_s			_list_entry;	// ç”¨äºæ·»åŠ åˆ°å‘é€é˜Ÿåˆ—
+		bool			used;			// æ˜¯å¦å·²è¢«ä½¿ç”¨
+		int				cb;				// æ•°æ®åŒ…æ•°æ®é•¿åº¦
 		unsigned char	data[csdp_def_size];
 	};
 #pragma pack(pop)
 #pragma warning(pop)
 
-	// ·¢ËÍÊı¾İ°ü¹ÜÀíÆ÷, ÓÃÀ´½«·¢ËÍµÄÊı¾İ°üÅÅ³É¶ÓÁĞ
-	// °ü¹ÜÀíÆ÷»á±»¶à¸öÏß³ÌÍ¬Ê±·ÃÎÊ
+	// å‘é€æ•°æ®åŒ…ç®¡ç†å™¨, ç”¨æ¥å°†å‘é€çš„æ•°æ®åŒ…æ’æˆé˜Ÿåˆ—
+	// åŒ…ç®¡ç†å™¨ä¼šè¢«å¤šä¸ªçº¿ç¨‹åŒæ—¶è®¿é—®
 	class c_data_packet_manager
 	{
 	public:
 		c_data_packet_manager();
 		~c_data_packet_manager();
 		void					empty();
-		c_send_data_packet*		alloc(int size);						// Í¨¹ı´Ëº¯Êı»ñÈ¡Ò»¸ö¿ÉÒÔÈİÄÉÖ¸¶¨´óĞ¡Êı¾İµÄ°ü
-		void					release(c_send_data_packet* psdp);		// ·µ»¹Ò»¸ö°ü
-		void					put(c_send_data_packet* psdp);			// Ïò·¢ËÍ¶ÓÁĞÎ²²åÈëÒ»¸öĞÂµÄÊı¾İ°ü
-		void					put_front(c_send_data_packet* psdp);	// ²åÈëÒ»¸ö·¢ËÍÊı¾İ°üµ½¶ÓÁĞÊ×, ÓÅÏÈ´¦Àí
-		c_send_data_packet*		get();									// °ü»ñÈ¡Õßµ÷ÓÃ´Ë½Ó¿ÚÈ¡µÃÊı¾İ°ü, Ã»ÓĞ°üÊ±»á±»¹ÒÆğ
+		c_send_data_packet*		alloc(int size);						// é€šè¿‡æ­¤å‡½æ•°è·å–ä¸€ä¸ªå¯ä»¥å®¹çº³æŒ‡å®šå¤§å°æ•°æ®çš„åŒ…
+		void					release(c_send_data_packet* psdp);		// è¿”è¿˜ä¸€ä¸ªåŒ…
+		void					put(c_send_data_packet* psdp);			// å‘å‘é€é˜Ÿåˆ—å°¾æ’å…¥ä¸€ä¸ªæ–°çš„æ•°æ®åŒ…
+		void					put_front(c_send_data_packet* psdp);	// æ’å…¥ä¸€ä¸ªå‘é€æ•°æ®åŒ…åˆ°é˜Ÿåˆ—é¦–, ä¼˜å…ˆå¤„ç†
+		c_send_data_packet*		get();									// åŒ…è·å–è€…è°ƒç”¨æ­¤æ¥å£å–å¾—æ•°æ®åŒ…, æ²¡æœ‰åŒ…æ—¶ä¼šè¢«æŒ‚èµ·
 		c_send_data_packet*		query_head();
 		HANDLE					get_event() const { return _hEvent; }
 
 	private:
-		c_send_data_packet_extended	_data[100];	// Ô¤¶¨ÒåµÄ±¾µØ°üµÄ¸öÊı
-		c_critical_locker			_lock;		// ¶àÏß³ÌËø
-		HANDLE						_hEvent;	// ³¢ÊÔget()¿É²»ÄÜËø¶¨, ÒòÎªÆäËüµØ·½Òªput()!
-		list_s						_list;		// ·¢ËÍÊı¾İ°ü¶ÓÁĞ
+		c_send_data_packet_extended	_data[100];	// é¢„å®šä¹‰çš„æœ¬åœ°åŒ…çš„ä¸ªæ•°
+		c_critical_locker			_lock;		// å¤šçº¿ç¨‹é”
+		HANDLE						_hEvent;	// å°è¯•get()å¯ä¸èƒ½é”å®š, å› ä¸ºå…¶å®ƒåœ°æ–¹è¦put()!
+		list_s						_list;		// å‘é€æ•°æ®åŒ…é˜Ÿåˆ—
 	};
 
-	// ´®¿ÚÊÂ¼ş¼àÌıÆ÷½Ó¿Ú
+	// ä¸²å£äº‹ä»¶ç›‘å¬å™¨æ¥å£
 	class i_com_event_listener
 	{
 	public:
 		virtual void do_event(DWORD evt) = 0;
 	};
 
-	// do_eventµÄ¹ı³ÌÒ»¶¨²»Òª³¤Ê±¼ä²»·µ»Ø, ËùÒÔĞ´ÁË¸ö»ùÓÚÊÂ¼şµÄ¼àÌıÆ÷
+	// do_eventçš„è¿‡ç¨‹ä¸€å®šä¸è¦é•¿æ—¶é—´ä¸è¿”å›, æ‰€ä»¥å†™äº†ä¸ªåŸºäºäº‹ä»¶çš„ç›‘å¬å™¨
 	class c_event_event_listener : public i_com_event_listener
 	{
 	public:
@@ -157,7 +157,7 @@ namespace Common {
 		HANDLE	hEvent;
 	};
 
-	// ´®¿ÚÊÂ¼ş¼àÌıÆ÷½Ó¿Ú ¹ÜÀíÆ÷
+	// ä¸²å£äº‹ä»¶ç›‘å¬å™¨æ¥å£ ç®¡ç†å™¨
 	class c_com_event_listener
 	{
 		struct item{
@@ -200,16 +200,16 @@ namespace Common {
 		std::vector<item>	_listeners;
 	};
 
-	// ´®¿ÚÀà
+	// ä¸²å£ç±»
 	class CComm
 	{
-	// UIÍ¨ÖªÕß
+	// UIé€šçŸ¥è€…
 	public:
 		void set_notifier(i_notifier* noti) { _notifier = noti;	}
 	private:
 		i_notifier*	_notifier;
 
-	// ·¢ËÍÊı¾İ°ü¹ÜÀí
+	// å‘é€æ•°æ®åŒ…ç®¡ç†
 	private:
 		c_send_data_packet*		get_packet()	{ return _send_data.get(); }
 	public:
@@ -232,7 +232,7 @@ namespace Common {
 			}
 			else{
 				if (!bsilent)
-					_notifier->msgbox(MB_ICONERROR, NULL, "´®¿ÚÎ´´ò¿ª!");
+					_notifier->msgbox(MB_ICONERROR, NULL, "ä¸²å£æœªæ‰“å¼€!");
 				release_packet(psdp);
 				return false;
 			}
@@ -243,17 +243,17 @@ namespace Common {
 	private:	
 		c_data_packet_manager	_send_data;
 
-	// ¼ÆÊıÆ÷
+	// è®¡æ•°å™¨
 	public:
 		c_data_counter*			counter() { return &_data_counter; }
 	private:
 		c_data_counter			_data_counter;
 
-	// ÊÂ¼ş¼àÌıÆ÷
+	// äº‹ä»¶ç›‘å¬å™¨
 	private:
 		c_com_event_listener	_event_listener;
 
-	// Êı¾İ½ÓÊÕÆ÷
+	// æ•°æ®æ¥æ”¶å™¨
 	public:
 		void add_data_receiver(IDataReceiver* receiver);
 		void remove_data_receiver(IDataReceiver* receiver);
@@ -262,7 +262,7 @@ namespace Common {
 		c_ptr_array<IDataReceiver>	_data_receivers;
 		c_critical_locker				_data_receiver_lock;
 
-	// ÄÚ²¿¹¤×÷Ïß³Ì
+	// å†…éƒ¨å·¥ä½œçº¿ç¨‹
 	private:
 		bool _begin_threads();
 		bool _end_threads();
@@ -311,13 +311,13 @@ namespace Common {
 	private:
 
 
-	// ´®¿ÚÅäÖÃ½á¹¹Ìå
+	// ä¸²å£é…ç½®ç»“æ„ä½“
 	private:
 		//COMMPROP			_commprop;
 		//COMMCONFIG			_commconfig;
 		COMMTIMEOUTS		_timeouts;
 		DCB					_dcb;
-	// ´®¿ÚÉèÖÃ(¹©Íâ²¿µ÷ÓÃ)
+	// ä¸²å£è®¾ç½®(ä¾›å¤–éƒ¨è°ƒç”¨)
 	public:
 		struct s_setting_comm{
 			DWORD	baud_rate;
@@ -331,7 +331,7 @@ namespace Common {
         }
 
 
-	// Íâ²¿Ïà¹Ø²Ù×÷½Ó¿Ú
+	// å¤–éƒ¨ç›¸å…³æ“ä½œæ¥å£
 	private:
 		HANDLE		_hComPort;
 	public:

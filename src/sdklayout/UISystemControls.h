@@ -62,7 +62,7 @@ namespace SdkLayout{
 		virtual LPCTSTR GetWindowClass() const override { return WC_STATIC; }
 	};
 
-	// Group ºÍÆäËü±ê×¼¿Ø¼şÒ»ÑùÊ¹ÓÃ, ²»Òªµ±×÷¿Ø¼şµÄÈİÆ÷!
+	// Group å’Œå…¶å®ƒæ ‡å‡†æ§ä»¶ä¸€æ ·ä½¿ç”¨, ä¸è¦å½“ä½œæ§ä»¶çš„å®¹å™¨!
 	class CGroupUI : public CSystemControlUI
 	{
 	public:

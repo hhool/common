@@ -2,3 +2,5 @@
 /.vscode/
 /tmp/
 /ipch/
+/*.pdb
+/*.VC.db

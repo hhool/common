@@ -37,7 +37,7 @@ namespace Common{
 	void HexReceiver::receive(const unsigned char* ba, int cb)
 	{
 		for (; cb > 0;){
-			if (_pre_proc){ // ¿ÉÄÜ´¦Àíºócb==0, ËùÒÔ²»¹ÜprocessµÄ·µ»ØÖµ
+			if (_pre_proc){ // å¯èƒ½å¤„ç†åcb==0, æ‰€ä»¥ä¸ç®¡processçš„è¿”å›å€¼
 				process(_pre_proc, true, &ba, &cb, &_pre_proc);
 				continue;
 			}
@@ -66,8 +66,8 @@ namespace Common{
 	//////////////////////////////////////////////////////////////////////////
 	bool NewlineProcessor::process_some(bool follow, const unsigned char* ba, int cb, int* pn)
 	{
-		char inner_buf[1024];		// ÄÚ²¿»º³å
-		int n = 0;					// ¼ÇÂ¼ĞÂcrlfµÄ¸öÊı
+		char inner_buf[1024];		// å†…éƒ¨ç¼“å†²
+		int n = 0;					// è®°å½•æ–°crlfçš„ä¸ªæ•°
 		char* str;
 
 		if (!follow){
@@ -482,20 +482,20 @@ namespace Common{
 	void TextReceiver::receive(const unsigned char* ba, int cb)
 	{
 		for (; cb > 0;){
-			if (_pre_proc){// ¿ÉÄÜ´¦Àíºócb==0, ËùÒÔ²»¹ÜprocessµÄ·µ»ØÖµ
+			if (_pre_proc){// å¯èƒ½å¤„ç†åcb==0, æ‰€ä»¥ä¸ç®¡processçš„è¿”å›å€¼
 				process(_pre_proc, true, &ba, &cb, &_pre_proc);
 				continue;
 			}
 
-			// ¿ØÖÆ×Ö·û/ÌØÊâ×Ö·û´¦Àí
+			// æ§åˆ¶å­—ç¬¦/ç‰¹æ®Šå­—ç¬¦å¤„ç†
 			if (0 <= *ba && *ba <= 0x1F){
-				// Bell, ÏìÁå, 7
+				// Bell, å“é“ƒ, 7
 				if (*ba == 7){
 					::Beep(800, 300);
 					ba += 1;
 					cb -= 1;
 				}
-				// É¾³ı(ÍË¸ñ), 8
+				// åˆ é™¤(é€€æ ¼), 8
 				else if (*ba == '\b'){
 					int n = 0;
 					while (n < cb && ba[n] == '\b') n++;
@@ -503,7 +503,7 @@ namespace Common{
 					ba += n;
 					cb -= n;
 				}
-				// Ë®Æ½ÖÆ±í, 9
+				// æ°´å¹³åˆ¶è¡¨, 9
 				else if (*ba == '\t'){
 					int n = 0;
 					char buf[64];
@@ -518,36 +518,36 @@ namespace Common{
 					ba += n;
 					cb -= n;
 				}
-				// »Ø³µÓë»»ĞĞ (13,10)
+				// å›è½¦ä¸æ¢è¡Œ (13,10)
 				else if (*ba == '\r' || *ba == '\n'){
 					process(&_proc_crlf, false, &ba, &cb, &_pre_proc);
 				}
-				// LinuxÖÕ¶Ë, nCursors ¿ØÖÆ×Ö·û´¦Àí
+				// Linuxç»ˆç«¯, nCursors æ§åˆ¶å­—ç¬¦å¤„ç†
 				else if (*ba == '\033'){
 					process(&_proc_escape, false, &ba, &cb, &_pre_proc);
 				}
-				// ÆäËü Î´×÷´¦Àí/²»¿ÉÏÔÊ¾ ×Ö·û´¦Àí
+				// å…¶å®ƒ æœªä½œå¤„ç†/ä¸å¯æ˜¾ç¤º å­—ç¬¦å¤„ç†
 				else{
 					process(&_proc_byte, false, &ba, &cb, &_pre_proc);
 				}
 			}
-			// ¿Õ¸ñÒÔºóµÄASCII±ê×¼×Ö·û´¦Àí
+			// ç©ºæ ¼ä»¥åçš„ASCIIæ ‡å‡†å­—ç¬¦å¤„ç†
 			else if (0x20 <= *ba && *ba <= 0x7F){
 				process(&_proc_ascii, false, &ba, &cb, &_pre_proc);
 			}
-			// À©Õ¹ASCII(Extended ASCII / EUC)×Ö·û´¦Àí
+			// æ‰©å±•ASCII(Extended ASCII / EUC)å­—ç¬¦å¤„ç†
 			else{
-				// µ±Ç°Ö»´¦ÀíGB2312
+				// å½“å‰åªå¤„ç†GB2312
 
-				// ·Çgb2312±àÂëÇø
+				// égb2312ç¼–ç åŒº
 				if (0x80 <= *ba && *ba <= 0xA0){
 					process(&_proc_byte, false, &ba, &cb, &_pre_proc);
 				}
-				// gb2312±àÂëÇø
+				// gb2312ç¼–ç åŒº
 				else if (0xA1 <= *ba && *ba <= 0xFE){
 					process(&_proc_gb2312, false, &ba, &cb, &_pre_proc);
 				}
-				//·Çgb2312±àÂëÇø
+				//égb2312ç¼–ç åŒº
 				else{
 					process(&_proc_byte, false, &ba, &cb, &_pre_proc);
 				}
@@ -556,27 +556,27 @@ namespace Common{
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	// ¹ØÓÚ gb2312
-	// µÍ×Ö½Ú:
-	//		01-94Î», È«²¿Ê¹ÓÃ, ·¶Î§: 0xA1->0xFE
-	// ¸ß×Ö½Ú:
-	//		01-09ÇøÎªÌØÊâ·ûºÅ: ·¶Î§: 0xA1->0xA9
-	//		10-15Çø: Î´Ê¹ÓÃ, ·¶Î§: 0xAA->0xAF
-	//		16-55Çø: Ò»¼¶ºº×Ö, °´Æ´ÒôÅÅĞò, ·¶Î§: 0xB0->0xD7
-	//		56-87Çø: ¶ş¼¶ºº×Ö, °´²¿Ê×/±Ê»­ÅÅĞò, ·¶Î§: 0xD8->0xF7
-	//		88-94Çø: Î´Ê¹ÓÃ, ·¶Î§: 0xF8->0xFE
+	// å…³äº gb2312
+	// ä½å­—èŠ‚:
+	//		01-94ä½, å…¨éƒ¨ä½¿ç”¨, èŒƒå›´: 0xA1->0xFE
+	// é«˜å­—èŠ‚:
+	//		01-09åŒºä¸ºç‰¹æ®Šç¬¦å·: èŒƒå›´: 0xA1->0xA9
+	//		10-15åŒº: æœªä½¿ç”¨, èŒƒå›´: 0xAA->0xAF
+	//		16-55åŒº: ä¸€çº§æ±‰å­—, æŒ‰æ‹¼éŸ³æ’åº, èŒƒå›´: 0xB0->0xD7
+	//		56-87åŒº: äºŒçº§æ±‰å­—, æŒ‰éƒ¨é¦–/ç¬”ç”»æ’åº, èŒƒå›´: 0xD8->0xF7
+	//		88-94åŒº: æœªä½¿ç”¨, èŒƒå›´: 0xF8->0xFE
 	//    
-	// ¹ØÓÚÖĞÎÄ´¦ÀíµÄÕıÈ·ĞÔ±£Ö¤:
-	// ´®¿ÚÉè±¸ÓÉÓÚĞ­ÒéµÄÄ³ÖÖ²»ÍêÕûĞÔ, ºÜÄÑ±£Ö¤Êı¾İ×ÜÊÇÍêÈ«ÎŞÎó,
-	// Èç¹ûÔÚ´¦Àí¹ı³ÌÖĞÓöµ½´íÎóµÄ±àÂë¾ÍºÜÄÑÏÔÊ¾³öÕıÈ·µÄÖĞÎÄÁË, °üÀ¨ºóĞøµÄ×Ö·û, ¿ÉÄÜµ¼ÖÂÒ»´í¶à´í
+	// å…³äºä¸­æ–‡å¤„ç†çš„æ­£ç¡®æ€§ä¿è¯:
+	// ä¸²å£è®¾å¤‡ç”±äºåè®®çš„æŸç§ä¸å®Œæ•´æ€§, å¾ˆéš¾ä¿è¯æ•°æ®æ€»æ˜¯å®Œå…¨æ— è¯¯,
+	// å¦‚æœåœ¨å¤„ç†è¿‡ç¨‹ä¸­é‡åˆ°é”™è¯¯çš„ç¼–ç å°±å¾ˆéš¾æ˜¾ç¤ºå‡ºæ­£ç¡®çš„ä¸­æ–‡äº†, åŒ…æ‹¬åç»­çš„å­—ç¬¦, å¯èƒ½å¯¼è‡´ä¸€é”™å¤šé”™
 	bool Gb2312Processor::process_some(bool follow, const unsigned char* ba, int cb, int* pn)
 	{
-		// ÊÇ·ñ¼ÌĞøÉÏÒ»´ÎÎ´ÍêµÄ´¦Àí?
+		// æ˜¯å¦ç»§ç»­ä¸Šä¸€æ¬¡æœªå®Œçš„å¤„ç†?
 		if (follow){
 			unsigned char chs[16];
 
 			if (*ba >= 0xA1 && *ba <= 0xFE){
-				// ÓĞ±àÂëÇø
+				// æœ‰ç¼–ç åŒº
 				if (0xA1 <= _lead_byte && _lead_byte <= 0xAF
 					|| 0xB0 <= _lead_byte && _lead_byte <= 0xF7)
 				{
@@ -585,7 +585,7 @@ namespace Common{
 					chs[2] = '\0';
 					_richedit->append_text((const char*)chs);
 				}
-				// ÎŞ±àÂëÇø
+				// æ— ç¼–ç åŒº
 				else{
 					sprintf((char*)chs, "<A+%02X%02X>", _lead_byte, *ba);
 					_richedit->append_text((const char*)chs);
@@ -597,9 +597,9 @@ namespace Common{
 				return false;
 			}
 			else{
-				// ÕâÀï¸ÃÈçºÎ´¦ÀíÊÇºÃ? 
-				// ·µ»Ø1?
-				// »¹ÊÇ°Ñ_lead_byteºÍµ±Ç°×Ö½ÚÏÔÊ¾ÁË?
+				// è¿™é‡Œè¯¥å¦‚ä½•å¤„ç†æ˜¯å¥½? 
+				// è¿”å›1?
+				// è¿˜æ˜¯æŠŠ_lead_byteå’Œå½“å‰å­—èŠ‚æ˜¾ç¤ºäº†?
 				sprintf((char*)chs, "<%02X>", _lead_byte);
 				_richedit->append_text((const char*)chs);
 
@@ -608,16 +608,16 @@ namespace Common{
 				return false;
 			}
 		}
-		// ¿ªÊ¼ĞÂµÄ´¦Àí
+		// å¼€å§‹æ–°çš„å¤„ç†
 		else{
 			_lead_byte = 0;
 
-			const int kPairs = 512;	// Ò»´Î×î¶à´¦Àí512¸öÖĞÎÄ×Ö·û
-			int npairs = 0;			// ÓĞ¶àÉÙ¶ÔÖĞÎÄĞèÒª´¦Àí
+			const int kPairs = 512;	// ä¸€æ¬¡æœ€å¤šå¤„ç†512ä¸ªä¸­æ–‡å­—ç¬¦
+			int npairs = 0;			// æœ‰å¤šå°‘å¯¹ä¸­æ–‡éœ€è¦å¤„ç†
 			char buf[kPairs*2+1];
 
-			// ÏÈ°ÑÄÜ´¦ÀíµÄ´¦Àíµô, ÆäËüµÄ½»¸øÏÂÒ»´Î´¦Àí
-			while (npairs < kPairs && (npairs + 1) * 2 <= cb){	// ´¦ÀíµÚnpairs¶ÔÊ±ÒªÇóµÄ×Ö½ÚÊı, ´Ó0¿ªÊ¼, ±ÈÈç3: ĞèÒªÖÁÉÙ8¸ö×Ö½Ú
+			// å…ˆæŠŠèƒ½å¤„ç†çš„å¤„ç†æ‰, å…¶å®ƒçš„äº¤ç»™ä¸‹ä¸€æ¬¡å¤„ç†
+			while (npairs < kPairs && (npairs + 1) * 2 <= cb){	// å¤„ç†ç¬¬npairså¯¹æ—¶è¦æ±‚çš„å­—èŠ‚æ•°, ä»0å¼€å§‹, æ¯”å¦‚3: éœ€è¦è‡³å°‘8ä¸ªå­—èŠ‚
 				unsigned char b1 = ba[npairs * 2 + 0];
 				unsigned char b2 = ba[npairs * 2 + 1];
 				if ((0xA1 <= b1 && b1 <= 0xFE) && (0xA1 <= b2 && b2 <= 0xFE)){
@@ -629,7 +629,7 @@ namespace Common{
 			}
 
 			if (npairs){
-				// BUG: Î´´¦Àí·Ç±àÂëÇø
+				// BUG: æœªå¤„ç†éç¼–ç åŒº
 				::memcpy(buf, ba, npairs * 2);
 				buf[npairs * 2] = '\0';
 				_richedit->append_text(buf);
@@ -638,8 +638,8 @@ namespace Common{
 				return false;
 			}
 			else{
-				// Ö»´æÔÚÒ»¸ö×Ö½ÚÂú×ãµÄÇé¿ö
-				// »òÊÇµ±Ç°ÖĞÊ£ÏÂÒ»¸ö×Ö½ÚĞèÒª´¦Àí
+				// åªå­˜åœ¨ä¸€ä¸ªå­—èŠ‚æ»¡è¶³çš„æƒ…å†µ
+				// æˆ–æ˜¯å½“å‰ä¸­å‰©ä¸‹ä¸€ä¸ªå­—èŠ‚éœ€è¦å¤„ç†
 				if (cb < 2){ // only can equal to 1
 					SMART_ASSERT(cb == 1)(cb).Fatal();
 					_lead_byte = *ba;
@@ -659,6 +659,6 @@ namespace Common{
 
 	void Gb2312Processor::reset_buffer()
 	{
-		_lead_byte = 0;	//ÖĞÎÄÇ°µ¼²»¿ÉÄÜÎªÁã, ËùÒÔÕâÑù×öÊÇÍêÈ«Ã»ÎÊÌâµÄ
+		_lead_byte = 0;	//ä¸­æ–‡å‰å¯¼ä¸å¯èƒ½ä¸ºé›¶, æ‰€ä»¥è¿™æ ·åšæ˜¯å®Œå…¨æ²¡é—®é¢˜çš„
 	}
 }

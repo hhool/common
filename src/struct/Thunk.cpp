@@ -1,5 +1,5 @@
 //ts=sts=sw=4
-//≈Æ∫¢≤ªøﬁ 2013-09-11
+//Â•≥Â≠©‰∏çÂì≠ 2013-09-11
 // http://www.cnblogs.com/nbsofer/p/thunk_in_cpp.html
 #include <Windows.h>
 #include "Thunk.h"
@@ -21,9 +21,9 @@ void* AThunk::fnStdcall(void* pThis,void* mfn)
 	/****************************************************************************************
 	machine code					assembly code						comment
 	------------------------------------------------------------------------------------------
-	FF 34 24						push	dword ptr[esp]				;‘Ÿ¥Œ—π»Î∑µªÿµÿ÷∑
-	C7 44 24 04 ?? ?? ?? ??			mov		dword ptr[esp+4],this		;¥´»Îthis÷∏’Î
-	E9 ?? ?? ?? ??					jmp		(relative target)			;◊™µΩ≥…‘±∫Ø ˝
+	FF 34 24						push	dword ptr[esp]				;ÂÜçÊ¨°ÂéãÂÖ•ËøîÂõûÂú∞ÂùÄ
+	C7 44 24 04 ?? ?? ?? ??			mov		dword ptr[esp+4],this		;‰º†ÂÖ•thisÊåáÈíà
+	E9 ?? ?? ?? ??					jmp		(relative target)			;ËΩ¨Âà∞ÊàêÂëòÂáΩÊï∞
 	****************************************************************************************/
 
 	m_pthis->m_stdcall.push[0] = 0xFF;
@@ -46,12 +46,12 @@ void* AThunk::fnCdeclcall(void* pThis,void* mfn)
 	/****************************************************************************************
 	machine code					assembly code						comment
 	------------------------------------------------------------------------------------------
-	3E 8F 05 ?? ?? ?? ??			pop		dword ptr ds:[?? ?? ?? ??]	;µØ≥ˆ≤¢±£¥Ê∑µªÿµÿ÷∑
-	68 ?? ?? ?? ??					push	this						;—π»Îthis÷∏’Î
-	68 ?? ?? ?? ??					push	my_ret						;—π»ÎŒ“µƒ∑µªÿµÿ÷∑
-	9E ?? ?? ?? ??					jmp		(relative target)			;Ã¯◊™µΩ≥…‘±∫Ø ˝
-	83 C4 04						add		esp,4						;«Â≥˝this’ª
-	3E FF 25 ?? ?? ?? ??			jmp		dword ptr ds:[?? ?? ?? ??]	;◊™µΩ‘≠∑µªÿµÿ÷∑
+	3E 8F 05 ?? ?? ?? ??			pop		dword ptr ds:[?? ?? ?? ??]	;ÂºπÂá∫Âπ∂‰øùÂ≠òËøîÂõûÂú∞ÂùÄ
+	68 ?? ?? ?? ??					push	this						;ÂéãÂÖ•thisÊåáÈíà
+	68 ?? ?? ?? ??					push	my_ret						;ÂéãÂÖ•ÊàëÁöÑËøîÂõûÂú∞ÂùÄ
+	9E ?? ?? ?? ??					jmp		(relative target)			;Ë∑≥ËΩ¨Âà∞ÊàêÂëòÂáΩÊï∞
+	83 C4 04						add		esp,4						;Ê∏ÖÈô§thisÊ†à
+	3E FF 25 ?? ?? ?? ??			jmp		dword ptr ds:[?? ?? ?? ??]	;ËΩ¨Âà∞ÂéüËøîÂõûÂú∞ÂùÄ
 	****************************************************************************************/
 	m_pthis->m_cdecl.pop_ret[0] = 0x3E;
 	m_pthis->m_cdecl.pop_ret[1] = 0x8F;

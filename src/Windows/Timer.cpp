@@ -13,7 +13,7 @@ namespace Common{
 		_tid = ::timeSetEvent(_period, 0, _timer_proc, DWORD_PTR(this), TIME_PERIODIC | TIME_CALLBACK_FUNCTION);
 		SMART_ASSERT(_tid != 0).Warning();
 		if (_tid == 0 && _notifier)
-			_notifier->msgerr("´´½¨ÏµÍ³¶¨Ê±Æ÷Ê§°Ü");
+			_notifier->msgerr("åˆ›å»ºç³»ç»Ÿå®šæ—¶å™¨å¤±è´¥");
 	}
 
 	void c_timer::stop(bool bsetzero)

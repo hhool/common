@@ -112,7 +112,7 @@ namespace Common {
 				case 't':*p1++  = '\t';p2++;break;
 				case 'n':*p1++  = '\n';p2++;break;
 				case 'r':*p1++  = '\r';p2++;break;
-				case 'x'://¼ì²âÊÇ·ñÎª2¸ö16½øÖÆ×Ö·û
+				case 'x'://æ£€æµ‹æ˜¯å¦ä¸º2ä¸ª16è¿›åˆ¶å­—ç¬¦
 					{
 						p2++;
 						if(*p2 && *(p2+1)){
@@ -135,7 +135,7 @@ namespace Common {
 					break;
 				default:
 					{
-						// 8½øÖÆÅĞ¶Ï
+						// 8è¿›åˆ¶åˆ¤æ–­
 						if(*p2>='0' && *p2<='7'){
 							p2 += char_oct_from_chars(p2, (unsigned char*)p1);
 							p1 ++;
@@ -158,16 +158,16 @@ _error:
 	unsigned int c_text_formatting::str2hex( char* str, unsigned char** ppBuffer,unsigned int buf_size )
 	{
 		enum{S2H_NULL,S2H_SPACE,S2H_HEX,S2H_END};
-		unsigned char hex=0;			//ÓÃÀ´±£´æ½âÎöµÄµ¥¸ö16½øÖÆÖµ
-		unsigned int count=0;			//±£´æ½âÎöµÄ16½øÖÆµÄ¸öÊı
-		unsigned char* hexarray;		//±£´æ×ª»»ºóµÄ½á¹û
-		unsigned char* pba;				//ÓÃÀ´ÏòhexarrayÖĞĞ´Êı¾İ
-		unsigned char* pp = (unsigned char*)str;	//´ı½âÎöµÄ×Ö·û´®
+		unsigned char hex=0;			//ç”¨æ¥ä¿å­˜è§£æçš„å•ä¸ª16è¿›åˆ¶å€¼
+		unsigned int count=0;			//ä¿å­˜è§£æçš„16è¿›åˆ¶çš„ä¸ªæ•°
+		unsigned char* hexarray;		//ä¿å­˜è½¬æ¢åçš„ç»“æœ
+		unsigned char* pba;				//ç”¨æ¥å‘hexarrayä¸­å†™æ•°æ®
+		unsigned char* pp = (unsigned char*)str;	//å¾…è§£æçš„å­—ç¬¦ä¸²
 
-		int flag_last=S2H_NULL,flag;				//´Ê·¨½âÎöÓÃµ½µÄ±ê¼ÇÎ»
+		int flag_last=S2H_NULL,flag;				//è¯æ³•è§£æç”¨åˆ°çš„æ ‡è®°ä½
 
 		if(str==NULL) return 0;
-		//ÓÉÓÚÊÇ2¸ö×Ö·û+Èô¸É¿Õ°××é³ÉÒ»¸ö16½øÖÆ, ËùÒÔ×î¶à²»¿ÉÄÜ³¬¹ı(strlen(str)/2)
+		//ç”±äºæ˜¯2ä¸ªå­—ç¬¦+è‹¥å¹²ç©ºç™½ç»„æˆä¸€ä¸ª16è¿›åˆ¶, æ‰€ä»¥æœ€å¤šä¸å¯èƒ½è¶…è¿‡(strlen(str)/2)
 		if(*ppBuffer && buf_size>=strlen(str)/2){
 			hexarray = *ppBuffer;
 		}else{
@@ -183,7 +183,7 @@ _error:
 			else if(*pp==0x20||*pp==0x09||*pp=='\r'||*pp=='\n')
 				flag = S2H_SPACE;
 			else{
-				//printf("·Ç·¨×Ö·û!\n");
+				//printf("éæ³•å­—ç¬¦!\n");
 				goto _parse_error;
 			}
 
@@ -201,7 +201,7 @@ _error:
 						pp++;
 						continue;
 					}else{
-						//printf("²»ÍêÕû!\n");
+						//printf("ä¸å®Œæ•´!\n");
 						goto _parse_error;
 					}
 				}
@@ -244,7 +244,7 @@ _error:
 		}
 		return 0|((unsigned int)pp-(unsigned int)str);
 	_exit_for:
-		//printf("½âÎöÁË:%d\n",pba-(unsigned int)ba);
+		//printf("è§£æäº†:%d\n",pba-(unsigned int)ba);
 		*ppBuffer = hexarray;
 		return count|0x80000000;
 	}
@@ -274,11 +274,11 @@ _error:
 	{
 		char* buffer=NULL;
 		unsigned char* p;
-		int total_length; // ²¢·ÇÕæÕıµÄ×Ü³¤¶È,ÒÀ¿¿pchÖ¸ÕëÅĞ¶Ï
+		int total_length; // å¹¶éçœŸæ­£çš„æ€»é•¿åº¦,ä¾é pchæŒ‡é’ˆåˆ¤æ–­
 		int cnt_n = 0;
 
-		//¼ÆËãÒÔÉÏ¸÷ÖÖÇé¿ö³öÏÖµÄ¸öÊı
-		//ÆäÊµ°´ÕÕ×î´óÀ´¹À¼Æ¿Õ¼ä
+		//è®¡ç®—ä»¥ä¸Šå„ç§æƒ…å†µå‡ºç°çš„ä¸ªæ•°
+		//å…¶å®æŒ‰ç…§æœ€å¤§æ¥ä¼°è®¡ç©ºé—´
 		do{
 			int i;
 			for(i=0; i<length; i++){
@@ -288,7 +288,7 @@ _error:
 			}
 		}while(0);
 
-		total_length = (length-cnt_n)*1 //·Ç'\r','\n'
+		total_length = (length-cnt_n)*1 //é'\r','\n'
 			+ cnt_n * (nlt == NLT_CRLF ? 2 : 1)
 			+ 1;
 
@@ -318,8 +318,8 @@ _error:
 					hex2chs_append_nl(&p, nlt);
 				}
 				else if(hexarray[i]==0){
-					// Èç¹ûĞèÒª"¸üĞÎÏó"µØÏÔÊ¾'\0', ¿ÉÒÔÔÚÕâÀï´¦Àí
-					// ²¢ÔÚÇ°Ãæ¼ÓÉÏ¶Ô'\0'¸öÊıµÄ¼ÆËã
+					// å¦‚æœéœ€è¦"æ›´å½¢è±¡"åœ°æ˜¾ç¤º'\0', å¯ä»¥åœ¨è¿™é‡Œå¤„ç†
+					// å¹¶åœ¨å‰é¢åŠ ä¸Šå¯¹'\0'ä¸ªæ•°çš„è®¡ç®—
 				}
 				else{
 					*p++ = hexarray[i];
@@ -340,14 +340,14 @@ _error:
 		int k;
 		int nltsz = nlt == newline_type::NLT_CRLF ? 2 : 1;
 
-		//2013-01-17¸üĞÂ¼ÆËã´íÎó:
-		//	Ã¿×Ö½ÚÕ¼ÓÃ2¸öASCII+1¸ö¿Õ¸ñ:length*3
-		//  »»ĞĞ×Ö·ûÕ¼ÓÃ:length/linecch*nltsz
+		//2013-01-17æ›´æ–°è®¡ç®—é”™è¯¯:
+		//	æ¯å­—èŠ‚å ç”¨2ä¸ªASCII+1ä¸ªç©ºæ ¼:length*3
+		//  æ¢è¡Œå­—ç¬¦å ç”¨:length/linecch*nltsz
 		if (linecch){
-			total_length = *length * 3 + *length / linecch * nltsz + 1 + nltsz;//+1:×îºó1¸ö'\0';+nltsz:¿ÉÄÜÊÇµÚ1¸ö\r\n
+			total_length = *length * 3 + *length / linecch * nltsz + 1 + nltsz;//+1:æœ€å1ä¸ª'\0';+nltsz:å¯èƒ½æ˜¯ç¬¬1ä¸ª\r\n
 		}
 		else{
-			total_length = *length * 3 + 1 + nltsz;//+1:×îºó1¸ö'\0';+2:¿ÉÄÜÊÇµÚ1¸ö\r\n
+			total_length = *length * 3 + 1 + nltsz;//+1:æœ€å1ä¸ª'\0';+2:å¯èƒ½æ˜¯ç¬¬1ä¸ª\r\n
 		}
 		if (buf_size >= total_length && buf){
 			buffer = buf;
@@ -358,7 +358,7 @@ _error:
 		for (k = 0, pb = buffer; k < *length; k++){
 			sprintf(pb, "%02X ", hexarray[k]);
 			pb += 3;
-			//»»ĞĞ´¦Àí
+			//æ¢è¡Œå¤„ç†
 			if (linecch && ++count == linecch){
 				hex2chs_append_nl((unsigned char**)&pb, nlt);
 				count = 0;

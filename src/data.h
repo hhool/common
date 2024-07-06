@@ -1,34 +1,34 @@
 #pragma once
 
 namespace Common{
-	// Êı¾İ´¦ÀíÆ÷½Ó¿Ú: ±ÈÈçÎÄ±¾¹ÜÀíÆ÷ 16½øÖÆ¹ÜÀíÆ÷, ÓÉÏÂÃæµÄÊı¾İ½ÓÊÕÆ÷µ÷ÓÃ
-	// Ò»°ãÓÉĞèÒªÓĞºóĞø´¦ÀíµÄÊı¾İ´¦Àí¼Ì³Ğ´Ë½Ó¿Ú, ·ñÔò¿ÉÒÔÖ±½Ó´¦Àí, ±ÈÈç'\t'µÄ´¦Àí¾Í²»ĞèÒª
+	// æ•°æ®å¤„ç†å™¨æ¥å£: æ¯”å¦‚æ–‡æœ¬ç®¡ç†å™¨ 16è¿›åˆ¶ç®¡ç†å™¨, ç”±ä¸‹é¢çš„æ•°æ®æ¥æ”¶å™¨è°ƒç”¨
+	// ä¸€èˆ¬ç”±éœ€è¦æœ‰åç»­å¤„ç†çš„æ•°æ®å¤„ç†ç»§æ‰¿æ­¤æ¥å£, å¦åˆ™å¯ä»¥ç›´æ¥å¤„ç†, æ¯”å¦‚'\t'çš„å¤„ç†å°±ä¸éœ€è¦
 	class IDataProcessor
 	{
 	public:
-		// ´¦Àí²¿·ÖÊı¾İ: 
-		//		follow:	Ç°Ò»´Îµ÷ÓÃÊÇ·ñÎª±¾´¦Àíº¯Êı, Ò²¼´ºóĞøÁ¬Ğøµ÷ÓÃ
-		//		ba:		Byte Array, ×Ö½ÚÊı×é
-		//		cb:		Count of Bytes, ×Ö½ÚÊı
-		//		*pn:	±¾´Î´¦ÀíÁË¶àÉÙÊı¾İ
-		// ·µ»ØÖµ:
-		//		bool:	ÊÇ·ñÏ£Íû¼ÌĞø´¦Àí, Ó°ÏìÏÂÒ»´Îµ÷ÓÃÊ±followµÄÖµ
+		// å¤„ç†éƒ¨åˆ†æ•°æ®: 
+		//		follow:	å‰ä¸€æ¬¡è°ƒç”¨æ˜¯å¦ä¸ºæœ¬å¤„ç†å‡½æ•°, ä¹Ÿå³åç»­è¿ç»­è°ƒç”¨
+		//		ba:		Byte Array, å­—èŠ‚æ•°ç»„
+		//		cb:		Count of Bytes, å­—èŠ‚æ•°
+		//		*pn:	æœ¬æ¬¡å¤„ç†äº†å¤šå°‘æ•°æ®
+		// è¿”å›å€¼:
+		//		bool:	æ˜¯å¦å¸Œæœ›ç»§ç»­å¤„ç†, å½±å“ä¸‹ä¸€æ¬¡è°ƒç”¨æ—¶followçš„å€¼
 		virtual bool process_some(bool follow, const unsigned char* ba, int cb, int* pn) = 0;
 
-		// ÖØÖÃÊı¾İ´¦Àí»º³å: ±ÈÈç, ÔÚ¹Ø±Õ´®¿Úºó, »òÇå¿Õ16½øÖÆÊı¾İºó
+		// é‡ç½®æ•°æ®å¤„ç†ç¼“å†²: æ¯”å¦‚, åœ¨å…³é—­ä¸²å£å, æˆ–æ¸…ç©º16è¿›åˆ¶æ•°æ®å
 		virtual void reset_buffer() = 0;
 	};
 
-	// Êı¾İ½ÓÊÕÆ÷½Ó¿Ú: ´®¿ÚÔÚ½ÓÊÕµ½Êı¾İºóµ÷ÓÃËùÓĞµÄ½ÓÊÕÆ÷
+	// æ•°æ®æ¥æ”¶å™¨æ¥å£: ä¸²å£åœ¨æ¥æ”¶åˆ°æ•°æ®åè°ƒç”¨æ‰€æœ‰çš„æ¥æ”¶å™¨
 	class IDataReceiver
 	{
 	public:
-		// Êı¾İ½ÓÊÕº¯Êı, ¶ÁÏß³Ì½ÓÊÕµ½Êı¾İÊ±µ÷ÓÃ´Ëº¯Êı
-		// baÖ¸ÏòµÄÄÚÈİ²»Ó¦¸Ã±»¸ü¸Ä!
+		// æ•°æ®æ¥æ”¶å‡½æ•°, è¯»çº¿ç¨‹æ¥æ”¶åˆ°æ•°æ®æ—¶è°ƒç”¨æ­¤å‡½æ•°
+		// baæŒ‡å‘çš„å†…å®¹ä¸åº”è¯¥è¢«æ›´æ”¹!
 		virtual void receive(const unsigned char* ba, int cb) = 0;
 		virtual void reset_buffer() = 0;
 	protected:
-		// Ò»¸öµ÷ÓÃ´¦ÀíÆ÷²¢ÉèÖÃÊ£ÓàÊı¾İÓëºóĞøµ÷ÓÃ±êÖ¾µÄ¸¨Öúº¯Êı
+		// ä¸€ä¸ªè°ƒç”¨å¤„ç†å™¨å¹¶è®¾ç½®å‰©ä½™æ•°æ®ä¸åç»­è°ƒç”¨æ ‡å¿—çš„è¾…åŠ©å‡½æ•°
 		virtual bool process(IDataProcessor* proc, bool follow, const unsigned char** pba, int* pcb, IDataProcessor** ppre)
 		{
 			int n;
@@ -68,7 +68,7 @@ namespace Common{
 		Window::c_rich_edit* _richedit;
 	};
 
-	// Linux¿ØÖÆ×Ö·û´¦Àí
+	// Linuxæ§åˆ¶å­—ç¬¦å¤„ç†
 	// http://www.cnblogs.com/memset/p/linux_printf_with_color.html
 	// http://ascii-table.com/ansi-escape-sequences.php
 	class EscapeProcessor : public IDataProcessor
@@ -86,8 +86,8 @@ namespace Common{
 			LCS_h,LCS_l,LCS_EQU,
 			LCS_m,LCS_P
 		} _state;
-		c_byte_array<64, 64> _data;		// Êı¾İÕ»
-		std::vector<lcs_state> _stack;	// ×´Ì¬Õ»
+		c_byte_array<64, 64> _data;		// æ•°æ®æ ˆ
+		std::vector<lcs_state> _stack;	// çŠ¶æ€æ ˆ
 	public:
 		Window::c_rich_edit* _richedit;
 	};
@@ -102,7 +102,7 @@ namespace Common{
 		Window::c_rich_edit* _richedit;
 	};
 
-	// ÖĞÎÄÀ©Õ¹ASCII×Ö·û´¦Àí (CodePage936 compatible, EUC-CN)
+	// ä¸­æ–‡æ‰©å±•ASCIIå­—ç¬¦å¤„ç† (CodePage936 compatible, EUC-CN)
 	// http://en.wikipedia.org/wiki/GB_2312
 	// http://zh.wikipedia.org/wiki/GB_2312
 	// http://www.knowsky.com/resource/gb2312tbl.htm
@@ -116,7 +116,7 @@ namespace Common{
 		virtual void reset_buffer();
 
 	public:
-		unsigned char _lead_byte;			// ÖĞÎÄÇ°µ¼×Ö·û
+		unsigned char _lead_byte;			// ä¸­æ–‡å‰å¯¼å­—ç¬¦
 		Window::c_rich_edit* _richedit;
 	};
 

@@ -3,20 +3,20 @@
 #include "asctable.h"
 
 /**********************************************************
-ÎÄ¼şÃû³Æ:asctable.c
-ÎÄ¼şÂ·¾¶:../common/asctable.c
-´´½¨Ê±¼ä:2013-2-14,22:03:48,½ñÌìÇéÈË½Ú
-ÎÄ¼ş×÷Õß:Å®º¢²»¿Ş
-ÎÄ¼şËµÃ÷:ÏÔÊ¾³ö0~127µÄASCIIÂë
+æ–‡ä»¶åç§°:asctable.c
+æ–‡ä»¶è·¯å¾„:../common/asctable.c
+åˆ›å»ºæ—¶é—´:2013-2-14,22:03:48,ä»Šå¤©æƒ…äººèŠ‚
+æ–‡ä»¶ä½œè€…:å¥³å­©ä¸å“­
+æ–‡ä»¶è¯´æ˜:æ˜¾ç¤ºå‡º0~127çš„ASCIIç 
 **********************************************************/
 
-#define ASC_FONT_HEIGHT		14					//×ÖÌå¸ß¶È
-#define ASC_TEXT_ASCENT		5					//ĞĞ¾à
-#define ASC_LINES_CLIENT	15					//Ã¿ÆÁÄ»ÏÔÊ¾µÄĞĞÊı
-#define ASC_CLIENT_WIDTH	380					//´°¿Ú¿Í»§Çø¿í¶È
-#define ASC_MOUSE_DELTA		ASC_LINES_CLIENT	//Êó±ê¹öÂÖ¹öÒ»´Î²½½øÖµ
-#define ASC_TOTAL_ENTRY		256					//0~127,ASCIIÂë×ÜÊı,¸ù¾İÊµ¼ÊÇé¿öĞŞ¸Ä
-#define ASC_FACENAME		"Consolas"			//×ÖÌåÃû
+#define ASC_FONT_HEIGHT		14					//å­—ä½“é«˜åº¦
+#define ASC_TEXT_ASCENT		5					//è¡Œè·
+#define ASC_LINES_CLIENT	15					//æ¯å±å¹•æ˜¾ç¤ºçš„è¡Œæ•°
+#define ASC_CLIENT_WIDTH	380					//çª—å£å®¢æˆ·åŒºå®½åº¦
+#define ASC_MOUSE_DELTA		ASC_LINES_CLIENT	//é¼ æ ‡æ»šè½®æ»šä¸€æ¬¡æ­¥è¿›å€¼
+#define ASC_TOTAL_ENTRY		256					//0~127,ASCIIç æ€»æ•°,æ ¹æ®å®é™…æƒ…å†µä¿®æ”¹
+#define ASC_FACENAME		"Consolas"			//å­—ä½“å
 
 static struct{
 	unsigned char index;
@@ -114,7 +114,7 @@ namespace Common{
 				SetBkMode(hdc,TRANSPARENT);
 				SetTextColor(hdc,cr_table[_fgcolor]);
 
-				len=sprintf(str,"%4s %4s  %4s  %s","Ê®","°Ë","Ê®Áù","ÃèÊö");
+				len=sprintf(str,"%4s %4s  %4s  %s","å","å…«","åå…­","æè¿°");
 				TextOut(hdc,x,y,str,len);
 				y += ASC_FONT_HEIGHT+ASC_TEXT_ASCENT;
 				len=sprintf(str,"----------------------------------------");
@@ -203,7 +203,7 @@ namespace Common{
 			}
 		case WM_INITDIALOG:
 			{
-				::SetWindowText(m_hWnd, "ASCIIÂë±í: ×ó¼ü: Ç°¾°É«, ÓÒ¼ü: ±³¾°É«");
+				::SetWindowText(m_hWnd, "ASCIIç è¡¨: å·¦é”®: å‰æ™¯è‰², å³é”®: èƒŒæ™¯è‰²");
 				SCROLLINFO si;
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_ALL;
@@ -219,7 +219,7 @@ namespace Common{
 					GetWindowRect(m_hWnd,&rcW);
 					GetClientRect(m_hWnd,&rcC);
 					borderheight = (rcW.bottom-rcW.top)-(rcC.bottom-rcC.top);
-					MoveWindow(m_hWnd,axisx,axisy,ASC_CLIENT_WIDTH+16, // "²ÂµÄ"
+					MoveWindow(m_hWnd,axisx,axisy,ASC_CLIENT_WIDTH+16, // "çŒœçš„"
 						borderheight+(ASC_LINES_CLIENT+2)*(ASC_FONT_HEIGHT+ASC_TEXT_ASCENT),TRUE);
 					break;	ZeroMemory(&si,sizeof(si));
 			

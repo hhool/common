@@ -35,7 +35,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
 #endif
-	debug_out(("程序已运行\n"));
+	debug_out(("绋嬪簭宸茶繍琛孿n"));
 
 	com_load_config();
 
@@ -48,7 +48,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	
 	com_unload_config();
 
-	debug_out(("程序已结束\n"));
+	debug_out(("绋嬪簭宸茬粨鏉焅n"));
 #ifdef _DEBUG
 	Sleep(500);
 	FreeConsole();

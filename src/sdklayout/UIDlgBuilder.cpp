@@ -4,7 +4,7 @@ namespace SdkLayout {
 
 	CContainerUI* CDialogBuilder::Create(LPCTSTR xml, CPaintManagerUI* manager, HINSTANCE hInst, IDialogBuilder_GetID* pgetid)
 {
-	//×ÊÔ´IDÎª0-65535£¬Á½¸ö×Ö½Ú£»×Ö·û´®Ö¸ÕëÎª4¸ö×Ö½Ú
+	//èµ„æºIDä¸º0-65535ï¼Œä¸¤ä¸ªå­—èŠ‚ï¼›å­—ç¬¦ä¸²æŒ‡é’ˆä¸º4ä¸ªå­—èŠ‚
     if( HIWORD(xml) != NULL ) {
 		if( !m_xml.Load(xml) ) 
 			return NULL;
