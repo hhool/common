@@ -5,14 +5,14 @@ namespace Common{
 	class i_timer
 	{
 	public:
-		// mm timer 锟斤拷锟斤拷锟节碉拷锟斤拷锟斤拷锟竭筹拷锟斤拷, 锟斤拷锟斤拷直锟接诧拷锟斤拷UI,应SendMessage
+		// mm timer 运行在单独的线程中, 不能直接操作UI,应SendMessage
 		virtual void update_timer(int h, int m, int s) = 0;
 	};
 
 	class i_timer_period
 	{
 	public:
-		// 锟斤拷锟斤拷通知锟斤拷时锟斤拷锟接匡拷
+		// 周期通知定时器接口
 		virtual void update_timer_period() = 0;
 	};
 

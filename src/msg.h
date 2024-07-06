@@ -4,7 +4,7 @@
 #include "comm.h"
 
 namespace Common {
-	// ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê½Ñ¡ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
+	// ·¢ËÍÎÄ¼þ¸ñÊ½Ñ¡Ôñ¶Ô»°¿ò
 	class c_send_file_format_dlg : public c_dialog_builder
 	{
 	public:
@@ -20,7 +20,7 @@ namespace Common {
 		SdkLayout::CTinyString _selected;
 	};
 
-	// ï¿½ï¿½ï¿½Í¸ï¿½Ê½ï¿½ï¿½ï¿½Æ¶Ô»ï¿½ï¿½ï¿½
+	// ·¢ËÍ¸ñÊ½¿ØÖÆ¶Ô»°¿ò
 	class c_send_data_format_dlg : public c_dialog_builder
 	{
 	public:
@@ -66,19 +66,19 @@ namespace Common {
 			kAutoSend,
 		};
 
-		// ï¿½ï¿½ï¿½Í·ï¿½Ê½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: 16ï¿½ï¿½ï¿½ï¿½ + ï¿½Ä±ï¿½ï¿½Ö·ï¿½, ï¿½ï¿½_b_send_data_frmat_hexï¿½ï¿½ï¿½ï¿½; ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½: ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
+		// ·¢ËÍ·½Ê½Ö»ÓÐÁ½ÖÖ: 16½øÖÆ + ÎÄ±¾×Ö·û, ÓÉ_b_send_data_frmat_hex¾ö¶¨; µ÷ÓÃº¯ÊýÀ´·½±ã¾ö¶¨
+		// ÕâÀïÊÇÆäËüÑ¡Ïî, ±ÈÈç: »Ø³µÀàÐÍ, ÊÇ·ñ´¦Àí¿ØÖÆ×Ö·ûµÈ
 		enum SendDataFormatHex{
 			sdfh_kNone		= 0x00000000,
 		};
 		enum SendDataFormatChar{
 			sdfc_kNone		= 0x00000000,
-			// 01ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½
+			// 01Á½Î»¾ö¶¨»»ÐÐ·ûÀàÐÍ
 			sdfc_kNoCrlf	= 0x00000000,
 			sdfc_kCr		= 0x00000001,
 			sdfc_kLf		= 0x00000002,
 			sdfc_kCrlf		= 0x00000003,
-			// ï¿½ï¿½2Î» ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½ï¿½×ªï¿½ï¿½ï¿½Ö·ï¿½
+			// µÚ2Î» ¾ö¶¨ÊÇ·ñÊ¹ÓÃ×ªÒå×Ö·û
 			sdfc_kUseEscape = 0x00000004,
 		};
 
@@ -95,7 +95,7 @@ namespace Common {
 		// IAcceleratorTranslator interface
 		virtual bool TranslateAccelerator(MSG* pmsg);
 
-		// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ß³Ì²ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´
+		// ´æÔÚ¶àÏß³Ì²Ù×÷, ËùÒÔÖØÐ´
 		virtual int msgbox(UINT msgicon, char* caption, char* fmt, ...);
 
 	protected:
@@ -121,7 +121,7 @@ namespace Common {
 		LRESULT on_command_ctrl(HWND hwnd, int id, int code);
 
 	private:
-		// Ò»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// Ò»Ð©Ïà¹ØÅäÖÃ
 		void init_from_config_file();
 		void save_to_config_file();
 
@@ -143,17 +143,17 @@ namespace Common {
 		Window::c_rich_edit*	editor_recv_char()	{return &_recv_char_edit;}
 
 	//////////////////////////////////////////////////////////////////////////
-	// ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ ...
+	// ÒÔÏÂ¹ÜÀí´®¿ÚÏà¹ØµÄÒ»Ð©¶ÔÏó, Èç: ²¨ÌØÂÊÁÐ±í ...
 
-	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½
+	// ´®¿Ú¶ÔÏó
 	class t_com_item
 	{
 	public:
 		t_com_item(int i,const char* s){_s = s; _i=i;}
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½Ð£ï¿½ï¿½Î»
+		// ·µ»Ø×Ö·û´®²¿·Ö: ±ÈÈç: ÎÞÐ£ÑéÎ»
 		std::string get_s() const {return _s;}
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½: NOPARITY(ï¿½ï¿½)
+		// ·µ»ØÕûÊý²¿·Ö : ±ÈÈç: NOPARITY(ºê)
 		int get_i() const {return _i;}
 
 	protected:
@@ -161,17 +161,17 @@ namespace Common {
 		int _i;
 	};
 
-	// Ë¢ï¿½Â´ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ê±ï¿½ï¿½Òªï¿½Ãµï¿½ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// Ë¢ÐÂ´®¿Ú¶ÔÏóÁÐ±íÊ±ÐèÒªÓÃµ½µÄ»Øµ÷º¯ÊýÀàÐÍ
 	typedef void t_list_callback(void* ud, const t_com_item* t);
 
-	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½Ê±ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½Í½Ó¿ï¿½
+	// ´®¿Ú¶ÔÏóË¢ÐÂÊ±µÄ»Øµ÷ÀàÐÍ½Ó¿Ú
 	class i_com_list
 	{
 	public:
 		virtual void callback(t_list_callback* cb, void* ud) = 0;
 	};
 
-	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ÐµÄ´ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+	// ´®¿Ú¶ÔÏóÈÝÆ÷: ±ÈÈç ±£´æÏµÍ³ËùÓÐµÄ´®¿ÚÁÐ±í
 	template<class T>
 	class t_com_list : public i_com_list
 	{
@@ -181,7 +181,7 @@ namespace Common {
 		int size() {return _list.size();}
 		const T& operator[](int i) {return _list[i];}
 
-		// ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ï¿½Ð±ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		// ¸üÐÂ¶ÔÏóÁÐ±í, ±ÈÈç¸üÐÂÏµÍ³´®¿ÚÁÐ±í
 		virtual i_com_list* update_list(){return this;}
 
 		virtual operator i_com_list*() {return static_cast<i_com_list*>(this);}
@@ -196,9 +196,9 @@ namespace Common {
 		std::vector<T> _list;
 	};
 
-	// ï¿½ï¿½ï¿½Ú¶Ë¿ï¿½ï¿½Ð±ï¿½, ï¿½Ì³Ðµï¿½Ô­ï¿½ï¿½ï¿½ï¿½: ï¿½Ë¿ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Î½ï¿½ï¿½ "ï¿½Ñºï¿½ï¿½ï¿½"
-	// ï¿½ï¿½ï¿½ç³£ï¿½ï¿½ï¿½ï¿½: Prolific USB-to-Serial Comm Port
-	// ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+	// ´®¿Ú¶Ë¿ÚÁÐ±í, ¼Ì³ÐµÄÔ­ÒòÊÇ: ¶Ë¿ÚÓÐÒ»¸öËùÎ½µÄ "ÓÑºÃÃû"
+	// ±ÈÈç³£¼ûµÄ: Prolific USB-to-Serial Comm Port
+	// ¸üÐÂµ½´®¿ÚÁÐ±í¿Ø¼þÖÐÊ±ÐèÒªËýÃÇÁ½ÕßÒ»Æð
 	class c_comport : public t_com_item
 	{
 	public:
@@ -209,14 +209,14 @@ namespace Common {
 		std::string get_id_and_name() const;
 	};
 
-	// ï¿½ï¿½ï¿½Ú¶Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½: Òªï¿½ï¿½ÏµÍ³È¡ï¿½ï¿½ï¿½Ð±ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´
+	// ´®¿Ú¶Ë¿ÚÈÝÆ÷: ÒªÏòÏµÍ³È¡µÃÁÐ±í, ËùÒÔÖØÐ´
 	class c_comport_list : public t_com_list<c_comport>
 	{
 	public:
 		virtual i_com_list* update_list();
 	};
 
-	// ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½â²¿ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ô±
+	// ÓÉÓÚ²¨ÌØÂÊ¿ÉÓÉÍâ²¿ÊÖ¶¯Ìí¼Ó, ËùÒÔ¶à¼ÓÒ»¸ö³ÉÔ±
 	class c_baudrate : public t_com_item
 	{
 	public:
@@ -230,7 +230,7 @@ namespace Common {
 		bool _inner;
 	};
 
-	// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+	// ´®¿Ú¶ÔÏóÁÐ±í
 	private:
 		c_comport_list			_comport_list;
 		t_com_list<c_baudrate>	_baudrate_list;
@@ -275,8 +275,8 @@ namespace Common {
 		c_timer				_timer;
 		c_timer				_auto_send_timer;
 
-		char				_send_buffer[10240];	//ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-		Window::c_edit*		_recv_cur_edit;			// ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½Ê½ï¿½Ä±ï¿½ï¿½Ø¼ï¿½
+		char				_send_buffer[10240];	//ÓÃÓÚÄ¬ÈÏÈ¡·¢ËÍÊý¾Ý¿òµÄÊý¾Ý
+		Window::c_edit*		_recv_cur_edit;			// µ±Ç°½ÓÊÕÊý¾Ý¸ñÊ½ÎÄ±¾¿Ø¼þ
 		bool				_b_send_data_format_hex;
 		bool				_b_recv_data_format_hex;
 		DWORD				_send_data_format_hex;
@@ -291,7 +291,7 @@ namespace Common {
 
 		c_observable		_window_close_handler;
 
-        // ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½Ú¹Ø±Õºï¿½Ë¢ï¿½Â´ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ú´ï¿½Ê±ï¿½Þ·ï¿½ï¿½Þ¸ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~
+        // ÊÇ·ñÐèÒªÔÚ¹Ø±ÕºóË¢ÐÂ´®¿ÚÁÐ±í£¬ÒòÎª´®¿Ú´ò¿ªÊ±ÎÞ·¨ÐÞ¸ÄÁÐ±í£¬ËùÒÔ~
         bool                _b_refresh_comport;
 	};
 }

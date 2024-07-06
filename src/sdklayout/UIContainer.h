@@ -48,7 +48,7 @@ public:
 
 protected:
     CStdPtrArray m_items;
-	bool m_bEnableUpdate;	//锟斤拷止锟斤拷SetVisibleByParent时锟接控硷拷锟截革拷锟斤拷锟斤拷NeedParentUpdate()
+	bool m_bEnableUpdate;	//防止在SetVisibleByParent时子控件重复调用NeedParentUpdate()
 };
 
 } // namespace SdkLayout

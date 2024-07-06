@@ -62,7 +62,7 @@ namespace SdkLayout{
 		virtual LPCTSTR GetWindowClass() const override { return WC_STATIC; }
 	};
 
-	// Group 锟斤拷锟斤拷锟斤拷锟斤拷准锟截硷拷一锟斤拷使锟斤拷, 锟斤拷要锟斤拷锟斤拷锟截硷拷锟斤拷锟斤拷锟斤拷!
+	// Group 和其它标准控件一样使用, 不要当作控件的容器!
 	class CGroupUI : public CSystemControlUI
 	{
 	public:

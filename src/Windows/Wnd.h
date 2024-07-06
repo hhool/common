@@ -21,11 +21,11 @@ public:
     HWND GetHWND() const;
     operator HWND() const;
 
-	// 锟斤拷锟节达拷锟斤拷锟斤拷通锟侥达拷锟斤拷
+	// 用于创建普通的窗体
     HWND Create(HWND hParent, LPCTSTR pstrName, DWORD dwStyle, DWORD dwExStyle, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int cx = CW_USEDEFAULT, int cy = CW_USEDEFAULT, HMENU hMenu = NULL);
-	// 锟斤拷锟节从对伙拷锟斤拷锟斤拷源锟斤拷锟斤拷
+	// 用于从对话框资源创建
 	HWND Create(HWND hParent, LPCTSTR lpTemplate);
-	// 锟斤拷锟节革拷锟接碉拷锟接控硷拷
+	// 用于附加到子控件
 	bool Attach(HWND hWnd);
 
 	void DestroyWindow();

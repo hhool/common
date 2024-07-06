@@ -35,7 +35,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
 #endif
-	debug_out(("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n"));
+	debug_out(("³ÌÐòÒÑÔËÐÐ\n"));
 
 	com_load_config();
 
@@ -48,7 +48,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	
 	com_unload_config();
 
-	debug_out(("ï¿½ï¿½ï¿½ï¿½ï¿½Ñ½ï¿½ï¿½ï¿½\n"));
+	debug_out(("³ÌÐòÒÑ½áÊø\n"));
 #ifdef _DEBUG
 	Sleep(500);
 	FreeConsole();
@@ -56,3 +56,4 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	MessageBeep(MB_OK);
 	return 0;
 }
+

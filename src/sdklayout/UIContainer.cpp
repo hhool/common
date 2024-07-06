@@ -80,7 +80,7 @@ namespace SdkLayout
 		for( int it = 0; it < m_items.GetSize(); it++ ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 			if( !pControl->IsVisible() ) continue;
-			pControl->SetPos(rct); // 锟斤拷锟叫凤拷float锟接控硷拷锟脚达拷锟斤拷锟斤拷锟酵伙拷锟斤拷
+			pControl->SetPos(rct); // 所有非float子控件放大到整个客户区
 		}
 	}
 

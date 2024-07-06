@@ -467,13 +467,13 @@ void CMarkup::_SkipWhitespace(LPTSTR& pstr) const
 
 void CMarkup::_SkipIdentifier(LPCTSTR& pstr) const
 {
-    // 锟斤拷锟斤拷只锟斤拷锟斤拷英锟侥ｏ拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷没锟斤拷锟斤拷锟斤拷
+    // 属性只能用英文，所以这样处理没有问题
     while( *pstr != _T('\0') && (*pstr == _T('_') || *pstr == _T(':') || _istalnum(*pstr)) ) pstr = ::CharNext(pstr);
 }
 
 void CMarkup::_SkipIdentifier(LPTSTR& pstr) const
 {
-    // 锟斤拷锟斤拷只锟斤拷锟斤拷英锟侥ｏ拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷没锟斤拷锟斤拷锟斤拷
+    // 属性只能用英文，所以这样处理没有问题
     while( *pstr != _T('\0') && (*pstr == _T('_') || *pstr == _T(':') || _istalnum(*pstr)) ) pstr = ::CharNext(pstr);
 }
 

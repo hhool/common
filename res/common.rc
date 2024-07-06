@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (Simplified, PRC) resources
+// ÖÐÎÄ(¼òÌå£¬ÖÐ¹ú) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -34,37 +34,37 @@ BEGIN
     COMBOBOX        IDC_CBO_CHK,30,34,42,49,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_CBO_DATA,30,47,42,47,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_CBO_STOP,30,60,42,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "ï¿½ï¿½ï¿½ï¿½\nï¿½ï¿½ï¿½ï¿½",IDC_BTN_MORE_SETTINGS,3,89,21,20,BS_MULTILINE
-    PUSHBUTTON      "ï¿½ò¿ª´ï¿½ï¿½ï¿½(&W)",IDC_BTN_OPEN,26,89,44,20,BS_MULTILINE
-    CONTROL         "Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_RADIO_SEND_HEX,"Button",BS_AUTORADIOBUTTON | WS_GROUP,4,160,48,10
-    CONTROL         "ï¿½Ö·ï¿½Ä£Ê½",IDC_RADIO_SEND_CHAR,"Button",BS_AUTORADIOBUTTON,5,170,48,10
+    PUSHBUTTON      "¸ü¶à\nÉèÖÃ",IDC_BTN_MORE_SETTINGS,3,89,21,20,BS_MULTILINE
+    PUSHBUTTON      "´ò¿ª´®¿Ú(&W)",IDC_BTN_OPEN,26,89,44,20,BS_MULTILINE
+    CONTROL         "Ê®Áù½øÖÆ",IDC_RADIO_SEND_HEX,"Button",BS_AUTORADIOBUTTON | WS_GROUP,4,160,48,10
+    CONTROL         "×Ö·ûÄ£Ê½",IDC_RADIO_SEND_CHAR,"Button",BS_AUTORADIOBUTTON,5,170,48,10
     CONTROL         "",IDC_CHK_AUTO_SEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,222,12,10
-    PUSHBUTTON      "ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_BTN_COPY_RECV,78,132,61,16
-    PUSHBUTTON      "ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_BTN_CLR_RECV,140,132,61,16
-    PUSHBUTTON      "ï¿½ï¿½Í£ï¿½ï¿½Ê¾(&D)",IDC_BTN_STOPDISP,202,132,61,16,WS_DISABLED
-    PUSHBUTTON      "ï¿½ï¿½ï¿½æµ½ï¿½Ä¼ï¿½",IDC_BTN_SAVEFILE,264,132,61,16
-    PUSHBUTTON      "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_BTN_HELP,329,132,31,16,BS_MULTILINE
+    PUSHBUTTON      "¸´ÖÆ½ÓÊÕÊý¾Ý",IDC_BTN_COPY_RECV,78,132,61,16
+    PUSHBUTTON      "Çå¿Õ½ÓÊÕÊý¾Ý",IDC_BTN_CLR_RECV,140,132,61,16
+    PUSHBUTTON      "ÔÝÍ£ÏÔÊ¾(&D)",IDC_BTN_STOPDISP,202,132,61,16,WS_DISABLED
+    PUSHBUTTON      "±£´æµ½ÎÄ¼þ",IDC_BTN_SAVEFILE,264,132,61,16
+    PUSHBUTTON      "¹¤¾ßÏä",IDC_BTN_HELP,329,132,31,16,BS_MULTILINE
     EDITTEXT        IDC_EDIT_SEND,82,154,276,78,ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL | ES_WANTRETURN | WS_VSCROLL
-    PUSHBUTTON      "ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_BTN_COPY_SEND,78,238,61,16
-    PUSHBUTTON      "ï¿½ï¿½Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_BTN_CLR_SEND,141,238,61,16
-    PUSHBUTTON      "ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½(&C)",IDC_BTN_CLR_COUNTER,203,238,61,16
-    PUSHBUTTON      "ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_BTN_LOADFILE,264,238,61,16
+    PUSHBUTTON      "¸´ÖÆ·¢ËÍÊý¾Ý",IDC_BTN_COPY_SEND,78,238,61,16
+    PUSHBUTTON      "Çå¿Õ·¢ËÍÊý¾Ý",IDC_BTN_CLR_SEND,141,238,61,16
+    PUSHBUTTON      "Çå¿Õ¼ÆÊýÆ÷(&C)",IDC_BTN_CLR_COUNTER,203,238,61,16
+    PUSHBUTTON      "´ÓÎÄ¼þ¼ÓÔØ",IDC_BTN_LOADFILE,264,238,61,16
     EDITTEXT        IDC_STATIC_STATUS,79,256,245,13,ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "ï¿½ï¿½ï¿½ï¿½(&S)",IDC_BTN_SEND,328,241,31,25
-    CONTROL         "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°",IDC_CHK_TOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,262,48,10
-    LTEXT           "ï¿½ï¿½ï¿½Úºï¿½",MAINSTATIC_CP,4,9,25,11
-    LTEXT           "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",MAINSTATIC_BR,4,22,25,11
-    LTEXT           "Ð£ï¿½ï¿½Î»",MAINSTATIC_CHK,4,36,25,8
-    LTEXT           "ï¿½ï¿½ï¿½ï¿½Î»",MAINSTATIC_DATABIT,4,49,25,8
+    PUSHBUTTON      "·¢ËÍ(&S)",IDC_BTN_SEND,328,241,31,25
+    CONTROL         "´°¿Ú×îÇ°",IDC_CHK_TOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,262,48,10
+    LTEXT           "´®¿ÚºÅ",MAINSTATIC_CP,4,9,25,11
+    LTEXT           "²¨ÌØÂÊ",MAINSTATIC_BR,4,22,25,11
+    LTEXT           "Ð£ÑéÎ»",MAINSTATIC_CHK,4,36,25,8
+    LTEXT           "Êý¾ÝÎ»",MAINSTATIC_DATABIT,4,49,25,8
     LTEXT           "Í£Ö¹Î»",MAINSTATIC_STOPBIT,4,62,25,8
-    GROUPBOX        "ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½(ms)",MAINSTATIC_AUTOSEND,5,210,66,26
-    GROUPBOX        "ï¿½ï¿½ï¿½Í¸ï¿½Ê½",MAINSTATIC_SEND_FORMAT,5,151,66,32
-    GROUPBOX        "ï¿½ï¿½ï¿½Õ¸ï¿½Ê½",MAINSTATIC_RECV_FORMAT,5,119,66,29
-    LTEXT           "ï¿½ï¿½Ê±ï¿½ï¿½",MAINSTATIC_TIMER,4,77,25,8
+    GROUPBOX        "×Ô¶¯·¢ËÍ(ms)",MAINSTATIC_AUTOSEND,5,210,66,26
+    GROUPBOX        "·¢ËÍ¸ñÊ½",MAINSTATIC_SEND_FORMAT,5,151,66,32
+    GROUPBOX        "½ÓÊÕ¸ñÊ½",MAINSTATIC_RECV_FORMAT,5,119,66,29
+    LTEXT           "¼ÆÊ±Æ÷",MAINSTATIC_TIMER,4,77,25,8
     LTEXT           "12:34:56",IDC_STATIC_TIMER,35,77,29,8
-    CONTROL         "ï¿½ï¿½ï¿½Ä£Ê½",IDC_CHECK_SIMPLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,274,48,10
-    CONTROL         "Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_RADIO_RECV_HEX,"Button",BS_AUTORADIOBUTTON,0,126,48,10
-    CONTROL         "ï¿½Ö·ï¿½Ä£Ê½",IDC_RADIO_RECV_CHAR,"Button",BS_AUTORADIOBUTTON,0,138,48,10
+    CONTROL         "¼ò½àÄ£Ê½",IDC_CHECK_SIMPLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,274,48,10
+    CONTROL         "Ê®Áù½øÖÆ",IDC_RADIO_RECV_HEX,"Button",BS_AUTORADIOBUTTON,0,126,48,10
+    CONTROL         "×Ö·ûÄ£Ê½",IDC_RADIO_RECV_CHAR,"Button",BS_AUTORADIOBUTTON,0,138,48,10
     EDITTEXT        IDC_EDIT_RECV,99,23,121,84,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_NOHIDESEL | ES_READONLY | ES_WANTRETURN | NOT WS_VISIBLE | WS_VSCROLL | WS_HSCROLL
     PUSHBUTTON      "+",IDC_BTN_SEND_FMT_CONFIG,51,162,11,15
     EDITTEXT        IDC_EDIT_DELAY,24,221,39,12,ES_AUTOHSCROLL | ES_NUMBER
@@ -73,7 +73,7 @@ END
 IDD_DLG_TIMEOUTS DIALOGEX 0, 0, 169, 191
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
-CAPTION "ï¿½ï¿½ï¿½Ú³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Î»:ms)"
+CAPTION "´®¿Ú³¬Ê±ÉèÖÃ(µ¥Î»:ms)"
 FONT 8, "Arial", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_CTO_EDIT_READ_INTERVAL,2,50,165,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
@@ -81,26 +81,26 @@ BEGIN
     EDITTEXT        IDC_CTO_EDIT_READ_CONSTANT,2,101,165,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_CTO_EDIT_WRITE_MULTIPLIER,2,129,165,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_CTO_EDIT_WRITE_CONSTANT,2,154,165,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    PUSHBUTTON      "È·ï¿½ï¿½(&O)",IDC_CTO_BTN_OK,89,172,36,15
-    PUSHBUTTON      "È¡ï¿½ï¿½(&C)",IDC_CTO_BTN_CANCEL,129,172,36,15
-    LTEXT           "    ï¿½ï¿½ï¿½Ö½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½; 0ï¿½ï¿½Ê¾ï¿½ï¿½ÖµÎ´ï¿½ï¿½Ê¹ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Õ±ï¿½Pending:",IDC_STATIC,2,32,164,18
-    LTEXT           "ï¿½ï¿½È¡Ã¿ï¿½Ö½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:",IDC_STATIC,2,66,161,9
-    LTEXT           "Ã¿ï¿½Î¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÙµÈ´ï¿½Ê±ï¿½ï¿½:",IDC_STATIC,2,91,164,9
-    LTEXT           "Ð´ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½Ö½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:",IDC_STATIC,2,119,164,8
-    LTEXT           "Ã¿ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÙµÈ´ï¿½Ê±ï¿½ï¿½:",IDC_STATIC,2,144,164,9
-    LTEXT           "    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½è±¸ï¿½Ä³ï¿½Ê±,ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½/Ð´ï¿½ï¿½ï¿½Úµï¿½Ê±ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê²Ã´,ï¿½ï¿½ï¿½ï¿½ï¿½ë²»Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",IDC_STATIC,5,2,159,26
-    PUSHBUTTON      "Ä¬ï¿½ï¿½Öµ(&D)",IDC_CTO_BTN_DEFAULT,6,172,42,15
+    PUSHBUTTON      "È·¶¨(&O)",IDC_CTO_BTN_OK,89,172,36,15
+    PUSHBUTTON      "È¡Ïû(&C)",IDC_CTO_BTN_CANCEL,129,172,36,15
+    LTEXT           "    Á½×Ö½Ú¼ä¶Á¼ä¸ô; 0±íÊ¾¸ÃÖµÎ´±»Ê¹ÓÃ,¶Á²Ù×÷Ê¼ÖÕ±»Pending:",IDC_STATIC,2,32,164,18
+    LTEXT           "¶ÁÈ¡Ã¿×Ö½ÚÓÃÊ±±¶³ËÊý:",IDC_STATIC,2,66,161,9
+    LTEXT           "Ã¿´Î¶Á²Ù×÷ÖÁÉÙµÈ´ýÊ±¼ä:",IDC_STATIC,2,91,164,9
+    LTEXT           "Ð´²Ù×÷Ã¿×Ö½ÚÓÃÊ±±¶³ËÊý:",IDC_STATIC,2,119,164,8
+    LTEXT           "Ã¿´ÎÐ´²Ù×÷ÖÁÉÙµÈ´ýÊ±¼ä:",IDC_STATIC,2,144,164,9
+    LTEXT           "    ÓÃÓÚÉèÖÃ´®¿ÚÍ¨ÐÅÉè±¸µÄ³¬Ê±,Ö÷ÒªÌåÏÖÔÚ¶Á/Ð´´®¿ÚµÄÊ±¼äÉÏ, ÇëÄã×Ô¼ºÃ÷°×ÕâÊÇÔÚ×öÊ²Ã´,·ñÔòÇë²»ÒªËæÒâÉèÖÃ",IDC_STATIC,5,2,159,26
+    PUSHBUTTON      "Ä¬ÈÏÖµ(&D)",IDC_CTO_BTN_DEFAULT,6,172,42,15
 END
 
 IDD_DLG_PINCTRL DIALOGEX 0, 0, 207, 40
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
-CAPTION "DTR/RTSï¿½ï¿½ï¿½Åµï¿½Æ½ï¿½ï¿½ï¿½ï¿½"
+CAPTION "DTR/RTSÒý½ÅµçÆ½¿ØÖÆ"
 FONT 8, "Arial", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "ï¿½è¶¨",IDC_PINCTRL_OK,170,6,33,28
-    LTEXT           "DTRï¿½ï¿½ï¿½ï¿½:",IDC_STATIC,5,9,32,8
-    LTEXT           "RTSï¿½ï¿½ï¿½ï¿½:",IDC_STATIC,5,25,32,8
+    PUSHBUTTON      "Éè¶¨",IDC_PINCTRL_OK,170,6,33,28
+    LTEXT           "DTR¿ØÖÆ:",IDC_STATIC,5,9,32,8
+    LTEXT           "RTS¿ØÖÆ:",IDC_STATIC,5,25,32,8
     COMBOBOX        IDC_CBO_PINCTRL_DTR,43,7,124,12,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_CBO_PINCTRL_RTS,43,22,124,12,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
@@ -109,11 +109,11 @@ IDD_SEND_CMD DIALOGEX 0, 0, 229, 42
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:",IDC_CMD_STATIC_TYPE,9,12,89,8,SS_NOTIFY
-    LTEXT           "ï¿½ï¿½ï¿½Ý´ï¿½Ð¡:",IDC_CMD_STATIC_SIZE,113,12,71,8
+    LTEXT           "Êý¾ÝÀàÐÍ:",IDC_CMD_STATIC_TYPE,9,12,89,8,SS_NOTIFY
+    LTEXT           "Êý¾Ý´óÐ¡:",IDC_CMD_STATIC_SIZE,113,12,71,8
     EDITTEXT        IDC_CMD_EDIT_CMD,6,23,181,14,ES_AUTOHSCROLL
-    GROUPBOX        "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:",IDC_CMD_STATIC_NAME,3,3,223,37
-    PUSHBUTTON      "ï¿½ï¿½ï¿½ï¿½\nï¿½ï¿½ï¿½ï¿½",IDC_CMD_BUTTON_SEND,191,11,31,26,BS_MULTILINE
+    GROUPBOX        "Êý¾ÝÃû³Æ:",IDC_CMD_STATIC_NAME,3,3,223,37
+    PUSHBUTTON      "·¢ËÍ\nÃüÁî",IDC_CMD_BUTTON_SEND,191,11,31,26,BS_MULTILINE
 END
 
 IDD_TEMPLATE DIALOGEX 0, 0, 309, 177
@@ -121,6 +121,49 @@ STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_CAPTION | 
 CAPTION "Dialog"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
+END
+
+IDD_DIALOG_WAVEFORM_SETTING DIALOGEX 0, 0, 295, 111
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "²¨ÐÎÏÔÊ¾ÉèÖÃ"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "È·¶¨",IDOK,79,90,50,14
+    PUSHBUTTON      "È¡Ïû",IDCANCEL,165,90,50,14
+    GROUPBOX        "²¨ÐÎ´°¿ÚÏÔÊ¾ÉèÖÃ",IDC_STATIC,7,7,124,76
+    GROUPBOX        "ÇøÓòÌØÕ÷ÉèÖÃ",IDC_STATIC,143,7,144,52
+    LTEXT           "´°¿ÚÏñËØ¿í£º",IDC_STATIC,17,22,53,8
+    LTEXT           "´°¿ÚÏñËØ¸ß£º",IDC_STATIC,17,40,53,8
+    LTEXT           "µã»æÖÆÏñËØ£º",IDC_STATIC,17,63,53,8
+    LTEXT           "´°¿Ú¶¥µã±íÊ¾Öµ£º",IDC_STATIC,154,22,74,8
+    LTEXT           "´°¿Úµ×µã±íÊ¾Öµ£º",IDC_STATIC,154,40,74,8
+    EDITTEXT        IDC_EDIT_WINDOWWIDTH,71,20,49,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_WINDOWHEIGHT,71,37,49,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_DOTSIZE,71,61,49,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_UPVAL,225,20,49,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DNVAL,225,37,49,12,ES_AUTOHSCROLL
+    LTEXT           "ÊäÈë£º",IDC_STATIC,165,70,31,8
+    COMBOBOX        IDC_COMBO_INPUTSELECT,197,68,65,12,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_DIALOG_WAVEFORM_VALUE DIALOGEX 0, 0, 201, 77
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "²¨ÐÎ»æÖÆ¹¦ÄÜµ±Ç°Êó±êÎ»ÖÃ"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "ÊÍ·ÅÊó±ê",IDCANCEL,75,56,50,14
+    DEFPUSHBUTTON   "ÔÝÍ£/¼ÌÐø",IDOK,7,56,50,14
+    GROUPBOX        "Êó±êÎ»ÖÃ",IDC_STATIC,7,7,89,44
+    LTEXT           "X£º",IDC_STATIC,16,20,17,8
+    LTEXT           "PosX",IDC_STATIC_POSX,35,20,51,8
+    LTEXT           "Y£º",IDC_STATIC,16,35,17,8
+    LTEXT           "PosY",IDC_STATIC_POSY,35,35,51,8
+    GROUPBOX        "ÕæÊµÖµ",IDC_STATIC,105,7,89,44
+    LTEXT           "X£º",IDC_STATIC,114,20,17,8
+    LTEXT           "RealX",IDC_STATIC_REALX,133,20,51,8
+    LTEXT           "Y£º",IDC_STATIC,114,35,17,8
+    LTEXT           "RealY",IDC_STATIC_REALY,133,35,51,8
+    PUSHBUTTON      "ÉèÖÃ",IDC_BTN_WDSETTING,144,56,50,14
 END
 
 
@@ -173,10 +216,10 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "CompanyName", "KondeU"
-            VALUE "FileDescription", "CommonSerialï¿½ï¿½ï¿½ï¿½Í¨ï¿½Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
+            VALUE "FileDescription", "CommonSerial´®¿ÚÍ¨ÐÅµ÷ÊÔÖúÊÖ"
             VALUE "FileVersion", "2.2.0.0"
             VALUE "InternalName", "common"
-            VALUE "LegalCopyright", "CommonSerial Copyright (C) 2017-2021 KondeU / Å®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
+            VALUE "LegalCopyright", "CommonSerial Copyright (C) 2017-2021 KondeU / Å®º¢²»¿Þ"
             VALUE "OriginalFilename", "common.exe"
             VALUE "ProductName", "CommonSerial"
             VALUE "ProductVersion", "2.2.0.0"
@@ -198,6 +241,7 @@ END
 // remains consistent on all systems.
 IDI_ICON1               ICON                    "100.ico"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
@@ -207,16 +251,16 @@ IDR_MENU_OTHER MENU
 BEGIN
     POPUP "popupmenu"
     BEGIN
-        MENUITEM "ASCII ï¿½ï¿½ï¿½",                    MENU_OTHER_ASCII
-        MENUITEM "Í¼ï¿½Î»ï¿½ï¿½ï¿½",                        MENU_OTHER_DRAW, GRAYED
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",                      MENU_OTHER_MONITOR, GRAYED
-        MENUITEM "ï¿½Ö·ï¿½ï¿½ï¿½×ª16ï¿½ï¿½ï¿½ï¿½",                    MENU_OTHER_STR2HEX, GRAYED
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",                         MENU_OTHER_CALC
-        MENUITEM "ï¿½ï¿½ï¿½Â±ï¿½",                         MENU_OTHER_NOTEPAD
-        MENUITEM "ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",                       MENU_OTHER_DEVICEMGR
+        MENUITEM "ASCII Âë±í",                    MENU_OTHER_ASCII
+        MENUITEM "²¨ÐÎ»æÖÆ",                        MENU_OTHER_DRAW
+        MENUITEM "´®¿ÚÇý¶¯¹ýÂË",                      MENU_OTHER_MONITOR, GRAYED
+        MENUITEM "×Ö·û´®×ª16½øÖÆ",                    MENU_OTHER_STR2HEX, GRAYED
+        MENUITEM "¼ÆËãÆ÷",                         MENU_OTHER_CALC
+        MENUITEM "¼ÇÊÂ±¾",                         MENU_OTHER_NOTEPAD
+        MENUITEM "Éè±¸¹ÜÀíÆ÷",                       MENU_OTHER_DEVICEMGR
         MENUITEM SEPARATOR
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½",                       MENU_OTHER_HELP
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â°æ±¾",                     MENU_OTHER_NEWVERSION, GRAYED
+        MENUITEM "°ïÖú/¹ØÓÚ",                       MENU_OTHER_HELP
+        MENUITEM "¼ì²éÈí¼þÐÂ°æ±¾",                     MENU_OTHER_NEWVERSION, GRAYED
     END
 END
 
@@ -224,7 +268,7 @@ IDR_MENU_MORE MENU
 BEGIN
     POPUP "popupmenu"
     BEGIN
-        MENUITEM "DTR/RTSï¿½ï¿½ï¿½Åµï¿½Æ½ï¿½ï¿½ï¿½ï¿½(&P)",           MENU_MORE_PINCTRL
+        MENUITEM "DTR/RTSÒý½ÅµçÆ½¿ØÖÆ(&P)",           MENU_MORE_PINCTRL
     END
 END
 
@@ -232,25 +276,25 @@ MENU_RICHEDIT_CONTEXTMENU MENU
 BEGIN
     POPUP "EditContextMenu"
     BEGIN
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½(&C)",                      ID_EDITCONTEXTMENU_COPY
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½(&X)",                      ID_EDITCONTEXTMENU_CUT
-        MENUITEM "Õ³ï¿½ï¿½(&P)",                      ID_EDITCONTEXTMENU_PASTE
+        MENUITEM "¸´ÖÆ(&C)",                      ID_EDITCONTEXTMENU_COPY
+        MENUITEM "¼ôÇÐ(&X)",                      ID_EDITCONTEXTMENU_CUT
+        MENUITEM "Õ³Ìù(&P)",                      ID_EDITCONTEXTMENU_PASTE
         MENUITEM SEPARATOR
-        MENUITEM "É¾ï¿½ï¿½(&D)",                      ID_EDITCONTEXTMENU_DELETE
+        MENUITEM "É¾³ý(&D)",                      ID_EDITCONTEXTMENU_DELETE
         MENUITEM "È«Ñ¡(&A)",                      ID_EDITCONTEXTMENU_SELALL
         MENUITEM SEPARATOR
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½(&R)\tï¿½ï¿½ï¿½ï¿½Ð¼ï¿½",                ID_EDITCONTEXTMENU_CLRSCR
+        MENUITEM "ÇåÆÁ(&R)\tÊó±êÖÐ¼ü",                ID_EDITCONTEXTMENU_CLRSCR
         MENUITEM SEPARATOR
-        MENUITEM "È«ï¿½ï¿½(&F)\tF11",                 ID_EDITCONTEXTMENU_FULLSCREEN, CHECKED
+        MENUITEM "È«ÆÁ(&F)\tF11",                 ID_EDITCONTEXTMENU_FULLSCREEN, CHECKED
         MENUITEM SEPARATOR
-        MENUITEM "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",                         ID_EDITCONTEXTMENU_CALC
+        MENUITEM "¼ÆËãÆ÷",                         ID_EDITCONTEXTMENU_CALC
     END
 END
 
 IDR_MENU_SENDCMD MENU
 BEGIN
-    MENUITEM "ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½",                        MENU_SENDCMD_NEWCMD
-    MENUITEM "È«ï¿½ï¿½ï¿½Ûµï¿½",                        MENU_SENDCMD_COLLAPSEALL
+    MENUITEM "ÐÂ½¨ÃüÁî",                        MENU_SENDCMD_NEWCMD
+    MENUITEM "È«²¿ÕÛµþ",                        MENU_SENDCMD_COLLAPSEALL
 END
 
 
@@ -260,6 +304,7 @@ END
 //
 
 1                       RT_MANIFEST             "xps.manifest"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -298,6 +343,22 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 170
     END
+
+    IDD_DIALOG_WAVEFORM_SETTING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 288
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 104
+    END
+
+    IDD_DIALOG_WAVEFORM_VALUE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 194
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 70
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -322,7 +383,50 @@ END
 //
 
 IDR_RCDATA2             RCDATA                  "main.xml"
-#endif    // Chinese (Simplified, PRC) resources
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DLG_MAIN AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG_WAVEFORM_SETTING AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG_WAVEFORM_VALUE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_WAVEFORM_SETTING DLGINIT
+BEGIN
+    IDC_COMBO_INPUTSELECT, 0x403, 5, 0
+0x5942, 0x4554, "\000" 
+    IDC_COMBO_INPUTSELECT, 0x403, 5, 0
+0x4f57, 0x4452, "\000" 
+    IDC_COMBO_INPUTSELECT, 0x403, 6, 0
+0x5744, 0x524f, 0x0044, 
+    IDC_COMBO_INPUTSELECT, 0x403, 6, 0
+0x4c46, 0x414f, 0x0054, 
+    IDC_COMBO_INPUTSELECT, 0x403, 7, 0
+0x4f44, 0x4255, 0x454c, "\000" 
+    0
+END
+
+#endif    // ÖÐÎÄ(¼òÌå£¬ÖÐ¹ú) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
